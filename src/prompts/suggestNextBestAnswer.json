@@ -1,0 +1,33 @@
+{
+    "name": "suggestNextBestAnswer",
+    "description": "Suggest the most appropriate next step or response for the agent based on the conversation history. This helps maintain the optimal treasury workflow and provides reasoning for the suggested action on the dashboard dashboard.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "suggestion": {
+                "type": "string",
+                "description": "The exact wording or specific action recommended for the assistant's next turn."
+            },
+            "rationale": {
+                "type": "string",
+                "description": "Explanation of why this is the highest-value next step (e.g., 'Addresses the customer's payment mismatch query directly', 'Matches the established pattern for discount validation')."
+            },
+            "stage": {
+                "type": "string",
+                "description": "The current stage in the treasury support process.",
+                "enum": [
+                    "greeting",
+                    "invoice_identification",
+                    "discrepancy_resolution",
+                    "payment_confirmation",
+                    "closing"
+                ]
+            }
+        },
+        "required": [
+            "suggestion",
+            "rationale",
+            "stage"
+        ]
+    }
+}
