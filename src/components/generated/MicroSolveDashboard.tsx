@@ -211,7 +211,7 @@ const AI_STEPS_BASE: AIStep[] = [{
 }, {
   id: 2,
   title: 'Extracting Payment Data',
-  details: ['Customer → Aldridge Pharma Group', 'Amount → $180,000', 'Invoice Ref → INV-7845'],
+  details: ['Customer → Aldridge Pharma Group', 'Amount → $180,000', 'Invoice Ref → KRL-INV-4845'],
   confidence: 'Confidence: 98%'
 }, {
   id: 3,
@@ -220,7 +220,7 @@ const AI_STEPS_BASE: AIStep[] = [{
 }, {
   id: 4,
   title: 'Fetching Open Invoices',
-  details: ['Invoice found: INV-7845', 'Amount → $180,000']
+  details: ['Invoice found: KRL-INV-4845', 'Amount → $180,000']
 }, {
   id: 5,
   title: 'AI Decision',
@@ -230,13 +230,13 @@ const AI_STEPS_BASE: AIStep[] = [{
 const AI_STEPS_EXTENDED: AIStep[] = [
   ...AI_STEPS_BASE,
   { id: 6, title: 'Resolve Exception', details: ['Awaiting user interaction'] },
-  { id: 7, title: 'Posting to ERP', details: ['Writing to ERP'] },
+  { id: 7, title: 'Posting to D365', details: ['Writing to D365'] },
   { id: 8, title: 'Complete', details: ['Transaction finalized'] }
 ];
 const AI_STEPS_NORTHWIND: AIStep[] = [
   { id: 1, title: 'Reading Remittance', details: ['Email identified', 'Bank: Bank of America'] },
   { id: 2, title: 'Extracting Payment Data', details: ['Payment metadata extracted', 'Case ID generated'] },
-  { id: 3, title: 'Matching Customer', details: ['Customer → Harlow Crane LLP', 'Customer ID → C-22018'] },
+  { id: 3, title: 'Matching Customer', details: ['Customer → Harlow Crane LLP', 'Customer ID → CL-2025-0304'] },
   { id: 4, title: 'Fetching Open Invoices', details: ['5 invoices retrieved', 'No single match found'] },
   { id: 5, title: 'AI Decision', details: ['Automatic allocation not possible', 'Customer outreach required'] },
   { id: 6, title: 'AI Email Draft', details: ['Email generated', 'Ready to send'] },
@@ -245,7 +245,7 @@ const AI_STEPS_NORTHWIND: AIStep[] = [
   { id: 9, title: 'Parsed Response', details: ['Allocation extracted', 'Validation passed'] },
   { id: 10, title: 'Matching Successful', details: ['Allocation confirmed', 'Ready to post'] },
   { id: 11, title: 'AI Decision', details: ['Ready for auto posting', 'Automation resumed'] },
-  { id: 12, title: 'Posting to ERP', details: ['Writing to ERP', 'Transaction processing'] },
+  { id: 12, title: 'Posting to D365', details: ['Writing to D365', 'Transaction processing'] },
   { id: 13, title: 'Success', details: ['Cash application completed', 'Transaction finalized'] }
 ];
 
@@ -256,7 +256,7 @@ const AI_STEPS_BLUEWAVE: AIStep[] = [
   { id: 4, title: 'Tax Profile', details: ['Customer tax profile'] },
   { id: 5, title: 'Withholding Validation', details: ['Withholding Reasoning Agent'] },
   { id: 6, title: 'Resolution Recommendation', details: ['AI decision'] },
-  { id: 7, title: 'ERP Posting Preview', details: ['Journal entry proposal'] },
+  { id: 7, title: 'D365 Posting Preview', details: ['Journal entry proposal'] },
   { id: 8, title: 'Documentation Request', details: ['Generated email'] },
   { id: 9, title: 'Documentation Received', details: ['Proof in attachments', 'Ready to post'] },
   { id: 10, title: 'Approval', details: ['Approve & Post'] },
@@ -283,7 +283,7 @@ const AI_STEPS_BANKFEE: AIStep[] = [
   { id: 3, title: 'Remittance Analysis', details: ['Document AI Agent'] },
   { id: 4, title: 'Policy Check', details: ['Absorb vs Chargeback'] },
   { id: 5, title: 'Resolution Recommendation', details: ['AI decision'] },
-  { id: 6, title: 'ERP Posting Preview', details: ['Journal entry proposal'] },
+  { id: 6, title: 'D365 Posting Preview', details: ['Journal entry proposal'] },
   { id: 7, title: 'Customer Outreach', details: ['If chargeback: email draft'] },
   { id: 8, title: 'Approval', details: ['Approve & Post'] },
   { id: 9, title: 'Resolution Completed', details: ['Success'] }
@@ -302,7 +302,7 @@ const STEP_AGENT_MAP: Record<string, string> = {
   'Tax Profile': 'Customer Tax Profile',
   'Withholding Validation': 'Withholding Reasoning Agent',
   'Resolution Recommendation': 'Kroll AI Agent',
-  'ERP Posting Preview': 'ERP Posting',
+  'D365 Posting Preview': 'D365 Posting',
   'Documentation Request': 'Customer Communications',
   'Documentation Received': 'Case orchestration',
   'Approval': 'User',
@@ -319,7 +319,7 @@ const STEP_AGENT_MAP: Record<string, string> = {
   'Response Received': 'Case orchestration',
   'Parsed Response': 'Remittance Ingestion & Decoding Agent',
   'Matching Successful': 'Payment Matching Agent',
-  'Posting to ERP': 'Deterministic enforcement (ERP)',
+  'Posting to D365': 'Deterministic enforcement (D365)',
   'Resolve Exception': 'Human workbench',
   'Complete': 'Deterministic enforcement',
   'Success': 'Complete'
@@ -332,9 +332,9 @@ const StatCard = ({
   label: string;
   value: string | number;
   colorClass: string;
-}) => <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1 min-w-[160px] flex-1">
+}) => <div className="bg-white p-3 rounded-lg border border-slate-100 shadow-sm flex flex-col gap-1 min-w-[160px] flex-1">
     <span className="text-slate-500 text-xs font-medium uppercase tracking-wider">{label}</span>
-    <span className={`text-2xl font-bold ${colorClass}`}>{value}</span>
+    <span className={`text-lg font-semibold ${colorClass}`}>{value}</span>
   </div>;
 const SUGGESTED_PHRASES_CONFIG: Record<string, string[]> = {
   frustrated: ["I sincerely apologize...", "I understand your frustration", "Let me fix this right away"],
@@ -345,11 +345,11 @@ const SUGGESTED_PHRASES_CONFIG: Record<string, string[]> = {
   positive: ["I'm glad I could help!", "Thank you for your patience", "Happy to assist you"],
   satisfied: ["I'm glad I could help!", "Thank you for your patience", "Happy to assist you"]
 };
-const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalysisProps) => <motion.div key="call-analysis" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 overflow-y-auto p-8 bg-[#F8FAFC]">
+const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalysisProps) => <motion.div key="call-analysis" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 overflow-y-auto p-5 bg-[#F8FAFC]">
   {/* Page Header */}
-  <div className="flex items-center justify-between mb-8">
+  <div className="flex items-center justify-between mb-5">
     <div>
-      <h2 className="text-2xl font-bold text-slate-800">Call Analysis</h2>
+      <h2 className="text-base font-semibold text-slate-800">Call Analysis</h2>
       <p className="text-slate-500 text-sm mt-1">Collections Triage Agent classifies inbound calls and proposes next-best actions. Call Intelligence Agent provides transcription, summaries, and QA flags.</p>
     </div>
     <div className="flex items-center gap-3">
@@ -357,7 +357,7 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
         <Clock className="w-4 h-4 text-slate-400" />
         Last 30 days
       </div>
-      <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold shadow-sm hover:bg-blue-700 transition-colors">
+      <button className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold shadow-sm hover:bg-[#003354] transition-colors">
         <Mic className="w-4 h-4" />
         New Recording
       </button>
@@ -365,7 +365,7 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
   </div>
 
   {/* KPI Cards */}
-  <div className="grid grid-cols-4 gap-5 mb-8">
+  <div className="grid grid-cols-4 gap-4 mb-5">
     {[
       { label: 'Total Calls', value: '142', delta: '+12%', icon: PhoneCall, color: 'blue' },
       { label: 'Avg Duration', value: '8.4 min', delta: '-0.6 min', icon: Clock, color: 'purple' },
@@ -378,21 +378,21 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
         emerald: 'bg-emerald-50 text-emerald-600',
         amber: 'bg-amber-50 text-amber-600',
       };
-      return <div key={i} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+      return <div key={i} className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between mb-4">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colors[kpi.color]}`}>
-            <kpi.icon className="w-5 h-5" />
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colors[kpi.color]}`}>
+            <kpi.icon className="w-4 h-4" />
           </div>
           <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">{kpi.delta}</span>
         </div>
-        <div className="text-3xl font-bold text-slate-800 mb-1">{kpi.value}</div>
+        <div className="text-base font-semibold text-slate-800 mb-1">{kpi.value}</div>
         <div className="text-sm text-slate-500">{kpi.label}</div>
       </div>;
     })}
   </div>
 
   {/* Call Log Table */}
-  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden max-w-6xl">
+  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden max-w-6xl">
     <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
       <h3 className="font-bold text-slate-800 text-sm">Recent Calls</h3>
       <span className="text-xs text-slate-400">Showing 6 of 142</span>
@@ -412,7 +412,7 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
           { customer: 'Brightline', duration: '14:52', topic: 'Credit limit review', date: 'Feb 16', riskTier: 'Tier 0 — Assist' },
           { customer: 'Harlow Crane', duration: '4:33', topic: 'Remittance query', date: 'Feb 16', riskTier: 'Tier 1 — Draft' },
           { customer: 'Meridian Capital Partners', duration: '9:17', topic: 'Overdue balance', date: 'Feb 15', riskTier: 'Tier 1 — Draft' },
-          { customer: 'Tailspin Toys', duration: '7:45', topic: 'New payment terms', date: 'Feb 15', riskTier: 'Tier 2 — Controlled auto' },
+          { customer: 'Horizon Equity Partners', duration: '7:45', topic: 'New payment terms', date: 'Feb 15', riskTier: 'Tier 2 — Controlled auto' },
         ].map((call, i) => (
           <tr key={i} className="hover:bg-slate-50 transition-colors cursor-pointer">
             <td className="px-4 py-2.5 font-semibold text-slate-800 text-sm">{call.customer}</td>
@@ -426,17 +426,17 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
     </table>
   </div>
 
-  <div className="mt-8 flex gap-6 max-w-6xl">
+  <div className="mt-5 flex gap-4 max-w-6xl">
     {/* Live Sentiment Analysis Panel */}
-    <div className="flex-[2] bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden min-w-0">
+    <div className="flex-[2] bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden min-w-0">
       {/* Panel Header */}
-      <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white">
+      <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center">
-            <Activity className="w-5 h-5 text-violet-600" />
+          <div className="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center">
+            <Activity className="w-4 h-4 text-violet-600" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 text-sm">Live Sentiment Analysis</h3>
+            <h3 className="font-semibold text-slate-700 text-sm">Live Sentiment Analysis</h3>
             <p className="text-xs text-slate-400">Call Intelligence Agent — transcript, summary, QA flags. No auto-posting actions.</p>
           </div>
         </div>
@@ -452,7 +452,7 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
       </div>
 
       {/* Current Sentiment Display */}
-      <div className="p-6">
+      <div className="p-4">
         {sentimentHistory.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
@@ -479,22 +479,22 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
           return (
             <div className="space-y-6">
               {/* Current Sentiment Card */}
-              <div className="flex gap-6">
+              <div className="flex gap-4">
                 {/* Left: Big Sentiment Display */}
                 <motion.div
                   key={latest.id}
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className={`flex-1 ${config.bg} ${config.border} border-2 rounded-2xl p-6 relative overflow-hidden`}
+                  className={`flex-1 ${config.bg} ${config.border} border-2 rounded-lg p-4 relative overflow-hidden`}
                 >
 
                   <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${config.bg} ${config.color} border ${config.border}`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${config.bg} ${config.color} border ${config.border}`}>
                         {config.icon}
                       </div>
                       <div>
-                        <span className={`text-xl font-bold ${config.color} capitalize`}>{config.label}</span>
+                        <span className={`text-base font-semibold ${config.color} capitalize`}>{config.label}</span>
                         <p className="text-xs text-slate-500">
                           Detected at {latest.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                         </p>
@@ -526,7 +526,7 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-blue-50 border border-blue-100 rounded-xl p-4"
+                      className="bg-blue-50 border border-blue-100 rounded-lg p-4"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <Zap className="w-4 h-4 text-blue-600" />
@@ -542,7 +542,7 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 }}
-                      className="bg-slate-50 border border-slate-100 rounded-xl p-4"
+                      className="bg-slate-50 border border-slate-100 rounded-lg p-4"
                     >
                       <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2.5">Behavioral Indicators</span>
                       <div className="flex flex-wrap gap-2">
@@ -560,7 +560,7 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
 
               {/* Sentiment Timeline */}
               {sentimentHistory.length > 1 && (
-                <div className="border border-slate-100 rounded-xl overflow-hidden">
+                <div className="border border-slate-100 rounded-lg overflow-hidden">
                   <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
                       <TrendingUp className="w-3.5 h-3.5" />
@@ -613,15 +613,15 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
     </div>
 
     {/* Suggested Phrases Sidebar */}
-    <div className="flex-1 min-w-[320px] flex flex-col gap-5">
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex-1 flex flex-col">
-        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+    <div className="flex-1 min-w-[320px] flex flex-col gap-4">
+      <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden flex-1 flex flex-col">
+        <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-2 mb-1">
             <MessageSquare className="w-4 h-4 text-blue-600" />
-            <h3 className="font-bold text-slate-800 text-sm">Suggested Responses</h3>
+            <h3 className="font-semibold text-slate-700 text-sm">Suggested Responses</h3>
           </div>
         </div>
-        <div className="p-6 flex-1 flex flex-col gap-4">
+        <div className="p-4 flex-1 flex flex-col gap-4">
           {sentimentHistory.length > 0 ? (() => {
             const latest = sentimentHistory[sentimentHistory.length - 1];
             const phrases = SUGGESTED_PHRASES_CONFIG[latest.sentiment] || SUGGESTED_PHRASES_CONFIG.neutral;
@@ -635,7 +635,7 @@ const CallAnalysisView = ({ sentimentHistory, sentimentTimelineRef }: CallAnalys
                   navigator.clipboard.writeText(phrase);
                   // Optional: add a small visual feedback of copying
                 }}
-                className="group relative text-left p-4 bg-slate-50 border border-slate-100 rounded-xl hover:border-blue-200 hover:bg-blue-50/50 transition-all active:scale-[0.98]"
+                className="group relative text-left p-4 bg-slate-50 border border-slate-100 rounded-lg hover:border-blue-200 hover:bg-blue-50/50 transition-all active:scale-[0.98]"
               >
                 <div className="flex items-start gap-3">
                   <div className="mt-1 w-5 h-5 rounded-full bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 group-hover:border-blue-300 group-hover:text-blue-600 transition-colors">
@@ -673,7 +673,7 @@ export const MicroSolveDashboard = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [processingRowId, setProcessingRowId] = useState<string | null>(null);
   const [emailSent, setEmailSent] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState<string>('INV-4432');
+  const [selectedInvoice, setSelectedInvoice] = useState<string>('KRL-INV-4432');
   const [sentimentHistory, setSentimentHistory] = useState<SentimentEntry[]>([]);
   const sentimentIdRef = useRef(0);
   const sentimentTimelineRef = useRef<HTMLDivElement>(null);
@@ -940,73 +940,73 @@ export const MicroSolveDashboard = () => {
     setCurrentView('dashboard');
     setProcessingRowId(null);
     setCurrentStep(0);
-    setSelectedInvoice('INV-4432');
+    setSelectedInvoice('KRL-INV-4432');
   };
-  const Sidebar = () => <aside className="w-64 bg-[#0078D4] border-r border-blue-600 flex flex-col flex-shrink-0">
-    <div className="p-6">
+  const Sidebar = () => <aside className="w-64 bg-[#00263A] border-r border-[#001F2E] flex flex-col flex-shrink-0">
+    <div className="p-4">
       <div className="flex items-center gap-2 text-white mb-8">
-        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-          <Cpu className="text-[#0078D4] w-5 h-5" />
+        <div className="w-8 h-8 bg-white rounded flex items-center justify-center flex-shrink-0">
+          <span className="text-[#00263A] font-black text-sm leading-none tracking-tight">K</span>
         </div>
         <div className="flex flex-col leading-none">
-          <span className="text-xl font-bold tracking-tight text-white">Kroll</span>
-          <span className="text-[10px] font-medium text-blue-200 tracking-wide">Cash Application AI</span>
+          <span className="text-base font-semibold tracking-tight text-white">Kroll</span>
+          <span className="text-[10px] font-medium text-[#7AADCB] tracking-wide">Receivables Intelligence</span>
         </div>
       </div>
 
       <nav className="space-y-1">
-        <p className="text-[10px] font-bold text-blue-200 uppercase tracking-widest px-3 mb-2">Menu</p>
-        <button onClick={() => setCurrentView('overview')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'overview' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <p className="text-[10px] font-bold text-[#7AADCB] uppercase tracking-widest px-3 mb-2">Menu</p>
+        <button onClick={() => setCurrentView('overview')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'overview' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <LayoutDashboard className="w-4 h-4" />
           Dashboard
         </button>
-        <button onClick={() => setCurrentView('dashboard')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'dashboard' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <button onClick={() => setCurrentView('dashboard')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'dashboard' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <Inbox className="w-4 h-4 flex-shrink-0" />
           Failed Cash Applications
         </button>
-        <button onClick={() => setCurrentView('invoice-delivery')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'invoice-delivery' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <button onClick={() => setCurrentView('invoice-delivery')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'invoice-delivery' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <Upload className="w-4 h-4" />
           Invoice Delivery
         </button>
-        <button onClick={() => setCurrentView('call-analysis')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'call-analysis' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <button onClick={() => setCurrentView('call-analysis')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'call-analysis' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <PhoneCall className="w-4 h-4" />
           Call Analysis
         </button>
-        <button onClick={() => setCurrentView('disputes')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'disputes' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <button onClick={() => setCurrentView('disputes')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'disputes' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <FileText className="w-4 h-4" />
           Disputes
         </button>
-        <button onClick={() => setCurrentView('ptp')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'ptp' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <button onClick={() => setCurrentView('ptp')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'ptp' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <Calendar className="w-4 h-4" />
           Promise to Pay
         </button>
-        <button onClick={() => setCurrentView('customer-master')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'customer-master' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <button onClick={() => setCurrentView('customer-master')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'customer-master' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <Database className="w-4 h-4" />
           Customer Master Data
         </button>
-        <button onClick={() => setCurrentView('qa')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'qa' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <button onClick={() => setCurrentView('qa')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'qa' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <Shield className="w-4 h-4" />
           Quality Assurance
         </button>
-        <button onClick={() => setCurrentView('help')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'help' ? 'bg-blue-700 text-white' : 'text-blue-100 hover:bg-blue-600/50 hover:text-white'}`}>
+        <button onClick={() => setCurrentView('help')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'help' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <HelpCircle className="w-4 h-4" />
           Get Assistance
         </button>
       </nav>
     </div>
 
-    <div className="mt-auto p-6 border-t border-blue-600">
-      <div className="flex items-center gap-3 text-blue-100 hover:text-white transition-colors cursor-pointer mb-4">
+    <div className="mt-auto p-6 border-t border-[#001F2E]">
+      <div className="flex items-center gap-3 text-[#A8C8DB] hover:text-white transition-colors cursor-pointer mb-4">
         <Globe className="w-4 h-4" />
         <span className="text-xs font-medium">Region: Global</span>
       </div>
-      <div className="flex items-center gap-3 p-2 bg-blue-700/50 rounded-xl">
-        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center overflow-hidden">
+      <div className="flex items-center gap-3 p-2 bg-[#001F2E] rounded-lg">
+        <div className="w-8 h-8 bg-[#003354] rounded-full flex items-center justify-center overflow-hidden">
           <User className="w-5 h-5 text-white" />
         </div>
         <div className="flex flex-col">
           <span className="text-xs font-semibold text-white">Alex Rivers</span>
-          <span className="text-[10px] text-blue-200">Cash Application Lead · Global Billing Ops</span>
+          <span className="text-[10px] text-[#7AADCB]">Director, Receivables · Global Finance</span>
         </div>
       </div>
     </div>
@@ -1028,8 +1028,8 @@ export const MicroSolveDashboard = () => {
     };
 
     return <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0">
-      <h1 className="text-lg font-semibold text-slate-800">{getTitle()}</h1>
-      <div className="flex items-center gap-6">
+      <h1 className="text-sm font-semibold text-slate-800">{getTitle()}</h1>
+      <div className="flex items-center gap-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input type="text" placeholder="Global search..." className="pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 placeholder-slate-400 transition-all" />
@@ -1048,8 +1048,7 @@ export const MicroSolveDashboard = () => {
     </header>;
   };
   const MainDashboardView = () => {
-    // Calculate summary metrics
-    const totalCashApplied = 480; // $480M
+    const totalCashApplied = 480;
     const touchlessRate = kpis.touchlessRate;
     const failedApplications = kpis.failedToday;
     const autoResolved = kpis.autoResolved;
@@ -1059,9 +1058,7 @@ export const MicroSolveDashboard = () => {
     const positiveSentiment = 74;
     const avgQAScore = 81;
     const activeDisputes = 12;
-    const ptpCommitments = 8;
 
-    // Chart data for trends
     const cashAppliedTrend = [
       { day: 'Mon', amount: 320 },
       { day: 'Tue', amount: 410 },
@@ -1078,178 +1075,180 @@ export const MicroSolveDashboard = () => {
       { day: 'Fri', resolved: 31 },
     ];
 
-    const recentActivity = [
-      { id: 1, type: 'cash-applied', message: 'Applied $125K payment for Acme Corp', time: '2 mins ago', icon: CheckCircle2, color: 'text-emerald-600' },
-      { id: 2, type: 'dispute', message: 'New dispute opened: INV-4432', time: '15 mins ago', icon: AlertCircle, color: 'text-amber-600' },
-      { id: 3, type: 'ptp', message: 'Promise to Pay received from Tech Solutions', time: '32 mins ago', icon: Calendar, color: 'text-blue-600' },
-      { id: 4, type: 'qa', message: 'QA review completed: Score 85/100', time: '1 hour ago', icon: Shield, color: 'text-purple-600' },
-      { id: 5, type: 'call', message: 'Call analysis: Positive sentiment detected', time: '2 hours ago', icon: PhoneCall, color: 'text-green-600' },
+    const auditTrail = [
+      { id: 1, message: '$125K applied — Aldridge Pharma Group · INV-3821', time: '2 min ago', icon: CheckCircle2, color: 'text-emerald-600' },
+      { id: 2, message: 'Dispute escalated — Pinnacle Global · pricing discrepancy', time: '15 min ago', icon: AlertCircle, color: 'text-amber-600' },
+      { id: 3, message: 'PTP commitment logged — Sterling Trust Bank · INV-20011', time: '32 min ago', icon: Calendar, color: 'text-[#00263A]' },
+      { id: 4, message: 'QA review complete — 85/100 — Brightline Industries', time: '1 hr ago', icon: Shield, color: 'text-purple-600' },
+      { id: 5, message: 'Call intelligence — positive sentiment — Meridian Capital', time: '2 hr ago', icon: PhoneCall, color: 'text-green-600' },
     ];
 
     return (
-      <div className="flex-1 overflow-y-auto p-8 bg-[#F8FAFC]">
-        {/* Welcome Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Dashboard</h1>
-          <p className="text-slate-500">Overview of your treasury operations</p>
+      <div className="flex-1 overflow-y-auto p-5 bg-[#F8FAFC]">
+
+        {/* Page Header */}
+        <div className="flex items-start justify-between mb-5">
+          <div>
+            <div className="flex items-center gap-2 mb-0.5">
+              <h1 className="text-base font-semibold text-slate-800">Receivables Command Centre</h1>
+              <span className="flex items-center gap-1 px-2 py-0.5 bg-emerald-50 border border-emerald-100 rounded-full">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                <span className="text-[10px] font-semibold text-emerald-700">Live</span>
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">Kroll Receivables Intelligence · Global Finance Operations · Audit trail active</p>
+          </div>
+          <div className="text-right">
+            <div className="text-xs font-semibold text-slate-700">Alex Rivers</div>
+            <div className="text-[10px] text-slate-400">Director, Receivables · Global Finance</div>
+          </div>
         </div>
 
-        {/* Design principle: deterministic control, probabilistic reasoning */}
-        <div className="mb-6 grid gap-4 md:grid-cols-2">
-          <div className="flex items-start gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
-            <div className="mt-0.5 w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
-              <Brain className="w-4 h-4 text-blue-600" />
-            </div>
+        {/* Kroll Platform Value Strip */}
+        <div className="grid grid-cols-3 gap-3 mb-5">
+          <div className="flex items-center gap-3 px-4 py-2.5 bg-[#00263A] rounded-lg text-white">
+            <Brain className="w-4 h-4 text-[#7AADCB] flex-shrink-0" />
             <div>
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Probabilistic intelligence</div>
-              <p className="text-sm text-slate-700">AI interprets messy remittance, email, and call signals.</p>
+              <div className="text-[10px] font-semibold text-[#7AADCB] uppercase tracking-wider">Probabilistic Intelligence</div>
+              <div className="text-xs text-white/80">AI resolves remittance, email &amp; call signals end-to-end</div>
             </div>
           </div>
-          <div className="flex items-start gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
-            <div className="mt-0.5 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-emerald-600" />
-            </div>
+          <div className="flex items-center gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-lg">
+            <Shield className="w-4 h-4 text-[#00263A] flex-shrink-0" />
             <div>
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Deterministic enforcement</div>
-              <p className="text-sm text-slate-700">Posting rules, approvals, SoD, audit, and logging gate external writes by risk tier.</p>
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Deterministic Controls</div>
+              <div className="text-xs text-slate-600">SoD, approval gates &amp; audit logging enforced by risk tier</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-lg">
+            <Award className="w-4 h-4 text-[#00263A] flex-shrink-0" />
+            <div>
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Trusted Expertise</div>
+              <div className="text-xs text-slate-600">Kroll advisory-grade framework · independent &amp; audit-ready</div>
             </div>
           </div>
         </div>
 
-        {/* Primary KPI Cards */}
-        <div className="grid grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <DollarSign className="w-6 h-6" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-blue-200" />
+        {/* Primary KPIs */}
+        <div className="grid grid-cols-4 gap-4 mb-5">
+          <div className="bg-[#00263A] rounded-lg p-4 text-white shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-semibold text-[#7AADCB] uppercase tracking-wider">Cash Applied Today</span>
+              <TrendingUp className="w-3.5 h-3.5 text-[#7AADCB]" />
             </div>
-            <div className="text-sm font-medium text-blue-100 mb-1">Cash Applied Today</div>
-            <div className="text-3xl font-bold mb-1">${totalCashApplied}M</div>
-            <div className="text-xs text-blue-200">+12% from yesterday</div>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
-                <Zap className="w-6 h-6 text-emerald-600" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-emerald-500" />
-            </div>
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Auto-application rate (Touchless)</div>
-            <div className="text-3xl font-bold text-slate-800 mb-2">{touchlessRate}%</div>
-            <div className="text-xs text-slate-500">Share of receipts auto-applied without human review (Tier 2–3)</div>
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden mt-1">
-              <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${touchlessRate}%` }}></div>
+            <div className="text-2xl font-semibold tracking-tight mb-0.5">${totalCashApplied}M</div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] text-[#7AADCB]">+12% vs. prior day</span>
+              <span className="text-[10px] text-[#7AADCB]">·</span>
+              <span className="text-[10px] text-[#7AADCB]">Audit-ready</span>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center">
-                <XCircle className="w-6 h-6 text-rose-600" />
-              </div>
-              <TrendingDown className="w-5 h-5 text-rose-500" />
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Touchless Rate</span>
+              <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
             </div>
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Failed Applications</div>
-            <div className="text-3xl font-bold text-slate-800 mb-1">{failedApplications}</div>
-            <div className="text-xs text-slate-500">Requires attention</div>
+            <div className="text-2xl font-semibold text-slate-800 tracking-tight mb-1">{touchlessRate}%</div>
+            <div className="h-1 bg-slate-100 rounded-full overflow-hidden mb-1">
+              <div className="h-full bg-[#00263A] rounded-full" style={{ width: `${touchlessRate}%` }} />
+            </div>
+            <span className="text-[10px] text-slate-400">Auto-applied without human review · Tier 2–3</span>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-                <Cpu className="w-6 h-6 text-blue-600" />
-              </div>
-              <Activity className="w-5 h-5 text-blue-500" />
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Open Exceptions</span>
+              <AlertCircle className="w-3.5 h-3.5 text-rose-500" />
             </div>
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Auto-Resolved</div>
-            <div className="text-3xl font-bold text-slate-800 mb-1">{autoResolved}</div>
-            <div className="text-xs text-slate-500">By AI today</div>
+            <div className="text-2xl font-semibold text-rose-600 tracking-tight mb-0.5">{failedApplications}</div>
+            <span className="text-[10px] text-slate-400">Routed to analyst workbench · SLA tracked</span>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Resolved by AI</span>
+              <CheckCircle className="w-3.5 h-3.5 text-[#00263A]" />
+            </div>
+            <div className="text-2xl font-semibold text-[#00263A] tracking-tight mb-0.5">{autoResolved}</div>
+            <span className="text-[10px] text-slate-400">Closed end-to-end without escalation today</span>
           </div>
         </div>
 
-        {/* Secondary Metrics Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Exception Queue</div>
-            <div className="text-2xl font-bold text-slate-800">{exceptionQueue}</div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm" title="Average time from exception creation to resolution">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Exception cycle time</div>
-            <div className="text-2xl font-bold text-slate-800">{avgResolutionTime}<span className="text-sm text-slate-500"> mins</span></div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm" title="Share of auto-posts that required reversal or correction">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">False auto-post rate</div>
-            <div className="text-2xl font-bold text-slate-800">{kpis.falseAutoPostRate}%</div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Total Calls</div>
-            <div className="text-2xl font-bold text-slate-800">{totalCalls}</div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Positive Sentiment</div>
-            <div className="text-2xl font-bold text-slate-800">{positiveSentiment}%</div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Avg QA Score</div>
-            <div className="text-2xl font-bold text-slate-800">{avgQAScore}</div>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-            <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Active Disputes</div>
-            <div className="text-2xl font-bold text-slate-800">{activeDisputes}</div>
-          </div>
+        {/* Secondary Operational Metrics */}
+        <div className="grid grid-cols-7 gap-3 mb-5">
+          {[
+            { label: 'Exception Queue', value: exceptionQueue, sub: 'items open' },
+            { label: 'Avg Resolution', value: `${avgResolutionTime}m`, sub: 'cycle time' },
+            { label: 'Error Rate', value: `${kpis.falseAutoPostRate}%`, sub: 'false postings' },
+            { label: 'Unapplied Cash', value: '$3.2M', sub: 'unmatched' },
+            { label: 'Calls Logged', value: totalCalls, sub: `${positiveSentiment}% positive` },
+            { label: 'Active Disputes', value: activeDisputes, sub: 'in review' },
+            { label: 'QA Score', value: `${avgQAScore}/100`, sub: 'avg this week' },
+          ].map((m) => (
+            <div key={m.label} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
+              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">{m.label}</div>
+              <div className="text-sm font-semibold text-slate-800 leading-tight">{m.value}</div>
+              <div className="text-[10px] text-slate-400 mt-0.5">{m.sub}</div>
+            </div>
+          ))}
         </div>
 
-        {/* Charts and Activity Row */}
-        <div className="grid grid-cols-3 gap-6 mb-8">
-          {/* Cash Applied Trend */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-            <h3 className="font-bold text-slate-800 mb-4">Cash Applied Trend</h3>
-            <ResponsiveContainer width="100%" height={200}>
+        {/* Charts + Audit Trail */}
+        <div className="grid grid-cols-3 gap-4 mb-5">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-semibold text-slate-700">Applied Cash — 5-Day Trend</h3>
+              <span className="text-[10px] text-slate-400">$M</span>
+            </div>
+            <ResponsiveContainer width="100%" height={160}>
               <AreaChart data={cashAppliedTrend}>
                 <defs>
                   <linearGradient id="colorCash" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#00263A" stopOpacity={0.12} />
+                    <stop offset="95%" stopColor="#00263A" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="day" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
+                <XAxis dataKey="day" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
                 <Tooltip />
-                <Area type="monotone" dataKey="amount" stroke="#2563eb" fillOpacity={1} fill="url(#colorCash)" />
+                <Area type="monotone" dataKey="amount" stroke="#00263A" strokeWidth={1.5} fillOpacity={1} fill="url(#colorCash)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Resolution Trend */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-            <h3 className="font-bold text-slate-800 mb-4">Daily Resolutions</h3>
-            <ResponsiveContainer width="100%" height={200}>
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-semibold text-slate-700">Exceptions Resolved — Daily</h3>
+              <span className="text-[10px] text-slate-400">count</span>
+            </div>
+            <ResponsiveContainer width="100%" height={160}>
               <BarChart data={resolutionTrend}>
-                <XAxis dataKey="day" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
+                <XAxis dataKey="day" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10 }} axisLine={false} tickLine={false} />
                 <Tooltip />
-                <Bar dataKey="resolved" fill="#10b981" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="resolved" fill="#00263A" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Recent Activity */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-            <h3 className="font-bold text-slate-800 mb-4">Recent Activity</h3>
-            <div className="space-y-3">
-              {recentActivity.map((activity) => {
-                const Icon = activity.icon;
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-semibold text-slate-700">Audit Trail</h3>
+              <span className="flex items-center gap-1 text-[10px] text-slate-400">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                live
+              </span>
+            </div>
+            <div className="space-y-0.5">
+              {auditTrail.map((item) => {
+                const Icon = item.icon;
                 return (
-                  <div key={activity.id} className="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
-                    <div className={`w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center flex-shrink-0`}>
-                      <Icon className={`w-4 h-4 ${activity.color}`} />
-                    </div>
+                  <div key={item.id} className="flex items-start gap-2 py-1.5 px-1.5 hover:bg-slate-50 rounded transition-colors">
+                    <Icon className={`w-3 h-3 mt-0.5 flex-shrink-0 ${item.color}`} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-slate-800 font-medium">{activity.message}</p>
-                      <p className="text-xs text-slate-400 mt-0.5">{activity.time}</p>
+                      <p className="text-[11px] text-slate-700 font-medium leading-snug">{item.message}</p>
+                      <p className="text-[10px] text-slate-400">{item.time}</p>
                     </div>
                   </div>
                 );
@@ -1258,68 +1257,70 @@ export const MicroSolveDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-4 gap-6">
-          <button
-            onClick={() => setCurrentView('dashboard')}
-            className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-left group"
-          >
-            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors">
-              <Inbox className="w-6 h-6 text-blue-600" />
-            </div>
-            <h3 className="font-bold text-slate-800 mb-1">Failed Cash Applications</h3>
-            <p className="text-sm text-slate-500 mb-3">{failedApplications} items need attention</p>
-            <div className="flex items-center text-blue-600 text-sm font-medium">
-              <span>View Details</span>
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </button>
-
-          <button
-            onClick={() => setCurrentView('call-analysis')}
-            className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-left group"
-          >
-            <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-green-100 transition-colors">
-              <PhoneCall className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="font-bold text-slate-800 mb-1">Call Analysis</h3>
-            <p className="text-sm text-slate-500 mb-3">{totalCalls} calls analyzed</p>
-            <div className="flex items-center text-green-600 text-sm font-medium">
-              <span>View Insights</span>
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </button>
-
-          <button
-            onClick={() => setCurrentView('disputes')}
-            className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-left group"
-          >
-            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-100 transition-colors">
-              <FileText className="w-6 h-6 text-amber-600" />
-            </div>
-            <h3 className="font-bold text-slate-800 mb-1">Disputes</h3>
-            <p className="text-sm text-slate-500 mb-3">{activeDisputes} active disputes</p>
-            <div className="flex items-center text-amber-600 text-sm font-medium">
-              <span>Manage Disputes</span>
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </button>
-
-          <button
-            onClick={() => setCurrentView('qa')}
-            className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-left group"
-          >
-            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-100 transition-colors">
-              <Shield className="w-6 h-6 text-purple-600" />
-            </div>
-            <h3 className="font-bold text-slate-800 mb-1">Quality Assurance</h3>
-            <p className="text-sm text-slate-500 mb-3">Avg score: {avgQAScore}/100</p>
-            <div className="flex items-center text-purple-600 text-sm font-medium">
-              <span>View QA Dashboard</span>
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </button>
+        {/* Kroll End-to-End Workflow Navigation */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">End-to-End Workflows</h3>
+            <span className="text-[10px] text-slate-400">Kroll Receivables Intelligence · select a module</span>
+          </div>
+          <div className="grid grid-cols-4 gap-3">
+            {[
+              {
+                view: 'dashboard',
+                icon: Inbox,
+                label: 'Exception Workbench',
+                sub: `${failedApplications} items pending analyst review`,
+                tag: 'Cash Application',
+                color: 'text-[#00263A]',
+                tagBg: 'bg-slate-100 text-slate-600',
+              },
+              {
+                view: 'call-analysis',
+                icon: PhoneCall,
+                label: 'Call Intelligence',
+                sub: `${totalCalls} calls logged · ${positiveSentiment}% positive sentiment`,
+                tag: 'Collections',
+                color: 'text-emerald-700',
+                tagBg: 'bg-emerald-50 text-emerald-700',
+              },
+              {
+                view: 'disputes',
+                icon: FileText,
+                label: 'Dispute Resolution',
+                sub: `${activeDisputes} active · SLA monitoring · evidence routing`,
+                tag: 'Risk Advisory',
+                color: 'text-amber-700',
+                tagBg: 'bg-amber-50 text-amber-700',
+              },
+              {
+                view: 'qa',
+                icon: Shield,
+                label: 'Quality Assurance',
+                sub: `Avg ${avgQAScore}/100 · continuous audit · agent performance`,
+                tag: 'Compliance',
+                color: 'text-purple-700',
+                tagBg: 'bg-purple-50 text-purple-700',
+              },
+            ].map((item) => (
+              <button
+                key={item.view}
+                onClick={() => setCurrentView(item.view as any)}
+                className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md hover:border-slate-300 transition-all text-left group"
+              >
+                <div className="flex items-center justify-between mb-2.5">
+                  <item.icon className={`w-4 h-4 ${item.color}`} />
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${item.tagBg}`}>{item.tag}</span>
+                </div>
+                <div className="text-xs font-semibold text-slate-800 mb-1">{item.label}</div>
+                <div className="text-[10px] text-slate-500 leading-relaxed mb-2">{item.sub}</div>
+                <div className={`flex items-center gap-1 text-[10px] font-semibold ${item.color}`}>
+                  Open module <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
+
       </div>
     );
   };
@@ -1334,8 +1335,8 @@ export const MicroSolveDashboard = () => {
     return { tier: 'Tier 0', label: 'Assist', color: 'bg-slate-100 text-slate-700' };
   };
 
-  const DashboardView = () => <div className="flex-1 overflow-y-auto p-8">
-    <div className="flex flex-wrap gap-4 mb-8">
+  const DashboardView = () => <div className="flex-1 overflow-y-auto p-5">
+    <div className="flex flex-wrap gap-4 mb-5">
       <StatCard label="Auto-application rate" value={`${kpis.touchlessRate}%`} colorClass="text-emerald-600" />
       <StatCard label="Failed Today" value={kpis.failedToday} colorClass="text-rose-600" />
       <StatCard label="Exception Queue" value="24" colorClass="text-amber-500" />
@@ -1357,19 +1358,19 @@ export const MicroSolveDashboard = () => {
       </button>
     </div>
 
-    <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-slate-50/50 border-b border-slate-100">
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Email ID</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Region</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Email ID</th>
+            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
+            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Region</th>
+            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider">
               AI Confidence
             </th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Age</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Age</th>
+            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -1385,7 +1386,7 @@ export const MicroSolveDashboard = () => {
             }} transition={{
               duration: 0.5
             }} className={`group hover:bg-slate-50 transition-colors ${row.status === 'Processing' ? 'opacity-50' : ''}`}>
-              <td className="px-6 py-4 text-sm font-medium text-slate-900">
+              <td className="px-4 py-3 text-sm font-medium text-slate-900">
                 <div className="flex items-center gap-2">
                   {row.emailId}
                   {row.isNew && <span className="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold uppercase tracking-tight">
@@ -1393,10 +1394,10 @@ export const MicroSolveDashboard = () => {
                   </span>}
                 </div>
               </td>
-              <td className="px-6 py-4 text-sm text-slate-600">{row.customer}</td>
-              <td className="px-6 py-4 text-sm font-semibold text-slate-800">{row.amount}</td>
-              <td className="px-6 py-4 text-sm text-slate-500">{row.region}</td>
-              <td className="px-6 py-4">
+              <td className="px-4 py-3 text-sm text-slate-600">{row.customer}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-slate-800">{row.amount}</td>
+              <td className="px-4 py-3 text-sm text-slate-500">{row.region}</td>
+              <td className="px-4 py-3">
                 <div className="flex items-center gap-2">
                   <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <div className={`h-full rounded-full ${row.confidence > 90 ? 'bg-emerald-500' : 'bg-amber-500'}`} style={{
@@ -1411,8 +1412,8 @@ export const MicroSolveDashboard = () => {
                   {row.confidence > 90 ? 'High confidence' : 'Needs review'}
                 </div>}
               </td>
-              <td className="px-6 py-4 text-sm text-slate-400">{row.age}</td>
-              <td className="px-6 py-4">
+              <td className="px-4 py-3 text-sm text-slate-400">{row.age}</td>
+              <td className="px-4 py-3">
                 {row.status === 'Failed' ? <div className="flex items-center gap-2 text-rose-600 text-sm font-medium">
                   <XCircle className="w-4 h-4" />
                   <span>Failed</span>
@@ -1422,7 +1423,7 @@ export const MicroSolveDashboard = () => {
                 </div> : row.status === 'Posted' ? <div className="flex items-center gap-2 text-emerald-600 text-sm font-medium">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>{row.resolutionType === 'Resolved by AI' ? 'Resolved by AI' : row.resolutionType === 'Awaiting Documentation' ? 'Awaiting Documentation' : 'Posted'}</span>
-                </div> : <button onClick={() => handleRunAI(row.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors shadow-sm">
+                </div> : <button onClick={() => handleRunAI(row.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-[#00263A] text-white rounded-lg text-xs font-bold hover:bg-[#003354] transition-colors shadow-sm">
                   <Zap className="w-3.5 h-3.5 fill-current" />
                   Run AI Resolution
                 </button>}
@@ -1516,15 +1517,15 @@ export const MicroSolveDashboard = () => {
           {currentStep === 5 && (
             /* Castellan Screen 6 — Agentic Resolution Analysis */
             <div className="h-full flex flex-row">
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Agentic Resolution Analysis</h2>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Agentic Resolution Analysis</h2>
                   <p className="text-sm text-slate-600">The AI Resolution Agent consolidates evidence from all previous steps.</p>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Evidence Used</h3>
                     </div>
-                    <div className="p-6">
+                    <div className="p-4">
                       <table className="w-full text-sm">
                         <tbody className="divide-y divide-slate-100">
                           {[
@@ -1544,19 +1545,19 @@ export const MicroSolveDashboard = () => {
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2">AI Conclusion</h3>
                     <p className="text-sm text-blue-800">
                       Short payment classified as withholding deduction. Customer applied default NRA withholding rate (30%) instead of the 10% treaty rate.
                     </p>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Resolution Strategy</h3>
                     </div>
-                    <div className="p-6">
+                    <div className="p-4">
                       <table className="w-full text-sm">
                         <thead className="border-b border-slate-200">
                           <tr className="text-xs text-slate-500 uppercase">
@@ -1567,7 +1568,7 @@ export const MicroSolveDashboard = () => {
                         <tbody className="divide-y divide-slate-100">
                           <tr>
                             <td className="py-2 font-semibold text-slate-900">Clear invoice</td>
-                            <td className="py-2 text-slate-700">Payment identified and matched to FTI-000802.</td>
+                            <td className="py-2 text-slate-700">Payment identified and matched to KRL-INV-4863.</td>
                           </tr>
                           <tr>
                             <td className="py-2 font-semibold text-slate-900">Record withholding receivable</td>
@@ -1589,23 +1590,23 @@ export const MicroSolveDashboard = () => {
           {currentStep === 6 && (
             /* Castellan Screen 7 — Customer Communication Draft */
             <div className="h-full flex flex-row">
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Customer Communication Draft</h2>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Customer Communication Draft</h2>
                   <p className="text-sm text-slate-600">The Customer Outreach Agent prepares a message requesting documentation.</p>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Generated Email</h3>
                     </div>
-                    <div className="p-6 space-y-4">
+                    <div className="p-4 space-y-4">
                       <div>
                         <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Subject</p>
-                        <p className="text-sm font-medium text-slate-900">Documentation required – withholding deduction (Invoice FTI-000802)</p>
+                        <p className="text-sm font-medium text-slate-900">Documentation required – withholding deduction (Invoice KRL-INV-4863)</p>
                       </div>
                       <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700 whitespace-pre-line">
-                        {`Hello Castellan Restructuring Finance Team,
+                        {`Hello Castellan Restructuring Ltd — Finance Team,
 
-We received your payment of $35,000 against invoice FTI-000802 totaling $50,000.
+We received your payment of $35,000 against invoice KRL-INV-4863 totaling $50,000.
 
 Your remittance indicates a withholding deduction of $15,000.
 
@@ -1623,18 +1624,18 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2">Why this email?</h3>
                     <p className="text-sm text-blue-800">
                       This communication requests documentation and calculation details so that any over-withholding can be corrected in line with treaty rules.
                     </p>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-wrap gap-3">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 flex flex-wrap gap-3">
                     <button
                       onClick={handleNextStep}
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-bold hover:bg-[#003354] transition-colors"
                     >
                       <Send className="w-4 h-4" />
                       Send Email
@@ -1648,7 +1649,7 @@ Thank you.`}
                       Skip Communication
                     </button>
                     <p className="text-xs text-slate-600 w-full">
-                      On send, the system auto-creates a ERP work item for tracking and audit evidence.
+                      On send, the system auto-creates a D365 work item for tracking and audit evidence.
                     </p>
                   </div>
                 </div>
@@ -1659,11 +1660,11 @@ Thank you.`}
           {currentStep === 7 && (
             /* Castellan Screen 8 — Accounting Posting Proposal */
             <div className="h-full flex flex-row">
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Accounting Posting Proposal</h2>
-                  <p className="text-sm text-slate-600">The ERP Posting Agent prepares the accounting resolution.</p>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Accounting Posting Proposal</h2>
+                  <p className="text-sm text-slate-600">The D365 Posting Agent prepares the accounting resolution.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
                     <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3">Posting Recommendation (Conservative)</h3>
                     <ul className="text-sm text-slate-700 space-y-1 list-disc list-inside">
                       <li>Clear invoice using net payment of $35,000.</li>
@@ -1671,11 +1672,11 @@ Thank you.`}
                       <li>Park the remaining $10,000 variance in a Short Pay Dispute/Suspense account.</li>
                     </ul>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Proposed Journal Entry</h3>
                     </div>
-                    <div className="p-6 font-mono text-sm space-y-2 text-slate-800">
+                    <div className="p-4 font-mono text-sm space-y-2 text-slate-800">
                       <p>Dr Cash                          $35,000</p>
                       <p>Dr Withholding Tax Receivable     $5,000</p>
                       <p>Dr Short Pay Dispute/Suspense    $10,000</p>
@@ -1684,14 +1685,14 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2">System Actions if Approved</h3>
                     <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                      <li>Apply payment to invoice FTI-000802.</li>
+                      <li>Apply payment to invoice KRL-INV-4863.</li>
                       <li>Record deduction using reason code <span className="font-mono">WHT_US</span>.</li>
-                      <li>Mark invoice as Settled in ERP.</li>
+                      <li>Mark invoice as Settled in D365.</li>
                       <li>Create follow-up task to track receipt of withholding documentation.</li>
                     </ul>
                   </div>
@@ -1703,22 +1704,22 @@ Thank you.`}
           {currentStep === 8 && (
             /* Castellan Screen 9 — Human Review (Before Posting) */
             <div className="h-full flex flex-row">
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Human Review (Before Posting)</h2>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Human Review (Before Posting)</h2>
                   <p className="text-sm text-slate-600">Since this affects financial records, the system requires human approval before posting.</p>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-2">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4 space-y-2">
                     <h3 className="text-sm font-bold text-slate-800 mb-2">AI Resolution Summary</h3>
                     <p className="text-sm text-slate-700">AI Investigation Complete.</p>
                     <p className="text-sm text-slate-700 mt-2">Reason for short payment: <span className="font-semibold">Combination of expected withholding and unexplained variance</span></p>
                     <p className="text-sm text-slate-700">Expected withholding (10% treaty rate): <span className="font-semibold">$5,000</span> · Remaining variance parked to dispute/suspense: <span className="font-semibold">$10,000</span></p>
                     <p className="text-sm text-slate-700">Customer documentation status: <span className="font-semibold">W-8BEN-E expired</span></p>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Evidence Panel</h3>
                     </div>
-                    <div className="p-6">
+                    <div className="p-4">
                       <table className="w-full text-sm">
                         <thead className="border-b border-slate-200">
                           <tr className="text-xs text-slate-500 uppercase">
@@ -1737,14 +1738,14 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-slate-800 mb-3">Approval Options</h3>
                     <div className="flex flex-wrap gap-3">
-                      <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors">
+                      <button className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-bold hover:bg-[#003354] transition-colors">
                         <CheckCircle2 className="w-4 h-4" />
-                        Approve &amp; Post to ERP
+                        Approve &amp; Post to D365
                       </button>
                       <button className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
                         <FileText className="w-4 h-4" />
@@ -1767,25 +1768,25 @@ Thank you.`}
           {currentStep === 9 && (
             /* Castellan Screen 10 — Posting Execution */
             <div className="h-full flex flex-row">
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 flex flex-col justify-center">
-                <div className="max-w-xl mx-auto text-center space-y-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
+                <div className="max-w-xl mx-auto text-center space-y-4">
                   <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-16 h-16 mx-auto bg-blue-50 rounded-full flex items-center justify-center">
                     <RefreshCw className="w-8 h-8 text-blue-600" />
                   </motion.div>
-                  <h2 className="text-xl font-bold text-slate-800">Posting to ERP</h2>
+                  <h2 className="text-sm font-semibold text-slate-800">Posting to D365</h2>
                   <div className="space-y-2 text-sm text-slate-700 text-left max-w-sm mx-auto">
-                    <p>• Applying payment to invoice FTI-000802…</p>
+                    <p>• Applying payment to invoice KRL-INV-4863…</p>
                     <p>• Posting withholding receivable of $15,000…</p>
                     <p>• Updating AR ledger balances…</p>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200 flex flex-col justify-center">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200 flex flex-col justify-center">
                 <div className="max-w-md mx-auto space-y-4">
-                  <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-800 mb-2">Posting Summary</h3>
                     <p className="text-xs text-slate-600 mb-1">Case: REM_008 — Castellan Restructuring Ltd</p>
-                    <p className="text-xs text-slate-600 mb-1">Invoice: FTI-000802</p>
+                    <p className="text-xs text-slate-600 mb-1">Invoice: KRL-INV-4863</p>
                     <p className="text-xs text-slate-600">Journal: Dr Cash 35k / Dr WHT Rec 15k / Cr AR 50k</p>
                   </div>
                 </div>
@@ -1796,13 +1797,13 @@ Thank you.`}
           {currentStep === 10 && (
             /* Castellan Screen 11 — Resolution Completed */
             <div className="h-full flex flex-row">
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 flex flex-col justify-center">
-                <div className="max-w-xl mx-auto space-y-6 text-center">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
+                <div className="max-w-xl mx-auto space-y-4 text-center">
                   <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-10 h-10 text-emerald-600" />
                   </div>
-                  <h2 className="text-2xl font-bold text-slate-800">AI Resolution Completed</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden text-left max-w-sm mx-auto">
+                  <h2 className="text-sm font-semibold text-slate-800">AI Resolution Completed</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden text-left max-w-sm mx-auto">
                     <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800">Resolution Summary</h3>
                     </div>
@@ -1818,9 +1819,9 @@ Thank you.`}
                   <p className="text-sm font-bold text-emerald-700">Case Status: Resolved – Awaiting Customer Documentation</p>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200 flex flex-col justify-center">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200 flex flex-col justify-center">
                 <div className="max-w-md mx-auto space-y-4">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">Dashboard Update</p>
                     <p className="text-sm text-blue-800">
                       REM_008 — Castellan Restructuring Ltd will appear in the Failed Cash Applications dashboard as <span className="font-semibold">Awaiting Documentation</span>.
@@ -1835,36 +1836,36 @@ Thank you.`}
         {/* Footer: Back + Next Step for Castellan steps 6–11 */}
         <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
           {currentStep === 10 ? (
-            <button onClick={handleNihonBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+            <button onClick={handleNihonBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
               <ArrowLeft className="w-5 h-5" />
               Back to Failed Cash Applications
             </button>
           ) : currentStep === 8 ? (
             <>
-              <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+              <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
                 <ArrowLeft className="w-5 h-5" />
                 Back
               </button>
-              <button onClick={handleNihonApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+              <button onClick={handleNihonApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
                 <CheckCircle2 className="w-5 h-5" />
-                Approve & Post to ERP
+                Approve & Post to D365
               </button>
-              <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+              <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
                 <FileText className="w-5 h-5" />
                 Create Journal Draft
               </button>
-              <button className="flex items-center gap-3 px-6 py-3 bg-white text-rose-700 border border-rose-200 rounded-xl text-base font-bold hover:bg-rose-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+              <button className="flex items-center gap-3 px-6 py-3 bg-white text-rose-700 border border-rose-200 rounded-lg text-base font-bold hover:bg-rose-50 transition-colors shadow-sm active:scale-95 transform duration-200">
                 <XCircle className="w-5 h-5" />
                 Reject Recommendation
               </button>
             </>
           ) : (
             <>
-              <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+              <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
                 <ArrowLeft className="w-5 h-5" />
                 Back
               </button>
-              <button onClick={handleNextStep} className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+              <button onClick={handleNextStep} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
                 Next Step
                 <ArrowRight className="w-5 h-5" />
               </button>
@@ -1919,24 +1920,24 @@ Thank you.`}
           {processingRowId === '9' ? (
             /* Bank Fees Step 0: Case Overview */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-slate-100 rounded-lg">
                         <Mail className="w-5 h-5 text-slate-600" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-slate-800">Source Document</h2>
+                        <h2 className="text-sm font-semibold text-slate-800">Source Document</h2>
                         <p className="text-sm text-slate-500">Original email content</p>
                       </div>
                     </div>
                     <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">Outlook Format</span>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
                           <Building2 className="w-5 h-5 text-slate-600" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -1944,55 +1945,55 @@ Thank you.`}
                             <span className="font-semibold text-slate-900 truncate">Vantage Global Advisors</span>
                             <span className="text-xs text-slate-500 whitespace-nowrap">Mar 18, 10:22 AM</span>
                           </div>
-                          <div className="text-sm text-slate-600 truncate">Subject: Payment advice – Invoice FTI-000825</div>
-                          <div className="text-xs text-slate-400 mt-1">To: ar@microsolve.com</div>
+                          <div className="text-sm text-slate-600 truncate">Subject: Payment advice – Invoice KRL-INV-4890</div>
+                          <div className="text-xs text-slate-400 mt-1">To: ar@kroll.com</div>
                         </div>
                       </div>
                     </div>
-                    <div className="p-8">
-                      <div className="prose prose-sm max-w-none text-slate-600">
+                    <div className="p-4">
+                      <div className="prose prose-sm max-w-none text-xs text-slate-600">
                         <p>Hello,</p>
-                        <p>Please find below details of our payment for invoice FTI-000825 (Consulting Services – Mar 2026).</p>
+                        <p>Please find below details of our payment for invoice KRL-INV-4890 (Restructuring Advisory Retainer – Mar 2026).</p>
                         <p className="mt-4">We have transferred <strong>$24,850</strong> to your account. Remittance advice is attached.</p>
-                        <p className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">Best regards,<br />Vantage Solutions Finance Team</p>
+                        <p className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">Best regards,<br />Vantage Global Advisors — Finance</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 bg-blue-100 rounded-lg">
                       <FileText className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold text-slate-800">Kroll Case Resolution</h2>
+                      <h2 className="text-sm font-semibold text-slate-800">Kroll Case Resolution</h2>
                       <p className="text-sm text-slate-500">Case Summary</p>
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Case Summary Panel</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { field: 'Email ID', value: 'REM_009' },
                         { field: 'Customer', value: 'Vantage Global Advisors' },
-                        { field: 'Invoice', value: 'FTI-000825' },
-                        { field: 'Invoice Description', value: 'Consulting Services – Mar 2026' },
+                        { field: 'Invoice', value: 'KRL-INV-4890' },
+                        { field: 'Invoice Description', value: 'Restructuring Advisory Retainer – Mar 2026' },
                         { field: 'Invoice Amount', value: '$25,000' },
                         { field: 'Payment Received', value: '$24,850' },
                         { field: 'Short Payment', value: '$150' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                          <span className="text-sm text-slate-500">{row.field}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
                       <Cpu className="w-4 h-4" />
                       AI System Message
@@ -2001,7 +2002,7 @@ Thank you.`}
                       Payment variance detected. Small deduction in typical bank fee range. Initiating bank-fee path (not WHT).
                     </p>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl p-5 text-center">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 text-center">
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Inbox className="w-6 h-6 text-blue-600" />
                     </div>
@@ -2016,15 +2017,15 @@ Thank you.`}
             /* Nakamura Holdings Step 0: Case Overview */
             <React.Fragment>
               {/* Left: Email / Source Document */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-slate-100 rounded-lg">
                         <Mail className="w-5 h-5 text-slate-600" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-slate-800">Source Document</h2>
+                        <h2 className="text-sm font-semibold text-slate-800">Source Document</h2>
                         <p className="text-sm text-slate-500">Original email content</p>
                       </div>
                     </div>
@@ -2032,10 +2033,10 @@ Thank you.`}
                       Outlook Format
                     </span>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
                           <Building2 className="w-5 h-5 text-slate-600" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -2043,19 +2044,19 @@ Thank you.`}
                             <span className="font-semibold text-slate-900 truncate">Nakamura Holdings KK Ltd</span>
                             <span className="text-xs text-slate-500 whitespace-nowrap">Feb 17, 9:15 AM</span>
                           </div>
-                          <div className="text-sm text-slate-600 truncate">Subject: Payment advice – Invoice FTI-000781</div>
-                          <div className="text-xs text-slate-400 mt-1">To: ar@microsolve.com</div>
+                          <div className="text-sm text-slate-600 truncate">Subject: Payment advice – Invoice KRL-INV-4847</div>
+                          <div className="text-xs text-slate-400 mt-1">To: ar@kroll.com</div>
                         </div>
                       </div>
                     </div>
-                    <div className="p-8">
-                      <div className="prose prose-sm max-w-none text-slate-600">
+                    <div className="p-4">
+                      <div className="prose prose-sm max-w-none text-xs text-slate-600">
                         <p>Hello,</p>
-                        <p>Please find below details of our payment for invoice FTI-000781 (Royalty License Fee – Feb 2026).</p>
+                        <p>Please find below details of our payment for invoice KRL-INV-4847 (Valuation Advisory Services – Feb 2026).</p>
                         <p className="mt-4">We have transferred <strong>$70,000</strong> to your account.</p>
                         <p className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">
                           Best regards,<br />
-                          Nakamura Holdings Finance Team
+                          Nakamura Holdings KK — AP Team
                         </p>
                       </div>
                     </div>
@@ -2063,39 +2064,39 @@ Thank you.`}
                 </div>
               </motion.div>
               {/* Right: Case Summary Panel + AI System Message */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-2 bg-blue-100 rounded-lg">
                       <FileText className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold text-slate-800">Kroll Case Resolution</h2>
+                      <h2 className="text-sm font-semibold text-slate-800">Kroll Case Resolution</h2>
                       <p className="text-sm text-slate-500">Case Summary</p>
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Case Summary Panel</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { field: 'Email ID', value: 'REM_007' },
                         { field: 'Customer', value: 'Nakamura Holdings KK Ltd' },
-                        { field: 'Invoice', value: 'FTI-000781' },
-                        { field: 'Invoice Description', value: 'Royalty License Fee – Feb 2026' },
+                        { field: 'Invoice', value: 'KRL-INV-4847' },
+                        { field: 'Invoice Description', value: 'Valuation Advisory Services – Feb 2026' },
                         { field: 'Invoice Amount', value: '$100,000' },
                         { field: 'Payment Received', value: '$70,000' },
                         { field: 'Short Payment', value: '$30,000' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                          <span className="text-sm text-slate-500">{row.field}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
                       <Cpu className="w-4 h-4" />
                       AI System Message
@@ -2104,7 +2105,7 @@ Thank you.`}
                       Payment variance detected. Initiating automated investigation using remittance data, customer tax profile, and historical payment behavior.
                     </p>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl p-5 text-center">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 text-center">
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Inbox className="w-6 h-6 text-blue-600" />
                     </div>
@@ -2112,7 +2113,7 @@ Thank you.`}
                     <p className="text-slate-600 text-xs mt-1">Amount: $100,000 · Region: NA</p>
                     <p className="text-slate-500 text-xs font-medium mt-1">AI Confidence: 94%</p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <div className="flex items-start gap-3">
                       <Clock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                       <div>
@@ -2127,12 +2128,12 @@ Thank you.`}
           ) : processingRowId === '8' ? (
             /* Castellan Step 0: Case Overview */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
                           <Building2 className="w-5 h-5 text-slate-600" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -2140,28 +2141,28 @@ Thank you.`}
                             <span className="font-semibold text-slate-900 truncate">Castellan Restructuring Ltd</span>
                             <span className="text-xs text-slate-500 whitespace-nowrap">17 Feb 2026, 11:22 AM</span>
                           </div>
-                          <div className="text-sm text-slate-600 truncate">Subject: Payment – Invoice FTI-000802</div>
-                          <div className="text-xs text-slate-400 mt-1">To: ar@microsolve.com</div>
+                          <div className="text-sm text-slate-600 truncate">Subject: Payment – Invoice KRL-INV-4863</div>
+                          <div className="text-xs text-slate-400 mt-1">To: ar@kroll.com</div>
                         </div>
                       </div>
                     </div>
-                    <div className="p-8">
-                      <div className="prose prose-sm max-w-none text-slate-600">
+                    <div className="p-4">
+                      <div className="prose prose-sm max-w-none text-xs text-slate-600">
                         <p>Hello,</p>
                         <p>
-                          We have sent a payment of <strong>$35,000</strong> against invoice <strong>FTI-000802</strong> (Software Subscription – Feb 2026).
+                          We have sent a payment of <strong>$35,000</strong> against invoice <strong>KRL-INV-4863</strong> (Transaction Due Diligence – Feb 2026).
                           A withholding amount of <strong>$15,000</strong> has been applied in line with our current tax setup.
                         </p>
                         <p>The detailed remittance advice is attached for your records.</p>
-                        <p className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">Best regards, Castellan Restructuring Finance</p>
+                        <p className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">Best regards, Castellan Restructuring Ltd — Finance</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-center gap-3">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 flex items-center gap-3">
                     <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-bold text-amber-900">Over-withholding suspected → Human Review Required</p>
@@ -2169,28 +2170,28 @@ Thank you.`}
                       <p className="text-xs text-amber-700 mt-1">AI detects 30% withholding, but treaty rate should be 10% if documentation were valid.</p>
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Case Summary</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { field: 'Email ID', value: 'REM_008' },
                         { field: 'Customer', value: 'Castellan Restructuring Ltd' },
-                        { field: 'Invoice', value: 'FTI-000802' },
+                        { field: 'Invoice', value: 'KRL-INV-4863' },
                         { field: 'Description', value: 'Software Subscription' },
                         { field: 'Invoice Amount', value: '$50,000' },
                         { field: 'Payment Received', value: '$35,000' },
                         { field: 'Short Pay', value: '$15,000' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                          <span className="text-sm text-slate-500">{row.field}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
                       <Cpu className="w-4 h-4" />
                       System message
@@ -2199,7 +2200,7 @@ Thank you.`}
                       Payment variance detected. Running automated analysis using remittance data, customer tax profile and treaty validation.
                     </p>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl p-5 text-center">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 text-center">
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Inbox className="w-6 h-6 text-blue-600" />
                     </div>
@@ -2214,15 +2215,15 @@ Thank you.`}
             /* Harlow Crane LLP Step 0: Reading Remittance - Missing Data */
             <React.Fragment>
               {/* Left: Email Mockup - Scrollable */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-slate-100 rounded-lg">
                         <Mail className="w-5 h-5 text-slate-600" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-slate-800">Source Document</h2>
+                        <h2 className="text-sm font-semibold text-slate-800">Source Document</h2>
                         <p className="text-sm text-slate-500">Original email content</p>
                       </div>
                     </div>
@@ -2231,10 +2232,10 @@ Thank you.`}
                     </span>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
                           <Building2 className="w-5 h-5 text-slate-600" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -2242,17 +2243,16 @@ Thank you.`}
                             <span className="font-semibold text-slate-900 truncate">Harlow Crane LLP</span>
                             <span className="text-xs text-slate-500 whitespace-nowrap">Feb 17, 8:30 AM</span>
                           </div>
-                          <div className="text-sm text-slate-600 truncate">Subject: Invoice payment</div>
-                          <div className="text-xs text-slate-400 mt-1">To: ar@microsolve.com</div>
+                          <div className="text-sm text-slate-600 truncate">Subject: Remittance Advice – Matters KRL-MAT-2025-0312 & KRL-MAT-2025-0318</div>
+                          <div className="text-xs text-slate-400 mt-1">To: ar@kroll.com</div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="p-8">
-                      <div className="prose prose-sm max-w-none text-slate-600">
-                        <p>Hello,</p>
-                        <p>We have sent a payment for our account.</p>
-                        <p className="mt-4 text-slate-500 italic">Invoice payment</p>
+                    <div className="p-4">
+                      <div className="prose prose-sm max-w-none text-xs text-slate-600">
+                        <p>Dear Kroll AR Team,</p>
+                        <p>Please find attached our wire transfer covering outstanding advisory fees for Matters KRL-MAT-2025-0312 (Restructuring Advisory) and KRL-MAT-2025-0318 (Valuation Advisory). Total payment of <strong>$142,500.00</strong> was sent via wire on <strong>17 Feb 2026</strong>. Kindly apply against open invoices on our account.</p>
                         <p className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">
                           Best regards,<br />
                           Harlow Crane LLP<br />
@@ -2261,7 +2261,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-6">
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                     <div className="flex items-center gap-3 mb-4">
                       <FileText className="w-5 h-5 text-slate-500" />
                       <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Bank Statement Data</h3>
@@ -2289,7 +2289,7 @@ Thank you.`}
               </motion.div>
 
               {/* Right: AI Extraction - Scrollable */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
                 <div className="max-w-4xl mx-auto space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -2297,7 +2297,7 @@ Thank you.`}
                         <Zap className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-slate-800">AI Analysis</h2>
+                        <h2 className="text-sm font-semibold text-slate-800">AI Analysis</h2>
                         <p className="text-sm text-slate-500">Live extraction results</p>
                       </div>
                     </div>
@@ -2310,7 +2310,7 @@ Thank you.`}
                   {/* Grid Layout: 2 columns */}
                   <div className="grid grid-cols-2 gap-4">
                     {/* Document Source */}
-                    <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                    <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                       <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                         <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                           <FileText className="w-4 h-4 text-slate-600" />
@@ -2338,7 +2338,7 @@ Thank you.`}
                     </div>
 
                     {/* Extracted Payment Signals */}
-                    <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                    <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                       <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                         <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                           <DollarSign className="w-4 h-4 text-slate-600" />
@@ -2369,7 +2369,7 @@ Thank you.`}
                     </div>
 
                     {/* AI Interpretation */}
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl shadow-sm overflow-hidden">
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg shadow-sm overflow-hidden">
                       <div className="bg-amber-100 border-b border-amber-200 px-4 py-3">
                         <h3 className="text-sm font-bold text-amber-900 flex items-center gap-2">
                           <Cpu className="w-4 h-4 text-amber-700" />
@@ -2402,7 +2402,7 @@ Thank you.`}
                     </div>
 
                     {/* Confidence */}
-                    <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                    <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                       <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                         <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                           <Activity className="w-4 h-4 text-slate-600" />
@@ -2431,7 +2431,7 @@ Thank you.`}
                   </div>
 
                   {/* Result - Full Width */}
-                  <div className="bg-rose-50 border-2 border-rose-200 rounded-xl shadow-sm overflow-hidden">
+                  <div className="bg-rose-50 border-2 border-rose-200 rounded-lg shadow-sm overflow-hidden">
                     <div className="bg-rose-100 border-b border-rose-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-rose-900 flex items-center gap-2">
                         <AlertTriangle className="w-4 h-4 text-rose-700" />
@@ -2459,15 +2459,15 @@ Thank you.`}
             /* Sterling Trust Bank Step 0: Reading Remittance */
             <React.Fragment>
               {/* Left: Email Mockup - Scrollable */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-slate-100 rounded-lg">
                         <Mail className="w-5 h-5 text-slate-600" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-slate-800">Source Document</h2>
+                        <h2 className="text-sm font-semibold text-slate-800">Source Document</h2>
                         <p className="text-sm text-slate-500">Original email content</p>
                       </div>
                     </div>
@@ -2476,10 +2476,10 @@ Thank you.`}
                     </span>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
                           <Building2 className="w-5 h-5 text-indigo-600" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -2487,14 +2487,14 @@ Thank you.`}
                             <span className="font-semibold text-slate-900 truncate">Sterling Trust Bank Accounts Payable</span>
                             <span className="text-xs text-slate-500 whitespace-nowrap">Feb 17, 10:15 AM</span>
                           </div>
-                          <div className="text-sm text-slate-600 truncate">Subject: Payment for outstanding invoices – Sterling Trust Bank Europe</div>
-                          <div className="text-xs text-slate-400 mt-1">To: ar@microsolve.com</div>
+                          <div className="text-sm text-slate-600 truncate">Subject: Payment for outstanding invoices – Sterling Trust Bank</div>
+                          <div className="text-xs text-slate-400 mt-1">To: ar@kroll.com</div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="p-8">
-                      <div className="prose prose-sm max-w-none text-slate-600">
+                    <div className="p-4">
+                      <div className="prose prose-sm max-w-none text-xs text-slate-600">
                         <p>Hi AR Team,</p>
                         <p>We have sent a payment for the account.</p>
 
@@ -2517,7 +2517,7 @@ Thank you.`}
                           </div>
                         </div>
 
-                        <p>Please allocate this to the Sterling Trust Bank Europe account.</p>
+                        <p>Please allocate this to the Sterling Trust Bank account.</p>
                         <p className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">
                           Best regards,<br />
                           Sterling Trust Bank Finance Team<br />
@@ -2529,15 +2529,15 @@ Thank you.`}
               </motion.div>
 
               {/* Right: AI Extraction - Scrollable */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-blue-100 rounded-lg">
                         <Zap className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-slate-800">AI Analysis</h2>
+                        <h2 className="text-sm font-semibold text-slate-800">AI Analysis</h2>
                         <p className="text-sm text-slate-500">Live extraction results</p>
                       </div>
                     </div>
@@ -2547,7 +2547,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-4 shadow-sm">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-4 shadow-sm">
                     <div className="bg-amber-100 p-2 rounded-full mt-0.5">
                       <AlertCircle className="w-5 h-5 text-amber-600" />
                     </div>
@@ -2559,7 +2559,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Historical payment behavior (last 12 months)</h3>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center py-2 border-b border-slate-100">
@@ -2577,13 +2577,13 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                  <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
                     <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
-                      <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center shadow-lg">
-                        <FileText className="w-6 h-6 text-white" />
+                      <div className="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center shadow-lg">
+                        <FileText className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-base font-bold text-slate-800">Extracted from document</h3>
+                        <h3 className="text-sm font-bold text-slate-800">Extracted from document</h3>
                         <p className="text-sm text-slate-500">Key fields identified by AI</p>
                       </div>
                     </div>
@@ -2592,7 +2592,7 @@ Thank you.`}
                       {/* Customer Name */}
                       <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between group">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-blue-600 group-hover:shadow-md transition-all">
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-blue-600 group-hover:shadow-md transition-all">
                             <Building2 className="w-5 h-5" />
                           </div>
                           <div>
@@ -2606,7 +2606,7 @@ Thank you.`}
                       {/* Amount */}
                       <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between group">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-blue-600 group-hover:shadow-md transition-all">
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-blue-600 group-hover:shadow-md transition-all">
                             <DollarSign className="w-5 h-5" />
                           </div>
                           <div>
@@ -2620,7 +2620,7 @@ Thank you.`}
                       {/* Invoice Reference - Not Found */}
                       <div className="p-4 bg-amber-50/30 hover:bg-amber-50 transition-colors flex items-center justify-between group border-l-4 border-amber-400">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-amber-500 shadow-sm">
+                          <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-amber-500 shadow-sm">
                             <FileText className="w-5 h-5" />
                           </div>
                           <div>
@@ -2640,15 +2640,15 @@ Thank you.`}
             /* Aldridge Pharma Step 0 (Original) */
             <React.Fragment>
               {/* Left: Email Mockup - Scrollable */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-slate-100 rounded-lg">
                         <Mail className="w-5 h-5 text-slate-600" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-slate-800">Source Document</h2>
+                        <h2 className="text-sm font-semibold text-slate-800">Source Document</h2>
                         <p className="text-sm text-slate-500">Original email content</p>
                       </div>
                     </div>
@@ -2657,10 +2657,10 @@ Thank you.`}
                     </span>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                           <Building2 className="w-5 h-5 text-blue-600" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -2669,13 +2669,13 @@ Thank you.`}
                             <span className="text-xs text-slate-500 whitespace-nowrap">Feb 17, 9:42 AM</span>
                           </div>
                           <div className="text-sm text-slate-600 truncate">Subject: Payment Confirmation - Wire Transfer</div>
-                          <div className="text-xs text-slate-400 mt-1">To: ar@microsolve.com</div>
+                          <div className="text-xs text-slate-400 mt-1">To: ar@kroll.com</div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="p-8">
-                      <div className="prose prose-sm max-w-none text-slate-600">
+                    <div className="p-4">
+                      <div className="prose prose-sm max-w-none text-xs text-slate-600">
                         <p>Dear Accounts Receivable Team,</p>
                         <p>Please find the payment details for our outstanding invoice:</p>
 
@@ -2686,7 +2686,7 @@ Thank you.`}
                           </div>
                           <div className="flex justify-between items-center py-1 border-b border-slate-200/50">
                             <span className="text-slate-500 text-xs font-medium uppercase tracking-wider">Invoice Ref</span>
-                            <span className="font-mono font-medium text-slate-700 bg-white px-2 py-0.5 rounded border border-slate-200">INV-7845</span>
+                            <span className="font-mono font-medium text-slate-700 bg-white px-2 py-0.5 rounded border border-slate-200">KRL-INV-4845</span>
                           </div>
                           <div className="flex justify-between items-center py-1 border-b border-slate-200/50">
                             <span className="text-slate-500 text-xs font-medium uppercase tracking-wider">Method</span>
@@ -2715,15 +2715,15 @@ Thank you.`}
               </motion.div>
 
               {/* Right: AI Extraction - Scrollable */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-blue-100 rounded-lg">
                         <Zap className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-slate-800">AI Analysis</h2>
+                        <h2 className="text-sm font-semibold text-slate-800">AI Analysis</h2>
                         <p className="text-sm text-slate-500">Live extraction results</p>
                       </div>
                     </div>
@@ -2733,13 +2733,13 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-blue-50 to-white border-b border-slate-100">
-                      <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
-                        <Check className="w-6 h-6 text-white" />
+                  <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                    <div className="flex items-center gap-4 p-6 bg-slate-50/50 border-b border-slate-100">
+                      <div className="w-8 h-8 bg-[#00263A] rounded-lg flex items-center justify-center shadow-lg shadow-slate-200">
+                        <Check className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-base font-bold text-slate-800">Email Source Identified</h3>
+                        <h3 className="text-sm font-bold text-slate-800">Email Source Identified</h3>
                         <p className="text-sm text-slate-500">Verified sender from known customer domain</p>
                       </div>
                     </div>
@@ -2747,7 +2747,7 @@ Thank you.`}
                     <div className="divide-y divide-slate-100">
                       <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between group">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-blue-600 group-hover:shadow-md transition-all">
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-blue-600 group-hover:shadow-md transition-all">
                             <Mail className="w-5 h-5" />
                           </div>
                           <div>
@@ -2760,7 +2760,7 @@ Thank you.`}
 
                       <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between group">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-amber-600 group-hover:shadow-md transition-all">
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-amber-600 group-hover:shadow-md transition-all">
                             <Building2 className="w-5 h-5" />
                           </div>
                           <div>
@@ -2773,7 +2773,7 @@ Thank you.`}
 
                       <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between group">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-purple-600 group-hover:shadow-md transition-all">
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-purple-600 group-hover:shadow-md transition-all">
                             <FileCheck className="w-5 h-5" />
                           </div>
                           <div>
@@ -2786,7 +2786,7 @@ Thank you.`}
 
                       <div className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between group">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-rose-600 group-hover:shadow-md transition-all">
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-rose-600 group-hover:shadow-md transition-all">
                             <Calendar className="w-5 h-5" />
                           </div>
                           <div>
@@ -2799,7 +2799,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-start gap-4 shadow-sm">
+                  <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-4 flex items-start gap-4 shadow-sm">
                     <div className="bg-emerald-100 p-2 rounded-full mt-0.5">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                     </div>
@@ -2821,17 +2821,17 @@ Thank you.`}
           {processingRowId === '9' ? (
             /* Bank Fees Step 1: Bank Fee Likelihood */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Match & Reconciliation Agent</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Match & Reconciliation Agent</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Matching Results</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { param: 'Payer', result: 'Vantage Global Advisors' },
-                        { param: 'Matched Invoice', result: 'FTI-000825' },
+                        { param: 'Matched Invoice', result: 'KRL-INV-4890' },
                         { param: 'Match Confidence', result: '97%' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
@@ -2841,11 +2841,11 @@ Thank you.`}
                       ))}
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Payment Comparison</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { item: 'Invoice Amount', amount: '$25,000' },
                         { item: 'Payment Received', amount: '$24,850' },
@@ -2860,21 +2860,21 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-amber-900 mb-2">Variance Pattern Analysis</h3>
                     <p className="text-xs text-amber-800 mb-2">AI evaluates the variance:</p>
                     <p className="text-sm text-amber-900">Variance = $150, within typical bank fee band ($15–$250). Pattern consistent with bank/intermediary fee, not withholding.</p>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
                       <Brain className="w-4 h-4" />
                       AI Insight
                     </h3>
                     <p className="text-sm text-blue-800">High confidence: bank/intermediary fee deduction (92%). Not WHT.</p>
                   </div>
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       Documentation
@@ -2887,17 +2887,17 @@ Thank you.`}
           ) : processingRowId === '7' ? (
             /* Nakamura Holdings Step 1: Payment Matching Analysis */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Match & Reconciliation Agent</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Match & Reconciliation Agent</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Matching Results</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { param: 'Payer', result: 'Nakamura Holdings KK Ltd' },
-                        { param: 'Matched Invoice', result: 'FTI-000781' },
+                        { param: 'Matched Invoice', result: 'KRL-INV-4847' },
                         { param: 'Match Confidence', result: '97%' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
@@ -2907,11 +2907,11 @@ Thank you.`}
                       ))}
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Payment Comparison</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { item: 'Invoice Amount', amount: '$100,000' },
                         { item: 'Payment Received', amount: '$70,000' },
@@ -2926,21 +2926,21 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-amber-900 mb-2">Variance Pattern Analysis</h3>
                     <p className="text-xs text-amber-800 mb-2">AI evaluates the variance:</p>
                     <p className="text-sm text-amber-900">Variance = 30% of invoice value. Pattern consistent with withholding deduction.</p>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
                       <Brain className="w-4 h-4" />
                       AI Insight
                     </h3>
                     <p className="text-sm text-blue-800">Detected short payment likely due to withholding tax. Likelihood: 96%</p>
                   </div>
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       SLA
@@ -2953,31 +2953,31 @@ Thank you.`}
           ) : processingRowId === '8' ? (
             /* Castellan Step 1: Payment Matching */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Match & Reconcile Agent</h2>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Match & Reconcile Agent</h2>
                   <p className="text-sm text-slate-600">The Match & Reconcile Agent identifies the invoice.</p>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Match Result</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
-                        { field: 'Matched Invoice', result: 'FTI-000802' },
+                        { field: 'Matched Invoice', result: 'KRL-INV-4863' },
                         { field: 'Match Confidence', result: '96%' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                          <span className="text-sm text-slate-500">{row.field}</span>
+                          <span className="text-xs text-slate-500">{row.field}</span>
                           <span className="text-sm font-semibold text-slate-900">{row.result}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Payment Comparison</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { item: 'Invoice', amount: '$50,000' },
                         { item: 'Payment', amount: '$35,000' },
@@ -2992,9 +2992,9 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2">AI observation</h3>
                     <p className="text-sm text-blue-800">
                       Variance equals 30% of invoice amount. Pattern is inconsistent with withholding deduction, which has been ~10% during the last 12 months.
@@ -3006,14 +3006,14 @@ Thank you.`}
                       <li>No dispute raised against the invoice.</li>
                     </ul>
                   </div>
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl px-4 py-3">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3">
                     <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">Likelihood</p>
-                    <p className="text-lg font-bold text-slate-800 mt-0.5">94% Withholding</p>
+                    <p className="text-sm font-semibold text-slate-800 mt-0.5">94% Withholding</p>
                     <p className="text-xs text-slate-600 mt-1">
                       Based on variance pattern, customer behavior, and absence of non-tax explanations.
                     </p>
                   </div>
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-emerald-900 uppercase tracking-wider mb-2">What this step does</h3>
                     <p className="text-sm text-emerald-800">
                       Confirms that the short pay behaves like a tax deduction. The next step is to validate this against the remittance
@@ -3027,34 +3027,34 @@ Thank you.`}
             /* Harlow Crane Step 1: Extracting Payment Data */
             <React.Fragment>
               {/* Left Panel: Payment Metadata */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-8">
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <h3 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2">
                       <DollarSign className="w-5 h-5 text-slate-500" />
                       Payment Metadata
                     </h3>
                     <div className="space-y-4">
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Payment method</span>
+                        <span className="text-xs text-slate-500">Payment method</span>
                         <span className="text-sm font-semibold text-slate-800">Wire transfer</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Value date</span>
+                        <span className="text-xs text-slate-500">Value date</span>
                         <span className="text-sm font-semibold text-slate-800">17 Feb 2026</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Company code</span>
-                        <span className="text-sm font-semibold text-slate-800">US01</span>
+                        <span className="text-xs text-slate-500">Company code</span>
+                        <span className="text-sm font-semibold text-slate-800">KRL-US</span>
                       </div>
                       <div className="flex justify-between py-2">
-                        <span className="text-sm text-slate-500">Incoming bank</span>
+                        <span className="text-xs text-slate-500">Incoming bank</span>
                         <span className="text-sm font-semibold text-slate-800">Bank of America</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                       <FileText className="w-4 h-4" />
                       Cash Application Context
@@ -3081,16 +3081,16 @@ Thank you.`}
               </motion.div>
 
               {/* Right Panel: AI Data Normalization */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                    <div className="bg-gradient-to-r from-blue-50 to-white px-6 py-4 border-b border-blue-100">
-                      <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <div className="bg-slate-50 px-4 py-3 border-b border-slate-100">
+                      <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                         <Cpu className="w-4 h-4 text-blue-500" />
                         AI Data Normalization
                       </h3>
                     </div>
-                    <div className="p-6 space-y-4">
+                    <div className="p-4 space-y-4">
                       <div className="flex justify-between items-center py-2 border-b border-slate-100">
                         <span className="text-sm text-slate-600">Payment classified as</span>
                         <span className="text-sm font-semibold text-slate-800">Unapplied cash candidate</span>
@@ -3102,7 +3102,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-4 shadow-sm">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-4 shadow-sm">
                     <div className="bg-amber-100 p-2 rounded-full mt-0.5">
                       <AlertCircle className="w-5 h-5 text-amber-600" />
                     </div>
@@ -3120,34 +3120,34 @@ Thank you.`}
             /* Sterling Trust Bank Step 1: Extracting Payment Data */
             <React.Fragment>
               {/* Left Panel: Remittance Data */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-8">
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <h3 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2">
                       <Mail className="w-5 h-5 text-slate-500" />
                       Remittance Data
                     </h3>
                     <div className="space-y-4">
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Source</span>
+                        <span className="text-xs text-slate-500">Source</span>
                         <span className="text-sm font-semibold text-slate-800">HSBC Bank Wire</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Received</span>
+                        <span className="text-xs text-slate-500">Received</span>
                         <span className="text-sm font-semibold text-slate-800">Feb 17, 10:15 AM</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Method</span>
+                        <span className="text-xs text-slate-500">Method</span>
                         <span className="text-sm font-semibold text-slate-800">Bank Transfer</span>
                       </div>
                       <div className="flex justify-between py-2">
-                        <span className="text-sm text-slate-500">Currency</span>
+                        <span className="text-xs text-slate-500">Currency</span>
                         <span className="text-sm font-semibold text-slate-800">EUR</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                       <DollarSign className="w-4 h-4" />
                       Extracted Payment Details
@@ -3165,18 +3165,18 @@ Thank you.`}
               </motion.div>
 
               {/* Right Panel: Validation */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                    <div className="bg-gradient-to-r from-amber-50 to-white px-6 py-4 border-b border-amber-100">
-                      <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <div className="bg-gradient-to-r from-amber-50 to-white px-4 py-3 border-b border-amber-100">
+                      <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                         <AlertCircle className="w-4 h-4 text-amber-500" />
                         Review Required
                       </h3>
                     </div>
-                    <div className="p-6">
+                    <div className="p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-slate-500">Extraction Confidence</span>
+                        <span className="text-xs text-slate-500">Extraction Confidence</span>
                         <span className="font-bold text-amber-600">90%</span>
                       </div>
                       <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -3185,7 +3185,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5" />
                       AI Validation Checks
@@ -3221,34 +3221,34 @@ Thank you.`}
             /* Aldridge Pharma Step 1 (Original) */
             <React.Fragment>
               {/* Left Panel: Remittance Data */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-8">
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <h3 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2">
                       <Mail className="w-5 h-5 text-slate-500" />
                       Remittance Data
                     </h3>
                     <div className="space-y-4">
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Source</span>
+                        <span className="text-xs text-slate-500">Source</span>
                         <span className="text-sm font-semibold text-slate-800">Citi Bank Wire</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Received</span>
+                        <span className="text-xs text-slate-500">Received</span>
                         <span className="text-sm font-semibold text-slate-800">Feb 17, 09:42 AM</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Method</span>
+                        <span className="text-xs text-slate-500">Method</span>
                         <span className="text-sm font-semibold text-slate-800">Wire Transfer</span>
                       </div>
                       <div className="flex justify-between py-2">
-                        <span className="text-sm text-slate-500">Currency</span>
+                        <span className="text-xs text-slate-500">Currency</span>
                         <span className="text-sm font-semibold text-slate-800">USD</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                       <DollarSign className="w-4 h-4" />
                       Extracted Payment Details
@@ -3266,28 +3266,28 @@ Thank you.`}
               </motion.div>
 
               {/* Right Panel: Identification & Validation */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
                         <Building2 className="w-4 h-4 text-blue-600" />
                         <span className="text-xs font-bold text-slate-500 uppercase">Customer ID</span>
                       </div>
-                      <p className="text-lg font-bold text-slate-800">Aldridge Pharma Group</p>
-                      <p className="text-xs text-slate-400">ID: C-10221</p>
+                      <p className="text-sm font-semibold text-slate-800">Aldridge Pharma Group</p>
+                      <p className="text-xs text-slate-400">ID: CL-2025-0072</p>
                     </div>
-                    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
                         <FileText className="w-4 h-4 text-purple-600" />
                         <span className="text-xs font-bold text-slate-500 uppercase">Invoice Match</span>
                       </div>
-                      <p className="text-lg font-bold text-slate-800">INV-7845</p>
+                      <p className="text-sm font-semibold text-slate-800">KRL-INV-4845</p>
                       <p className="text-xs text-slate-400">Open Amount: $180,000</p>
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-emerald-800 uppercase tracking-wider mb-4 flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5" />
                       AI Validation Checks
@@ -3312,16 +3312,16 @@ Thank you.`}
           {processingRowId === '9' ? (
             /* Bank Fees Step 2: Remittance Analysis */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Remittance Document AI Agent</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Remittance Document AI Agent</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Document Extract</h3>
                     </div>
-                    <div className="p-6 space-y-4">
+                    <div className="p-4 space-y-4">
                       <p className="text-sm text-slate-600">Remittance file:</p>
-                      <p className="text-sm font-mono font-semibold text-blue-600 bg-blue-50 px-3 py-2 rounded-lg border border-blue-100">Remittance_Vantage-FTI-000825.pdf</p>
+                      <p className="text-sm font-mono font-semibold text-blue-600 bg-blue-50 px-3 py-2 rounded-lg border border-blue-100">Remittance_Vantage-KRL-INV-4890.pdf</p>
                       <div className="grid grid-cols-2 gap-3 text-sm">
                         <div className="flex justify-between py-2 border-b border-slate-100">
                           <span className="text-slate-500">Received</span>
@@ -3338,13 +3338,13 @@ Thank you.`}
                       </div>
                       <p className="text-sm text-slate-600 mt-2">Extracted text:</p>
                       <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700">
-                        Payment for invoice FTI-000825. Net amount after bank/wire charges. See attached statement.
+                        Payment for invoice KRL-INV-4890. Net amount after bank/wire charges. See attached statement.
                       </div>
                       <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
                         <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider px-4 py-2 bg-slate-50 border-b border-slate-100">Structured fields</h4>
                         <div className="p-4 space-y-2">
                           {[
-                            { label: 'Invoice reference', value: 'FTI-000825' },
+                            { label: 'Invoice reference', value: 'KRL-INV-4890' },
                             { label: 'Deduction noted', value: '$150 (bank/wire charges)' },
                             { label: 'Payer (from document)', value: 'Vantage Global Advisors' }
                           ].map((row, i) => (
@@ -3359,22 +3359,22 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-amber-900 mb-2">Key Signal Detection</h3>
                     <p className="text-xs text-amber-800 mb-2">AI highlights:</p>
                     <p className="text-sm font-bold text-amber-900 bg-amber-100 px-3 py-2 rounded-lg inline-block">BANK FEE KEYWORDS DETECTED</p>
                     <p className="text-xs text-amber-700 mt-2">Keywords in remittance: &quot;bank fee&quot;, &quot;charges&quot;, &quot;SWIFT&quot;.</p>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl p-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-2">
                       <FileText className="w-4 h-4" />
                       Document requirement
                     </h3>
                     <p className="text-sm text-slate-700">No tax documentation required. Variance treated as bank fee.</p>
                   </div>
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-emerald-900 uppercase tracking-wider mb-2">Next step</h3>
                     <p className="text-sm text-emerald-800">Policy check: absorb vs chargeback.</p>
                   </div>
@@ -3384,14 +3384,14 @@ Thank you.`}
           ) : processingRowId === '7' ? (
             /* Nakamura Holdings Step 2: Remittance Analysis */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Remittance Document AI Agent</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Remittance Document AI Agent</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Document Extract</h3>
                     </div>
-                    <div className="p-6 space-y-4">
+                    <div className="p-4 space-y-4">
                       <p className="text-sm text-slate-600">Remittance file:</p>
                       <p className="text-sm font-mono font-semibold text-blue-600 bg-blue-50 px-3 py-2 rounded-lg border border-blue-100">Remittance_BW-REM-33221.pdf</p>
                       <div className="grid grid-cols-2 gap-3 text-sm">
@@ -3414,13 +3414,13 @@ Thank you.`}
                       </div>
                       <p className="text-sm text-slate-600 mt-2">Extracted text:</p>
                       <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700">
-                        Payment for invoice FTI-000781. Net amount differs from invoice total; see attached statement for deduction details.
+                        Payment for invoice KRL-INV-4847. Net amount differs from invoice total; see attached statement for deduction details.
                       </div>
                       <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
                         <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider px-4 py-2 bg-slate-50 border-b border-slate-100">Structured fields</h4>
                         <div className="p-4 space-y-2">
                           {[
-                            { label: 'Invoice reference', value: 'FTI-000781' },
+                            { label: 'Invoice reference', value: 'KRL-INV-4847' },
                             { label: 'Deduction noted', value: '$30,000 (reason unspecified in remittance)' },
                             { label: 'Supporting detail', value: 'See payer statement / attachments' },
                             { label: 'Payer (from document)', value: 'Nakamura Holdings KK Ltd' }
@@ -3436,22 +3436,22 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-amber-900 mb-2">Key Signal Detection</h3>
                     <p className="text-xs text-amber-800 mb-2">AI highlights:</p>
                     <p className="text-sm font-bold text-amber-900 bg-amber-100 px-3 py-2 rounded-lg inline-block">PATTERN MATCHED DEDUCTION</p>
                     <p className="text-xs text-amber-700 mt-2">Signal strength: High · Short payment of $30,000 aligns with typical tax withholding percentages for this customer and country.</p>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl p-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-2">
                       <FileText className="w-4 h-4" />
                       Document requirement
                     </h3>
                     <p className="text-sm text-slate-700">Form 1042-S or equivalent required for $30,000 withholding. <strong>30-day SLA</strong> from posting.</p>
                   </div>
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center gap-2">
                       <Shield className="w-4 h-4" />
                       Policy reference
@@ -3459,7 +3459,7 @@ Thank you.`}
                     <p className="text-xs text-slate-600 mb-1">IRS Ch. 3 – Withholding on payments to non-US persons.</p>
                     <p className="text-xs text-slate-600">Royalty payments to treaty-eligible entities subject to reduced or documented withholding.</p>
                   </div>
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-emerald-900 uppercase tracking-wider mb-2">Next step</h3>
                     <p className="text-sm text-emerald-800">Customer Tax Profile will be checked (W-8BEN-E, treaty status) to validate withholding treatment.</p>
                   </div>
@@ -3469,43 +3469,43 @@ Thank you.`}
           ) : processingRowId === '8' ? (
             /* Castellan Step 2: Remittance Analysis */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Remittance Analysis</h2>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Remittance Analysis</h2>
                   <p className="text-sm text-slate-600">Remittance document processed.</p>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Extracted Document</h3>
                     </div>
-                    <div className="p-6 space-y-4">
+                    <div className="p-4 space-y-4">
                       <p className="text-sm text-slate-600">Remittance file:</p>
                       <p className="text-sm font-mono font-semibold text-blue-600 bg-blue-50 px-3 py-2 rounded-lg border border-blue-100">Remittance_ND-REM-88410.pdf</p>
                       <p className="text-sm text-slate-600">Extracted text:</p>
                       <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700">
-                        Payment for invoice FTI-000802. Withholding tax applied.
+                        Payment for invoice KRL-INV-4863. Withholding tax applied.
                       </div>
                     </div>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2">AI interpretation</h3>
                     <p className="text-sm text-blue-800">
                       Remittance explicitly references withholding tax. This confirms that the $15,000 variance is being treated by the payer as withholding,
                       not as fees, discounts, or disputed amounts.
                     </p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-amber-900 mb-2">Document signals</h3>
                     <ul className="text-sm text-amber-800 space-y-1 list-disc list-inside">
-                      <li>Invoice reference FTI-000802 is present in the text.</li>
+                      <li>Invoice reference KRL-INV-4863 is present in the text.</li>
                       <li>Phrase <span className="font-semibold">“Withholding tax applied”</span> is detected.</li>
                       <li>No language found about partial disputes, fee adjustments, or early‑payment discounts.</li>
                     </ul>
                   </div>
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">What this step confirms</h3>
                     <p className="text-sm text-slate-700">
                       The remittance supports the hypothesis that the short payment is entirely due to tax withholding.
@@ -3519,11 +3519,11 @@ Thank you.`}
             /* Harlow Crane Step 2: Matching Customer */
             <React.Fragment>
               {/* Left Panel: Customer Master Match */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 shadow-sm">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                         <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                       </div>
                       <div>
@@ -3534,7 +3534,7 @@ Thank you.`}
                     <div className="space-y-3">
                       {[
                         { label: 'Customer', value: 'Harlow Crane LLP' },
-                        { label: 'Customer ID', value: 'C-22018' },
+                        { label: 'Customer ID', value: 'CL-2025-0304' },
                         { label: 'Account status', value: 'Active' },
                         { label: 'Credit block', value: 'No' },
                         { label: 'Payment block', value: 'No' }
@@ -3547,7 +3547,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">AR Snapshot</h3>
                     <div className="space-y-3">
                       <div className="flex justify-between items-center py-2 border-b border-slate-100">
@@ -3568,9 +3568,9 @@ Thank you.`}
               </motion.div>
 
               {/* Right Panel: Matching Signals & Confidence */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                       <Zap className="w-4 h-4 text-blue-500" />
                       Matching Signals
@@ -3592,7 +3592,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">Confidence</h3>
                     <div className="space-y-3">
                       <div>
@@ -3607,7 +3607,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-start gap-4">
+                  <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-4 flex items-start gap-4">
                     <div className="bg-emerald-100 p-2 rounded-full mt-0.5">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                     </div>
@@ -3623,11 +3623,11 @@ Thank you.`}
             /* Sterling Trust Bank Step 3 */
             <React.Fragment>
               {/* Left Panel: Customer Match */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 shadow-sm">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                         <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                       </div>
                       <div>
@@ -3636,7 +3636,7 @@ Thank you.`}
                       </div>
                     </div>
                     <div className="space-y-3">
-                      {[{ label: 'Customer', value: 'Sterling Trust Bank Europe' }, { label: 'Customer ID', value: 'C-44721' }, { label: 'Company Code', value: 'EU01' }, { label: 'Region', value: 'Europe' }, { label: 'Status', value: 'Active' }].map((item, i) => (
+                      {[{ label: 'Customer', value: 'Sterling Trust Bank' }, { label: 'Customer ID', value: 'CL-2025-0156' }, { label: 'Company Code', value: 'KRL-EU' }, { label: 'Region', value: 'Europe' }, { label: 'Status', value: 'Active' }].map((item, i) => (
                         <div key={i} className="flex justify-between items-center py-2 border-b border-emerald-100 last:border-0">
                           <span className="text-sm text-emerald-700">{item.label}</span>
                           <span className="font-bold text-emerald-900">{item.value}</span>
@@ -3645,7 +3645,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">Customer Match Confidence</h3>
                     <div className="space-y-3">
                       <div>
@@ -3663,9 +3663,9 @@ Thank you.`}
               </motion.div>
 
               {/* Right Panel: Matching Signals */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                       <Zap className="w-4 h-4 text-blue-500" />
                       Matching Signals
@@ -3682,13 +3682,13 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-start gap-4">
+                  <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-4 flex items-start gap-4">
                     <div className="bg-emerald-100 p-2 rounded-full mt-0.5">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-emerald-900">Customer identified successfully</h4>
-                      <p className="text-xs text-emerald-700 mt-1">Sterling Trust Bank Europe matched with 97% confidence. Proceeding to invoice lookup.</p>
+                      <p className="text-xs text-emerald-700 mt-1">Sterling Trust Bank matched with 97% confidence. Proceeding to invoice lookup.</p>
                     </div>
                   </div>
                 </div>
@@ -3698,10 +3698,10 @@ Thank you.`}
             /* Aldridge Pharma Step 3 (Original) */
             <React.Fragment>
               {/* Left Panel: Allocation Summary */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-8">
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">Allocation Details</h3>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <h3 className="text-sm font-semibold text-slate-800 mb-6 border-b border-slate-100 pb-4">Allocation Details</h3>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <span className="text-slate-500">Customer</span>
@@ -3709,7 +3709,7 @@ Thank you.`}
                       </div>
                       <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg">
                         <span className="text-slate-500">Invoice</span>
-                        <span className="font-mono font-bold text-blue-600">INV-7845</span>
+                        <span className="font-mono font-bold text-blue-600">KRL-INV-4845</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-slate-500">Amount</span>
@@ -3717,11 +3717,11 @@ Thank you.`}
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-slate-500">Company Code</span>
-                        <span className="font-bold text-slate-800">US01</span>
+                        <span className="font-bold text-slate-800">KRL-US</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">Confidence Breakdown</h3>
                     <div className="space-y-4">
                       {[{ label: 'Customer Match', value: 99 }, { label: 'Invoice Match', value: 96 }, { label: 'Amount Match', value: 100 }].map((item, i) => (
@@ -3740,9 +3740,9 @@ Thank you.`}
                 </div>
               </motion.div>
               {/* Right Panel: Controls */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="text-sm font-bold text-emerald-800 uppercase tracking-wider mb-6 flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5" />
                       Controls &amp; Validations
@@ -3765,12 +3765,12 @@ Thank you.`}
                       </div>
                     </div>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <div className="flex items-center gap-3 mb-4">
                       <RefreshCw className="w-5 h-5 text-blue-600" />
                       <h3 className="font-bold text-blue-900">Simulation: Success</h3>
                     </div>
-                    <p className="text-blue-800 text-sm mb-2">Simulated posting to ERP returns success code.</p>
+                    <p className="text-blue-800 text-sm mb-2">Simulated posting to D365 returns success code.</p>
                     <div className="flex gap-2">
                       <span className="px-2 py-1 bg-white/50 rounded border border-blue-200 text-xs font-mono text-blue-700">Type: DZ</span>
                       <span className="px-2 py-1 bg-white/50 rounded border border-blue-200 text-xs font-mono text-blue-700">Account: 100234</span>
@@ -3784,10 +3784,10 @@ Thank you.`}
 
         {/* Nakamura Holdings Step 5: Resolution Recommendation */}
         {currentStep === 5 && processingRowId === '7' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <h2 className="text-lg font-bold text-slate-800">Kroll AI Agent</h2>
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+            <div className="max-w-xl mx-auto space-y-4">
+              <h2 className="text-sm font-semibold text-slate-800">Kroll AI Agent</h2>
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                 <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5" />
                   AI Decision
@@ -3803,19 +3803,19 @@ Thank you.`}
               </div>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Case at a glance</h3>
                 </div>
                 <div className="p-4 space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-semibold text-slate-800">FTI-000781</span></div>
+                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-semibold text-slate-800">KRL-INV-4847</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">Variance</span><span className="font-semibold text-slate-800">$30,000 (WHT)</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">Resolution</span><span className="font-semibold text-emerald-600">Post WHT receivable</span></div>
                 </div>
               </div>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <Clock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div>
@@ -3824,53 +3824,53 @@ Thank you.`}
                   </div>
                 </div>
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Next steps</p>
-                <p className="text-sm text-blue-800 mt-1">ERP posting preview → Customer email → Approval</p>
+                <p className="text-sm text-blue-800 mt-1">D365 posting preview → Customer email → Approval</p>
               </div>
             </div>
           </motion.div>
         </div>}
 
-        {/* Bank Fees Step 5: ERP Posting Preview */}
+        {/* Bank Fees Step 5: D365 Posting Preview */}
         {currentStep === 5 && processingRowId === '9' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <h2 className="text-lg font-bold text-slate-800">ERP Accounting Posting Preview</h2>
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+            <div className="max-w-xl mx-auto space-y-4">
+              <h2 className="text-sm font-semibold text-slate-800">D365 Accounting Posting Preview</h2>
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Journal Entry (Option B1: Absorb)</h3>
                 </div>
-                <div className="p-6 font-mono text-sm space-y-2">
+                <div className="p-4 font-mono text-sm space-y-2">
                   <p className="text-slate-800">Dr Cash                          24,850</p>
                   <p className="text-slate-800">Dr Bank Charges Expense          150</p>
                   <p className="text-slate-800">Cr Accounts Receivable          25,000</p>
                 </div>
               </div>
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                 <h3 className="text-sm font-bold text-slate-800 mb-2">Posting Explanation</h3>
                 <p className="text-sm text-slate-700">Invoice fully cleared. $150 captured as expense with reason code BNK_FEE.</p>
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
-                <h3 className="text-sm font-bold text-blue-900 mb-2">ERP Actions</h3>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="text-sm font-bold text-blue-900 mb-2">D365 Actions</h3>
                 <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                  <li>Apply payment to invoice FTI-000825</li>
+                  <li>Apply payment to invoice KRL-INV-4890</li>
                   <li>Post bank fee using reason code BNK_FEE</li>
                   <li>Mark invoice Fully Settled</li>
                 </ul>
               </div>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Posting summary</h3>
                 </div>
                 <div className="p-4 space-y-2 text-sm">
                   <div className="flex justify-between"><span className="text-slate-500">Cash applied</span><span className="font-semibold text-slate-800">$24,850</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">Bank fee expense</span><span className="font-semibold text-slate-800">$150</span></div>
-                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-mono font-semibold text-slate-800">FTI-000825</span></div>
+                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-mono font-semibold text-slate-800">KRL-INV-4890</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">Reason code</span><span className="font-mono font-semibold text-slate-800">BNK_FEE</span></div>
                 </div>
               </div>
@@ -3880,10 +3880,10 @@ Thank you.`}
 
         {/* Bank Fees Step 6: Customer Outreach */}
         {currentStep === 6 && processingRowId === '9' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <h2 className="text-lg font-bold text-slate-800">Customer Outreach</h2>
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+            <div className="max-w-xl mx-auto space-y-4">
+              <h2 className="text-sm font-semibold text-slate-800">Customer Outreach</h2>
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                 <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5" />
                   No outreach required
@@ -3892,41 +3892,41 @@ Thank you.`}
               </div>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Next step</p>
-                <p className="text-sm text-blue-800 mt-1">Approve & Post to ERP</p>
+                <p className="text-sm text-blue-800 mt-1">Approve & Post to D365</p>
               </div>
             </div>
           </motion.div>
         </div>}
 
-        {/* Nakamura Holdings Step 6: ERP Accounting Posting Preview */}
+        {/* Nakamura Holdings Step 6: D365 Accounting Posting Preview */}
         {currentStep === 6 && processingRowId === '7' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <h2 className="text-lg font-bold text-slate-800">ERP Accounting Posting Preview</h2>
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+            <div className="max-w-xl mx-auto space-y-4">
+              <h2 className="text-sm font-semibold text-slate-800">D365 Accounting Posting Preview</h2>
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Journal Entry</h3>
                 </div>
-                <div className="p-6 font-mono text-sm space-y-2">
+                <div className="p-4 font-mono text-sm space-y-2">
                   <p className="text-slate-800">Dr Cash                          $70,000</p>
                   <p className="text-slate-800">Dr Withholding Tax Receivable    $30,000</p>
                   <p className="text-slate-800">Cr Accounts Receivable          $100,000</p>
                 </div>
               </div>
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                 <h3 className="text-sm font-bold text-slate-800 mb-2">Posting Explanation</h3>
                 <p className="text-sm text-slate-700 mb-2">Cash received applied to invoice. Withholding tax amount recorded as receivable until withholding certificate is received.</p>
                 <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">Documentation SLA: $30,000 proof due within <strong>30 days</strong>.</p>
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
-                <h3 className="text-sm font-bold text-blue-900 mb-2">ERP Actions</h3>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="text-sm font-bold text-blue-900 mb-2">D365 Actions</h3>
                 <p className="text-xs text-blue-800 mb-2">The AI will:</p>
                 <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                  <li>Apply payment to invoice FTI-000781</li>
+                  <li>Apply payment to invoice KRL-INV-4847</li>
                   <li>Post deduction using reason code WHT_US</li>
                   <li>Mark invoice Fully Settled</li>
                   <li>Create follow-up task for documentation</li>
@@ -3934,19 +3934,19 @@ Thank you.`}
               </div>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Posting summary</h3>
                 </div>
                 <div className="p-4 space-y-2 text-sm">
                   <div className="flex justify-between"><span className="text-slate-500">Cash applied</span><span className="font-semibold text-slate-800">$70,000</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">WHT receivable</span><span className="font-semibold text-slate-800">$30,000</span></div>
-                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-mono font-semibold text-slate-800">FTI-000781</span></div>
+                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-mono font-semibold text-slate-800">KRL-INV-4847</span></div>
                 </div>
               </div>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <Clock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div>
@@ -3955,7 +3955,7 @@ Thank you.`}
                   </div>
                 </div>
               </div>
-              <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+              <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">Reason code</p>
                 <p className="text-sm font-mono font-semibold text-slate-800 mt-0.5">WHT_US</p>
               </div>
@@ -3965,34 +3965,34 @@ Thank you.`}
 
         {/* Nakamura Holdings Step 7: Customer Documentation Request */}
         {currentStep === 7 && processingRowId === '7' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <h2 className="text-lg font-bold text-slate-800">Customer Documentation Request</h2>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+            <div className="max-w-xl mx-auto space-y-4">
+              <h2 className="text-sm font-semibold text-slate-800">Customer Documentation Request</h2>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-4 flex items-center gap-2">
                 <Clock className="w-4 h-4 text-amber-600 flex-shrink-0" />
                 <p className="text-sm text-amber-800">SLA: Proof of $30,000 withholding required within <strong>30 days</strong> of posting.</p>
               </div>
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Generated Email</h3>
                 </div>
-                <div className="p-6 space-y-4">
-                  <p className="text-sm text-slate-600"><span className="font-semibold">Subject:</span> Request for Payment Variance Details — Invoice FTI-000781</p>
+                <div className="p-4 space-y-4">
+                  <p className="text-sm text-slate-600"><span className="font-semibold">Subject:</span> Request for Payment Variance Details — Invoice KRL-INV-4847</p>
                   <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-700">
-                    <p className="mb-2">Hello Nakamura Holdings Finance Team,</p>
-                    <p className="mb-2">We received your payment of $70,000 against invoice FTI-000781 totaling $100,000.</p>
+                    <p className="mb-2">Hello Nakamura Holdings KK — AP Team,</p>
+                    <p className="mb-2">We received your payment of $70,000 against invoice KRL-INV-4847 totaling $100,000.</p>
                     <p className="mb-2">Our reconciliation shows a $30,000 difference between the invoice amount and the payment received. To complete our records and classify this variance correctly, could you please share the supporting documentation explaining this deduction (for example, any applicable tax or regulatory documentation)?</p>
                     <p>Thank you.</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-sm text-blue-800">
-                Sending this email automatically creates a ERP tracking ticket for audit and follow-up.
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                Sending this email automatically creates a D365 tracking ticket for audit and follow-up.
               </div>
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={handleNextStep}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-bold hover:bg-[#003354] transition-colors"
                 >
                   <Mail className="w-4 h-4" />
                   Send Email
@@ -4007,9 +4007,9 @@ Thank you.`}
               </div>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <Clock className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div>
@@ -4019,13 +4019,13 @@ Thank you.`}
                   </div>
                 </div>
               </div>
-              <div className="bg-white border border-slate-200 rounded-xl p-4">
+              <div className="bg-white border border-slate-200 rounded-lg p-4">
                 <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Request purpose</h3>
                 <p className="text-sm text-slate-700">This email requests the withholding certificate so the receivable can be cleared within the 30-day SLA window.</p>
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-blue-900">Recipient</p>
-                <p className="text-sm text-blue-800 mt-0.5">Nakamura Holdings Finance Team</p>
+                <p className="text-sm text-blue-800 mt-0.5">Nakamura Holdings KK — AP Team</p>
               </div>
             </div>
           </motion.div>
@@ -4033,33 +4033,33 @@ Thank you.`}
 
         {/* Nakamura Holdings Step 8: Documentation Received — inbound email with proof, ready to post */}
         {currentStep === 8 && processingRowId === '7' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <h2 className="text-lg font-bold text-slate-800">Documentation Received</h2>
-              <p className="text-sm text-slate-600">Inbound email with withholding proof in attachments. Case is now ready to post to ERP.</p>
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+            <div className="max-w-xl mx-auto space-y-4">
+              <h2 className="text-sm font-semibold text-slate-800">Documentation Received</h2>
+              <p className="text-sm text-slate-600">Inbound email with withholding proof in attachments. Case is now ready to post to D365.</p>
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <Mail className="w-5 h-5 text-emerald-600" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-semibold text-slate-900 truncate">Nakamura Holdings Finance Team</span>
+                        <span className="font-semibold text-slate-900 truncate">Nakamura Holdings KK — AP Team</span>
                         <span className="text-xs text-slate-500 whitespace-nowrap">20 Feb 2026, 10:42 AM</span>
                       </div>
-                      <div className="text-sm text-slate-600 truncate">Re: Request for Withholding Tax Certificate — Invoice FTI-000781</div>
-                      <div className="text-xs text-slate-400 mt-1">To: ar@microsolve.com</div>
+                      <div className="text-sm text-slate-600 truncate">Re: Request for Withholding Tax Certificate — Invoice KRL-INV-4847</div>
+                      <div className="text-xs text-slate-400 mt-1">To: ar@kroll.com</div>
                     </div>
                   </div>
                 </div>
-                <div className="p-6 space-y-4">
-                  <div className="prose prose-sm max-w-none text-slate-600">
+                <div className="p-4 space-y-4">
+                  <div className="prose prose-sm max-w-none text-xs text-slate-600">
                     <p>Hi,</p>
-                    <p>Please find attached our Form 1042-S for the $30,000 withholding on invoice FTI-000781. Let us know if you need anything else.</p>
-                    <p className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-400">Best regards, Nakamura Holdings Finance</p>
+                    <p>Please find attached our Form 1042-S for the $30,000 withholding on invoice KRL-INV-4847. Let us know if you need anything else.</p>
+                    <p className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-400">Best regards, Nakamura Holdings KK — Finance</p>
                   </div>
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
                       <Paperclip className="w-4 h-4" />
                       Attachments
@@ -4067,37 +4067,37 @@ Thank you.`}
                     <ul className="space-y-2">
                       <li className="flex items-center gap-2 text-sm">
                         <FileText className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                        <span className="font-mono font-semibold text-emerald-800">Form_1042-S_BW_FTI-000781.pdf</span>
+                        <span className="font-mono font-semibold text-emerald-800">Form_1042-S_BW_KRL-INV-4847.pdf</span>
                         <span className="text-xs text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">Proof of withholding</span>
                       </li>
                     </ul>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-center gap-3">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                    <p className="text-sm font-semibold text-blue-900">Withholding proof received. Case ready to post to ERP.</p>
+                    <p className="text-sm font-semibold text-blue-900">Withholding proof received. Case ready to post to D365.</p>
                   </div>
                 </div>
               </div>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                 <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5" />
                   SLA satisfied
                 </h3>
                 <p className="text-sm text-emerald-800">Proof of payment for the $30,000 withholding received within the 30-day window. Documentation complete.</p>
               </div>
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Next action</h3>
                 </div>
                 <div className="p-4">
-                  <p className="text-sm text-slate-700">Proceed to <strong>Approval</strong> to post the journal entry to ERP and clear the withholding receivable.</p>
+                  <p className="text-sm text-slate-700">Proceed to <strong>Approval</strong> to post the journal entry to D365 and clear the withholding receivable.</p>
                 </div>
               </div>
-              <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+              <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">Document</p>
                 <p className="text-sm font-mono font-semibold text-slate-800 mt-0.5">Form 1042-S · Verified</p>
               </div>
@@ -4107,28 +4107,28 @@ Thank you.`}
 
         {/* Nakamura Holdings Step 9: Approval */}
         {currentStep === 9 && processingRowId === '7' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 flex flex-col justify-center">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
             <div className="max-w-xl mx-auto text-center">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Approval</h2>
-              <p className="text-slate-600 mb-8">Kroll now displays final actions. Select an option below.</p>
+              <h2 className="text-sm font-semibold text-slate-800 mb-2">Approval</h2>
+              <p className="text-slate-600 mb-5">Kroll now displays final actions. Select an option below.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
-                <span className="text-sm text-slate-500">Options: Approve & Post to ERP · Create Journal Draft · Escalate to Analyst</span>
+                <span className="text-xs text-slate-500">Options: Approve & Post to D365 · Create Journal Draft · Escalate to Analyst</span>
               </div>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Approval summary</h3>
                 </div>
                 <div className="p-4 space-y-2 text-sm">
                   <div className="flex justify-between"><span className="text-slate-500">Case</span><span className="font-semibold text-slate-800">REM_007</span></div>
-                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-mono font-semibold text-slate-800">FTI-000781</span></div>
+                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-mono font-semibold text-slate-800">KRL-INV-4847</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">Action</span><span className="font-semibold text-slate-800">Post & send follow-up</span></div>
                 </div>
               </div>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <Clock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                   <div>
@@ -4137,7 +4137,7 @@ Thank you.`}
                   </div>
                 </div>
               </div>
-              <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+              <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">Checklist</p>
                 <ul className="text-sm text-slate-700 mt-2 space-y-1">
                   <li className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-600" /> Journal entry reviewed</li>
@@ -4152,21 +4152,21 @@ Thank you.`}
 
         {/* Bank Fees Step 7: Approval */}
         {currentStep === 7 && processingRowId === '9' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 flex flex-col justify-center">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
             <div className="max-w-xl mx-auto text-center">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Approval</h2>
-              <p className="text-slate-600 mb-8">Review the posting and select Approve & Post to ERP below.</p>
+              <h2 className="text-sm font-semibold text-slate-800 mb-2">Approval</h2>
+              <p className="text-slate-600 mb-5">Review the posting and select Approve & Post to D365 below.</p>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Approval summary</h3>
                 </div>
                 <div className="p-4 space-y-2 text-sm">
                   <div className="flex justify-between"><span className="text-slate-500">Case</span><span className="font-semibold text-slate-800">REM_009</span></div>
-                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-mono font-semibold text-slate-800">FTI-000825</span></div>
+                  <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-mono font-semibold text-slate-800">KRL-INV-4890</span></div>
                   <div className="flex justify-between"><span className="text-slate-500">Action</span><span className="font-semibold text-slate-800">Post bank fee (BNK_FEE)</span></div>
                 </div>
               </div>
@@ -4176,13 +4176,13 @@ Thank you.`}
 
         {/* Bank Fees Step 8: Resolution Completed */}
         {currentStep === 8 && processingRowId === '9' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 flex flex-col justify-center">
-            <div className="max-w-xl mx-auto text-center space-y-6">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
+            <div className="max-w-xl mx-auto text-center space-y-4">
               <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-10 h-10 text-emerald-600" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-800">AI Resolution Completed Successfully</h2>
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden text-left max-w-sm mx-auto">
+              <h2 className="text-sm font-semibold text-slate-800">AI Resolution Completed Successfully</h2>
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden text-left max-w-sm mx-auto">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800">Result</h3>
                 </div>
@@ -4202,9 +4202,9 @@ Thank you.`}
               <p className="text-sm font-bold text-emerald-700">Case Status: Resolved by AI</p>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Dashboard</p>
                 <p className="text-sm text-blue-800 mt-1">REM_009 will show as <strong>Resolved by AI</strong>. Exception queue reduced.</p>
               </div>
@@ -4214,13 +4214,13 @@ Thank you.`}
 
         {/* Nakamura Holdings Step 10: Resolution Completed */}
         {currentStep === 10 && processingRowId === '7' && <div className="h-full flex flex-row">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 flex flex-col justify-center">
-            <div className="max-w-xl mx-auto text-center space-y-6">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
+            <div className="max-w-xl mx-auto text-center space-y-4">
               <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-10 h-10 text-emerald-600" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-800">AI Resolution Completed Successfully</h2>
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden text-left max-w-sm mx-auto">
+              <h2 className="text-sm font-semibold text-slate-800">AI Resolution Completed Successfully</h2>
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden text-left max-w-sm mx-auto">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800">Result</h3>
                 </div>
@@ -4241,9 +4241,9 @@ Thank you.`}
               <p className="text-sm font-bold text-emerald-700">Case Status: Resolved by AI</p>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-            <div className="max-w-xl mx-auto space-y-6">
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+            <div className="max-w-xl mx-auto space-y-4">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Follow-up & SLA</h3>
                 </div>
@@ -4259,7 +4259,7 @@ Thank you.`}
                   </div>
                 </div>
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Dashboard</p>
                 <p className="text-sm text-blue-800 mt-1">REM_007 will show as <strong>Resolved by AI</strong>. Exception queue reduced.</p>
               </div>
@@ -4271,8 +4271,8 @@ Thank you.`}
         {currentStep === 5 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Email Preview */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-2xl mx-auto space-y-6">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
                 <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 flex items-start gap-3">
                   <User className="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5" />
                   <div>
@@ -4283,11 +4283,11 @@ Thank you.`}
                 <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-700">
                   <span className="font-semibold">Trigger:</span> Unmatched receipt where invoice references are absent or low-confidence.
                 </div>
-                <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                  <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
-                    <h2 className="text-lg font-bold text-slate-800">Email template: missing remittance request</h2>
+                <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                  <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                    <h2 className="text-sm font-semibold text-slate-800">Email template: missing remittance request</h2>
                   </div>
-                  <div className="p-6 space-y-3">
+                  <div className="p-4 space-y-3">
                     <div className="flex items-center justify-between py-2 border-b border-slate-100">
                       <span className="text-sm text-slate-600">Kind of mail</span>
                       <span className="text-sm font-semibold text-slate-800">Clarification request for payment allocation</span>
@@ -4307,11 +4307,11 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                  <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
-                    <h2 className="text-lg font-bold text-slate-800">Email Body (AI-Generated)</h2>
+                <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                  <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                    <h2 className="text-sm font-semibold text-slate-800">Email Body (AI-Generated)</h2>
                   </div>
-                  <div className="p-6 prose prose-sm max-w-none">
+                  <div className="p-4 prose prose-sm max-w-none text-xs">
                     <p className="text-slate-700">Dear Harlow Crane LLP,</p>
                     <p className="text-slate-700">We have received your payment of <strong>$142,500</strong> <strong>USD</strong> dated <strong>February 17, 2026</strong>. At present we&apos;re unable to match it to specific invoice(s) due to missing remittance information.</p>
                     <p className="text-slate-700">Please could you confirm which invoice numbers this payment relates to (or share remittance advice/EDI remittance detail)?</p>
@@ -4331,9 +4331,9 @@ Thank you.`}
             </motion.div>
 
             {/* Right: AI Personalization & Audit */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-xl mx-auto space-y-6">
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                     <Cpu className="w-4 h-4 text-blue-500" />
                     AI Personalization
@@ -4350,7 +4350,7 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-blue-900 mb-4 flex items-center gap-2">
                     <FileCheck className="w-4 h-4 text-blue-700" />
                     Audit Tag
@@ -4362,7 +4362,7 @@ Thank you.`}
                 </div>
 
                 <div className="text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded-lg px-4 py-2 mb-4">
-                  <span className="font-medium text-slate-600">Human action:</span> Approve email, optionally approve posting plan. <span className="font-medium text-amber-700">Tier 1 (Draft):</span> human sends emails and posts to ERP.
+                  <span className="font-medium text-slate-600">Human action:</span> Approve email, optionally approve posting plan. <span className="font-medium text-amber-700">Tier 1 (Draft):</span> human sends emails and posts to D365.
                 </div>
                 <button
                   onClick={() => {
@@ -4373,7 +4373,7 @@ Thank you.`}
                     });
                   }}
                   disabled={emailSent}
-                  className={`bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6 shadow-lg w-full text-center transition-all ${emailSent
+                  className={`bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 shadow-lg w-full text-center transition-all ${emailSent
                     ? 'opacity-75 cursor-not-allowed'
                     : 'hover:border-emerald-300 hover:shadow-xl active:scale-[0.98] cursor-pointer'
                     }`}
@@ -4386,7 +4386,7 @@ Thank you.`}
                         <Mail className="w-8 h-8 text-white" />
                       )}
                     </div>
-                    <h3 className="text-lg font-bold text-emerald-900 mb-2">
+                    <h3 className="text-sm font-semibold text-emerald-900 mb-2">
                       {emailSent ? 'Email Sent' : 'Send Email'}
                     </h3>
                     <p className="text-sm text-emerald-700">
@@ -4403,22 +4403,22 @@ Thank you.`}
         {currentStep === 6 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Case Status */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-2xl mx-auto space-y-6">
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
                       <Clock className="w-6 h-6 text-amber-600" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-amber-900">Case Status</h2>
+                      <h2 className="text-base font-semibold text-amber-900">Case Status</h2>
                       <p className="text-sm text-amber-700">Awaiting customer reply</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2">
                     <Clock3 className="w-5 h-5 text-slate-600" />
                     SLA Tracker
                   </h3>
@@ -4434,8 +4434,8 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2">
                     <Mail className="w-5 h-5 text-slate-600" />
                     Mailbox Monitoring
                   </h3>
@@ -4454,9 +4454,9 @@ Thank you.`}
             </motion.div>
 
             {/* Right: Dashboard Metrics Impact */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-xl mx-auto space-y-6">
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4">Dashboard Metrics Impact</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center py-2 border-b border-slate-100">
@@ -4470,7 +4470,7 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-3">
                     <Mail className="w-5 h-5 text-blue-600" />
                     <h3 className="font-bold text-blue-900">Email Sent</h3>
@@ -4486,21 +4486,21 @@ Thank you.`}
         {currentStep === 7 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Inbound Email */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-2xl mx-auto space-y-6">
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
                       <Mail className="w-6 h-6 text-emerald-600" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-emerald-900">Inbound Email Detected</h2>
+                      <h2 className="text-base font-semibold text-emerald-900">Inbound Email Detected</h2>
                       <p className="text-sm text-emerald-700">Customer response received</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm">
                   <h3 className="text-sm font-bold text-blue-900 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <FileText className="w-4 h-4" />
                     Key details shared by customer
@@ -4513,10 +4513,10 @@ Thank you.`}
                   <p className="text-xs text-blue-700 mt-2">Total: $142,500 (matches payment amount)</p>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                  <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                  <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
                         <Building2 className="w-5 h-5 text-emerald-600" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -4530,8 +4530,8 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="p-8">
-                    <div className="prose prose-sm max-w-none text-slate-600">
+                  <div className="p-4">
+                    <div className="prose prose-sm max-w-none text-xs text-slate-600">
                       <p>Hi Kroll Team,</p>
                       <p>Please find attached the remittance advice for payment $142,500.</p>
                       <p className="mt-4">This payment should be applied to:</p>
@@ -4547,7 +4547,7 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <FileText className="w-4 h-4" />
                     Matched via
@@ -4571,9 +4571,9 @@ Thank you.`}
             </motion.div>
 
             {/* Right: Attachment & AI Action */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-xl mx-auto space-y-6">
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                     <FileText className="w-4 h-4 text-blue-500" />
                     Attachment
@@ -4587,7 +4587,7 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                     <Cpu className="w-4 h-4 text-blue-500" />
                     AI Action
@@ -4611,22 +4611,22 @@ Thank you.`}
         {currentStep === 8 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Extracted Allocation */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-2xl mx-auto space-y-6">
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
                       <CheckCircle2 className="w-6 h-6 text-emerald-600" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-emerald-900">Extracted Allocation</h2>
+                      <h2 className="text-base font-semibold text-emerald-900">Extracted Allocation</h2>
                       <p className="text-sm text-emerald-700">Successfully parsed from remittance</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">Invoice Allocation</h3>
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4">Invoice Allocation</h3>
                   <div className="space-y-3">
                     {[
                       { id: 'INV-9912', amount: '$100,000' },
@@ -4641,8 +4641,8 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">Additional Data</h3>
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4">Additional Data</h3>
                   <div className="space-y-3">
                     {[
                       { label: 'Discount', value: 'None' },
@@ -4660,9 +4660,9 @@ Thank you.`}
             </motion.div>
 
             {/* Right: Validation & Confidence */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-xl mx-auto space-y-6">
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-blue-900 mb-3 flex items-center gap-2">
                     <Cpu className="w-4 h-4 text-blue-600" />
                     Agent interpretation
@@ -4672,7 +4672,7 @@ Thank you.`}
                   </p>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                     Validation
@@ -4691,7 +4691,7 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">Confidence</h3>
                   <div className="space-y-3">
                     <div>
@@ -4706,7 +4706,7 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-start gap-4">
+                <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-4 flex items-start gap-4">
                   <div className="bg-emerald-100 p-2 rounded-full mt-0.5">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                   </div>
@@ -4724,27 +4724,27 @@ Thank you.`}
         {currentStep === 9 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Final Allocation Plan */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-2xl mx-auto space-y-6">
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
                       <CheckCircle2 className="w-6 h-6 text-emerald-600" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-emerald-900">Invoice Matching Successful</h2>
+                      <h2 className="text-base font-semibold text-emerald-900">Invoice Matching Successful</h2>
                       <p className="text-sm text-emerald-700">Final allocation plan ready</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">Final Allocation Plan</h3>
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4">Final Allocation Plan</h3>
                   <div className="space-y-4">
                     <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
                       <div className="flex justify-between items-center mb-3">
                         <span className="text-sm text-slate-600">Payment</span>
-                        <span className="text-lg font-bold text-slate-900">$142,500</span>
+                        <span className="text-sm font-semibold text-slate-900">$142,500</span>
                       </div>
                     </div>
                     <div>
@@ -4770,9 +4770,9 @@ Thank you.`}
             </motion.div>
 
             {/* Right: Controls Passed */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-xl mx-auto space-y-6">
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                     Controls Passed
@@ -4791,13 +4791,13 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 shadow-sm">
                   <div className="text-center">
                     <div className="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle2 className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-emerald-900 mb-2">Ready for Posting</h3>
-                    <p className="text-sm text-emerald-700">All controls passed. Allocation validated and ready to post to ERP.</p>
+                    <h3 className="text-sm font-semibold text-emerald-900 mb-2">Ready for Posting</h3>
+                    <p className="text-sm text-emerald-700">All controls passed. Allocation validated and ready to post to D365.</p>
                   </div>
                 </div>
               </div>
@@ -4809,25 +4809,25 @@ Thank you.`}
         {currentStep === 10 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Ready for Auto Posting */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-2xl mx-auto space-y-6">
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
                       <Zap className="w-6 h-6 text-emerald-600" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-emerald-900">Ready for Auto Posting</h2>
+                      <h2 className="text-base font-semibold text-emerald-900">Ready for Auto Posting</h2>
                       <p className="text-sm text-emerald-700">Automation resumed after customer input</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">Resolution Type</h3>
-                  <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4">Resolution Type</h3>
+                  <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                      <div className="w-12 h-12 bg-[#00263A] rounded-full flex items-center justify-center">
                         <Mail className="w-6 h-6 text-white" />
                       </div>
                       <div>
@@ -4841,9 +4841,9 @@ Thank you.`}
             </motion.div>
 
             {/* Right: Summary */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-xl mx-auto space-y-6">
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4">Process Summary</h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
@@ -4856,7 +4856,7 @@ Thank you.`}
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                      <span className="text-sm font-medium text-emerald-900">Ready for ERP posting</span>
+                      <span className="text-sm font-medium text-emerald-900">Ready for D365 posting</span>
                     </div>
                   </div>
                 </div>
@@ -4865,29 +4865,29 @@ Thank you.`}
           </React.Fragment>
         </div>}
 
-        {/* Step 11: Posting to ERP (Harlow Crane only) */}
+        {/* Step 11: Posting to D365 (Harlow Crane only) */}
         {currentStep === 11 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Posting Details */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-2xl mx-auto space-y-6">
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                       <Cpu className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-blue-900">Posting to ERP</h2>
-                      <p className="text-sm text-blue-700">Writing to ERP</p>
+                      <h2 className="text-base font-semibold text-blue-900">Posting to D365</h2>
+                      <p className="text-sm text-blue-700">Writing to D365</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">Posting Details</h3>
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4">Posting Details</h3>
                   <div className="space-y-3">
                     {[
-                      { label: 'System', value: 'ERP' },
+                      { label: 'System', value: 'D365' },
                       { label: 'Document type', value: 'DZ' },
                       { label: 'Clearing document', value: '1800002472' }
                     ].map((item, i) => (
@@ -4902,9 +4902,9 @@ Thank you.`}
             </motion.div>
 
             {/* Right: Accounting Impact */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-xl mx-auto space-y-6">
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4">Accounting Impact</h3>
                   <div className="space-y-3">
                     {[
@@ -4920,12 +4920,12 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-3">
                     <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
                     <h3 className="font-bold text-blue-900">Posting in Progress</h3>
                   </div>
-                  <p className="text-sm text-blue-800">Writing transaction to ERP...</p>
+                  <p className="text-sm text-blue-800">Writing transaction to D365...</p>
                 </div>
               </div>
             </motion.div>
@@ -4936,22 +4936,22 @@ Thank you.`}
         {currentStep === 12 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Resolution Summary */}
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-2xl mx-auto space-y-6">
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center">
                       <CheckCircle2 className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-emerald-900">Cash Application Completed</h2>
+                      <h2 className="text-sm font-semibold text-emerald-900">Cash Application Completed</h2>
                       <p className="text-sm text-emerald-700">Transaction successfully posted</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">Resolution Summary</h3>
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-4">Resolution Summary</h3>
                   <div className="space-y-3">
                     {[
                       { label: 'Customer', value: 'Harlow Crane LLP' },
@@ -4970,9 +4970,9 @@ Thank you.`}
             </motion.div>
 
             {/* Right: Business Impact */}
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-              <div className="max-w-xl mx-auto space-y-6">
-                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+              <div className="max-w-xl mx-auto space-y-4">
+                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                   <h3 className="font-bold text-slate-800 mb-4">Business Impact</h3>
                   <div className="space-y-3">
                     {[
@@ -4988,13 +4988,13 @@ Thank you.`}
                   </div>
                 </div>
 
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 shadow-sm">
                   <div className="text-center">
                     <div className="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle2 className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-emerald-900 mb-2">Transaction Complete</h3>
-                    <p className="text-sm text-emerald-700">Payment successfully allocated and posted to ERP</p>
+                    <h3 className="text-sm font-semibold text-emerald-900 mb-2">Transaction Complete</h3>
+                    <p className="text-sm text-emerald-700">Payment successfully allocated and posted to D365</p>
                   </div>
                 </div>
               </div>
@@ -5007,14 +5007,14 @@ Thank you.`}
           {processingRowId === '9' ? (
             /* Bank Fees Step 3: Policy Check */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Policy: Bank Fees</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Policy: Bank Fees</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Customer / Contract Policy</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { field: 'Customer', value: 'Vantage Global Advisors' },
                         { field: 'Contract ref', value: 'ALT-2024-001' },
@@ -5023,8 +5023,8 @@ Thank you.`}
                         { field: 'Engagement letter terms', value: 'Bank-fee deductions contractually allowed (where applicable)' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                          <span className="text-sm text-slate-500">{row.field}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
@@ -5035,18 +5035,18 @@ Thank you.`}
                   </p>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
                       AI Decision
                     </h3>
                     <p className="text-sm text-emerald-800">Policy: <strong>Absorb</strong> — company will book bank charges as expense. No customer chargeback.</p>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Next step</p>
-                    <p className="text-sm text-blue-800 mt-1">Proceed to ERP posting preview (Option B1: expense with reason code BNK_FEE).</p>
+                    <p className="text-sm text-blue-800 mt-1">Proceed to D365 posting preview (Option B1: expense with reason code BNK_FEE).</p>
                   </div>
                 </div>
               </motion.div>
@@ -5054,14 +5054,14 @@ Thank you.`}
           ) : processingRowId === '7' ? (
             /* Nakamura Holdings Step 3: Customer Tax Profile Analysis */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Customer Tax Profile</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Customer Tax Profile</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Customer Information</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { field: 'Customer Name', value: 'Nakamura Holdings KK Ltd' },
                         { field: 'Country', value: 'United Kingdom' },
@@ -5069,17 +5069,17 @@ Thank you.`}
                         { field: 'Payment Behaviour', value: 'Net payments with withholding' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                          <span className="text-sm text-slate-500">{row.field}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Tax Documentation</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { document: 'W-8BEN-E', status: 'Valid' },
                         { document: 'Treaty Status', status: 'Eligible' },
@@ -5094,16 +5094,16 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2">Payment Type Classification</h3>
                     <p className="text-xs text-blue-800 mb-1">Invoice description:</p>
                     <p className="text-sm font-semibold text-blue-900">Royalty license fee</p>
                     <p className="text-xs text-blue-800 mt-3">AI tax logic:</p>
                     <p className="text-sm text-blue-800">Royalty payments to non-US entities may be subject to US withholding tax.</p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-amber-900 mb-1 flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       Documentation SLA
@@ -5116,14 +5116,14 @@ Thank you.`}
           ) : processingRowId === '8' ? (
             /* Castellan Step 3: Customer Tax Profile */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Customer Tax Profile</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Customer Tax Profile</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Customer Profile Panel</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { field: 'Customer', value: 'Castellan Restructuring Ltd' },
                         { field: 'Customer ID', value: 'USC-2002' },
@@ -5132,36 +5132,36 @@ Thank you.`}
                         { field: 'Payment Type', value: 'Software Subscription' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                          <span className="text-sm text-slate-500">{row.field}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Tax Documentation</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Document</span>
-                        <span className="text-sm font-semibold text-slate-900">W-8BEN-E</span>
+                        <span className="text-xs text-slate-500">Document</span>
+                        <span className="text-xs font-semibold text-slate-900">W-8BEN-E</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-slate-100">
-                        <span className="text-sm text-slate-500">Status</span>
+                        <span className="text-xs text-slate-500">Status</span>
                         <span className="text-sm font-semibold text-rose-600">Expired</span>
                       </div>
                       <div className="flex justify-between py-2">
-                        <span className="text-sm text-slate-500">Expiry Date</span>
-                        <span className="text-sm font-semibold text-slate-900">Jan 2025</span>
+                        <span className="text-xs text-slate-500">Expiry Date</span>
+                        <span className="text-xs font-semibold text-slate-900">Jan 2025</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2">Treaty Information</h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between"><span className="text-blue-700">Treaty Country</span><span className="font-semibold text-blue-900">Japan</span></div>
@@ -5172,7 +5172,7 @@ Thank you.`}
                       Under the US–Japan treaty, qualifying royalty and service payments may be subject to a reduced 10% withholding rate instead of the default 30%.
                     </p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-amber-900 mb-2">AI Insight</h3>
                     <p className="text-sm text-amber-800 mb-2">
                       Customer treaty eligibility detected. However W‑8 documentation has expired, so the payer is likely applying the default 30% NRA rate.
@@ -5183,7 +5183,7 @@ Thank you.`}
                       <li>Risk: Potential over‑withholding of 20% on this payment.</li>
                     </ul>
                   </div>
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">What this step shows</h3>
                     <p className="text-sm text-slate-700">
                       This step confirms that Castellan Restructuring Ltd should benefit from a reduced treaty rate, but missing/expired documentation prevents it.
@@ -5197,21 +5197,21 @@ Thank you.`}
             /* Harlow Crane Step 3: Fetching Open Invoices */
             <React.Fragment>
               {/* Left: Invoice List */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 mb-2">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-2">
                     <div className="grid grid-cols-3 gap-4">
-                      <div><span className="text-xs font-bold text-blue-600 uppercase">System</span><p className="font-bold text-blue-900 text-sm">ERP</p></div>
+                      <div><span className="text-xs font-bold text-blue-600 uppercase">System</span><p className="font-bold text-blue-900 text-sm">D365</p></div>
                       <div><span className="text-xs font-bold text-blue-600 uppercase">Customer</span><p className="font-bold text-blue-900 text-sm">Harlow Crane LLP</p></div>
                       <div><span className="text-xs font-bold text-blue-600 uppercase">Open Invoices</span><p className="font-bold text-blue-900 text-sm">4 retrieved</p></div>
                     </div>
                   </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-3">
                     <p className="text-sm font-bold text-slate-800">Multiple open invoices are present.</p>
                     <p className="text-xs text-slate-600 mt-1">Payment amount: <span className="font-bold">$142,500</span></p>
                   </div>
                   <h3 className="font-bold text-slate-800">Open Invoices</h3>
-                  <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                  <div className="border border-slate-200 rounded-lg overflow-hidden shadow-sm">
                     <table className="w-full text-left">
                       <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
@@ -5228,7 +5228,7 @@ Thank you.`}
                       </tbody>
                     </table>
                   </div>
-                  <div className="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                  <div className="bg-rose-50 border border-rose-200 rounded-lg p-4">
                     <div className="flex items-center gap-2">
                       <XCircle className="w-5 h-5 text-rose-600" />
                       <span className="text-sm font-bold text-rose-900">No single invoice for $142,500</span>
@@ -5237,9 +5237,9 @@ Thank you.`}
                 </div>
               </motion.div>
               {/* Right: AI Matching Logic */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
                       <Cpu className="w-4 h-4 text-blue-500" />
                       Combinations matching payment ($142,500)
@@ -5259,7 +5259,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex items-start gap-4">
                     <div className="bg-emerald-100 p-2 rounded-full mt-0.5">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                     </div>
@@ -5269,7 +5269,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-rose-50 border-2 border-rose-200 rounded-xl p-5">
+                  <div className="bg-rose-50 border-2 border-rose-200 rounded-lg p-4">
                     <h3 className="font-bold text-rose-900 mb-3 flex items-center gap-2">
                       <XCircle className="w-4 h-4" />
                       Result
@@ -5285,7 +5285,7 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-4">
                     <div className="bg-amber-100 p-2 rounded-full mt-0.5">
                       <AlertCircle className="w-5 h-5 text-amber-600" />
                     </div>
@@ -5301,17 +5301,17 @@ Thank you.`}
             /* Sterling Trust Bank Step 4 */
             <React.Fragment>
               {/* Left: Open Invoices */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 mb-2">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-2">
                     <div className="grid grid-cols-3 gap-4">
-                      <div><span className="text-xs font-bold text-blue-600 uppercase">System</span><p className="font-bold text-blue-900 text-sm">ERP</p></div>
-                      <div><span className="text-xs font-bold text-blue-600 uppercase">Customer</span><p className="font-bold text-blue-900 text-sm">Sterling Trust Bank Europe</p></div>
+                      <div><span className="text-xs font-bold text-blue-600 uppercase">System</span><p className="font-bold text-blue-900 text-sm">D365</p></div>
+                      <div><span className="text-xs font-bold text-blue-600 uppercase">Customer</span><p className="font-bold text-blue-900 text-sm">Sterling Trust Bank</p></div>
                       <div><span className="text-xs font-bold text-blue-600 uppercase">Open Invoices</span><p className="font-bold text-blue-900 text-sm">3 found</p></div>
                     </div>
                   </div>
                   <h3 className="font-bold text-slate-800">Open Invoices</h3>
-                  <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                  <div className="border border-slate-200 rounded-lg overflow-hidden shadow-sm">
                     <table className="w-full text-left">
                       <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
@@ -5323,7 +5323,7 @@ Thank you.`}
                       </thead>
                       <tbody className="divide-y divide-slate-100">
                         <tr className="bg-blue-50/50 border-l-4 border-blue-400">
-                          <td className="px-4 py-3 font-mono font-bold text-slate-800">INV-4432</td>
+                          <td className="px-4 py-3 font-mono font-bold text-slate-800">KRL-INV-4432</td>
                           <td className="px-4 py-3 font-bold text-slate-800">$100,000</td>
                           <td className="px-4 py-3 text-slate-700">7 Feb 2026</td>
                           <td className="px-4 py-3 text-slate-700">9 Mar 2026</td>
@@ -5335,7 +5335,7 @@ Thank you.`}
                           <td className="px-4 py-3 text-slate-700">4 Mar 2026</td>
                         </tr>
                         <tr>
-                          <td className="px-4 py-3 font-mono font-bold text-slate-800">INV-4478</td>
+                          <td className="px-4 py-3 font-mono font-bold text-slate-800">KRL-INV-4478</td>
                           <td className="px-4 py-3 font-bold text-slate-800">$98,000</td>
                           <td className="px-4 py-3 text-slate-700">16 Feb 2026</td>
                           <td className="px-4 py-3 text-slate-700">18 Mar 2026</td>
@@ -5347,9 +5347,9 @@ Thank you.`}
                 </div>
               </motion.div>
               {/* Right: Matching Signals + AI Recommendation */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                       <Zap className="w-4 h-4 text-amber-500" />
                       Matching Signals
@@ -5365,12 +5365,12 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 shadow-sm">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-emerald-900 mb-3 flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> AI Recommendation</h3>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center py-2 border-b border-emerald-100">
                         <span className="text-sm text-emerald-700">Suggested match</span>
-                        <span className="font-mono font-bold text-emerald-900">INV-4432</span>
+                        <span className="font-mono font-bold text-emerald-900">KRL-INV-4432</span>
                       </div>
                       <div className="flex justify-between items-center py-2 border-b border-emerald-100">
                         <span className="text-sm text-emerald-700">Invoice amount</span>
@@ -5382,7 +5382,7 @@ Thank you.`}
                       </div>
                       <div className="pt-2">
                         <p className="text-sm font-medium text-emerald-900">Reason</p>
-                        <p className="text-xs text-emerald-800 mt-1">Payment of $98,000 matches invoice INV-4432 ($100,000) after 2% early payment discount. Historically the customer has availed early payment discounts (85% of invoices).</p>
+                        <p className="text-xs text-emerald-800 mt-1">Payment of $98,000 matches invoice KRL-INV-4432 ($100,000) after 2% early payment discount. Historically the customer has availed early payment discounts (85% of invoices).</p>
                       </div>
                     </div>
                   </div>
@@ -5392,23 +5392,23 @@ Thank you.`}
           ) : (
             /* Aldridge Pharma Step 4 (Original) */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-3xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-3xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <span className="text-xs font-bold text-blue-600 uppercase">Connected ERP</span>
-                        <p className="font-bold text-blue-900">ERP</p>
+                        <span className="text-xs font-bold text-blue-600 uppercase">Connected D365</span>
+                        <p className="font-bold text-blue-900">D365</p>
                       </div>
                       <div>
                         <span className="text-xs font-bold text-blue-600 uppercase">Customer</span>
-                        <p className="font-bold text-blue-900">Aldridge Pharma Group (C-10221)</p>
+                        <p className="font-bold text-blue-900">Aldridge Pharma Group (CL-2025-0072)</p>
                       </div>
                     </div>
                   </div>
                   <div>
                     <h3 className="font-bold text-slate-800 mb-4">Open Invoices</h3>
-                    <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div className="border border-slate-200 rounded-lg overflow-hidden shadow-sm">
                       <table className="w-full text-left">
                         <thead className="bg-slate-50 border-b border-slate-200">
                           <tr>
@@ -5419,7 +5419,7 @@ Thank you.`}
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                          {[{ id: 'INV-7845', amt: '$180,000', date: '15 Feb', match: 96, best: true },
+                          {[{ id: 'KRL-INV-4845', amt: '$180,000', date: '15 Feb', match: 96, best: true },
                           { id: 'INV-7712', amt: '$95,000', date: '28 Feb', match: 12, best: false },
                           { id: 'INV-7654', amt: '$12,400', date: '10 Mar', match: 5, best: false }].map((row, i) => (
                             <tr key={i} className={row.best ? 'bg-emerald-50/50' : ''}>
@@ -5445,9 +5445,9 @@ Thank you.`}
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                       <Zap className="w-4 h-4 text-amber-500" />
                       Matching Signals
@@ -5461,16 +5461,16 @@ Thank you.`}
                       ))}
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-4">Customer Snapshot</h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 bg-slate-50 rounded-xl text-center">
+                      <div className="p-4 bg-slate-50 rounded-lg text-center">
                         <span className="text-xs text-slate-500 uppercase font-bold">Total AR</span>
-                        <p className="text-xl font-bold text-slate-800">$540,000</p>
+                        <p className="text-sm font-semibold text-slate-800">$540,000</p>
                       </div>
-                      <div className="p-4 bg-rose-50 rounded-xl text-center">
+                      <div className="p-4 bg-rose-50 rounded-lg text-center">
                         <span className="text-xs text-rose-600 uppercase font-bold">Overdue</span>
-                        <p className="text-xl font-bold text-rose-700">$120,000</p>
+                        <p className="text-base font-semibold text-rose-700">$120,000</p>
                       </div>
                     </div>
                     <p className="mt-4 text-xs text-slate-500 text-center">
@@ -5488,10 +5488,10 @@ Thank you.`}
           {processingRowId === '9' ? (
             /* Bank Fees Step 4: Resolution Recommendation */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Kroll AI Agent</h2>
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Kroll AI Agent</h2>
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
                       <CheckCircle2 className="w-5 h-5" />
                       AI Decision
@@ -5501,26 +5501,26 @@ Thank you.`}
                     <ul className="text-sm text-emerald-800 space-y-1 list-disc list-inside">
                       <li>Apply received payment</li>
                       <li>Book bank charges expense $150 (reason code BNK_FEE)</li>
-                      <li>Clear invoice FTI-000825</li>
+                      <li>Clear invoice KRL-INV-4890</li>
                     </ul>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                     <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Case at a glance</h3>
                     </div>
                     <div className="p-4 space-y-2 text-sm">
-                      <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-semibold text-slate-800">FTI-000825</span></div>
+                      <div className="flex justify-between"><span className="text-slate-500">Invoice</span><span className="font-semibold text-slate-800">KRL-INV-4890</span></div>
                       <div className="flex justify-between"><span className="text-slate-500">Variance</span><span className="font-semibold text-slate-800">$150 (Bank fee)</span></div>
                       <div className="flex justify-between"><span className="text-slate-500">Resolution</span><span className="font-semibold text-emerald-600">Post as expense (BNK_FEE)</span></div>
                     </div>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Next steps</p>
-                    <p className="text-sm text-blue-800 mt-1">ERP posting preview → Approval</p>
+                    <p className="text-sm text-blue-800 mt-1">D365 posting preview → Approval</p>
                   </div>
                 </div>
               </motion.div>
@@ -5528,14 +5528,14 @@ Thank you.`}
           ) : processingRowId === '7' ? (
             /* Nakamura Holdings Step 4: AI Withholding Validation */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Withholding Reasoning Agent</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Withholding Reasoning Agent</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Expected Withholding Calculation</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { param: 'Invoice Amount', value: '$100,000' },
                         { param: 'Configured Rate', value: '30%' },
@@ -5543,43 +5543,43 @@ Thank you.`}
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
                           <span className="text-sm text-slate-500">{row.param}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Actual Payment Difference</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { field: 'Actual Deduction', value: '$30,000' },
                         { field: 'Expected Deduction', value: '$30,000' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
-                          <span className="text-sm text-slate-500">{row.field}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
                       AI Determination
                     </h3>
                     <p className="text-sm text-emerald-800">Observed deduction matches expected withholding rate. No discrepancy detected.</p>
                   </div>
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl px-4 py-3">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg px-4 py-3">
                     <p className="text-xs text-slate-500 uppercase font-bold">Confidence score</p>
-                    <p className="text-lg font-bold text-slate-800">AI Confidence: 96%</p>
+                    <p className="text-sm font-semibold text-slate-800">AI Confidence: 96%</p>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <p className="text-xs font-bold text-amber-900">SLA</p>
                     <p className="text-sm text-amber-800 mt-0.5">Proof of $30,000 withholding due within <strong>30 days</strong>.</p>
                   </div>
@@ -5589,14 +5589,14 @@ Thank you.`}
           ) : processingRowId === '8' ? (
             /* Castellan Step 4: AI Withholding Analysis */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <h2 className="text-lg font-bold text-slate-800">Withholding Reasoning Agent</h2>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Withholding Reasoning Agent</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Expected Withholding</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { param: 'Invoice Amount', value: '$50,000' },
                         { param: 'Treaty Rate', value: '10%' },
@@ -5604,32 +5604,32 @@ Thank you.`}
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
                           <span className="text-sm text-slate-500">{row.param}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                    <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                       <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Actual Deduction</h3>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 space-y-3">
                       {[
                         { param: 'Actual Deduction', value: '$15,000' },
                         { param: 'Actual Rate', value: '30%' }
                       ].map((row, i) => (
                         <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
                           <span className="text-sm text-slate-500">{row.param}</span>
-                          <span className="text-sm font-semibold text-slate-900">{row.value}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-6 border-l border-slate-200">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
                       <Brain className="w-4 h-4" />
                       AI Insight
@@ -5652,7 +5652,7 @@ Thank you.`}
                       </div>
                     </div>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-amber-900 mb-2">Root Cause</h3>
                     <p className="text-sm text-amber-800 mb-2">
                       W‑8BEN‑E documentation is expired. Customer likely applied default 30% withholding instead of the 10% treaty rate.
@@ -5662,7 +5662,7 @@ Thank you.`}
                       <li>Variance is fully explained by the higher withholding percentage.</li>
                     </ul>
                   </div>
-                  <div className="bg-slate-100 border border-slate-200 rounded-xl p-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
                     <h3 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">What this step clarifies</h3>
                     <p className="text-sm text-slate-700">
                       This step quantifies the gap between expected and actual withholding and flags a $10,000 potential over‑withholding amount
@@ -5676,22 +5676,22 @@ Thank you.`}
             /* Harlow Crane Step 4: AI Decision */
             <React.Fragment>
               {/* Left: Root Cause Analysis */}
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-rose-50 border-2 border-rose-200 rounded-2xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-rose-50 border-2 border-rose-200 rounded-lg p-4 shadow-sm">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
                         <XCircle className="w-6 h-6 text-rose-600" />
                       </div>
                       <div>
-                        <h2 className="text-xl font-bold text-rose-900">Automatic Cash Application Not Possible</h2>
+                        <h2 className="text-base font-semibold text-rose-900">Automatic Cash Application Not Possible</h2>
                         <p className="text-sm text-rose-700">Manual intervention required</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <h3 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2">
                       <AlertCircle className="w-5 h-5 text-slate-600" />
                       Root Cause Analysis
                     </h3>
@@ -5709,8 +5709,8 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <h3 className="text-sm font-semibold text-slate-800 mb-4 flex items-center gap-2">
                       <Mail className="w-5 h-5 text-blue-600" />
                       Outreach Data Prepared
                     </h3>
@@ -5732,14 +5732,14 @@ Thank you.`}
               </motion.div>
 
               {/* Right: AI Next Best Action */}
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                         <Mail className="w-5 h-5 text-blue-600" />
                       </div>
-                      <h3 className="text-lg font-bold text-blue-900">AI Next Best Action</h3>
+                      <h3 className="text-sm font-semibold text-blue-900">AI Next Best Action</h3>
                     </div>
                     <div className="space-y-4">
                       <div>
@@ -5756,12 +5756,12 @@ Thank you.`}
                     </div>
                   </div>
 
-                  <button onClick={handleNextStep} className="bg-white border-2 border-blue-200 rounded-xl p-6 shadow-lg hover:border-blue-300 hover:shadow-xl transition-all cursor-pointer w-full text-left active:scale-[0.98]">
+                  <button onClick={handleNextStep} className="bg-white border-2 border-blue-200 rounded-lg p-4 shadow-lg hover:border-blue-300 hover:shadow-xl transition-all cursor-pointer w-full text-left active:scale-[0.98]">
                     <div className="text-center">
-                      <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 bg-[#00263A] rounded-full flex items-center justify-center mx-auto mb-4">
                         <Mail className="w-8 h-8 text-white" />
                       </div>
-                      <h3 className="text-lg font-bold text-slate-800 mb-2">Generate AI Email</h3>
+                      <h3 className="text-sm font-semibold text-slate-800 mb-2">Generate AI Email</h3>
                       <p className="text-sm text-slate-600 mb-4">AI will draft a professional email requesting allocation details</p>
                     </div>
                   </button>
@@ -5771,13 +5771,13 @@ Thank you.`}
           ) : processingRowId === '5' ? (
             /* Sterling Trust Bank Step 5: Touchless Not Possible */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar flex flex-col items-center justify-center text-center">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar flex flex-col items-center justify-center text-center">
                 <div className="w-24 h-24 bg-rose-100 rounded-full flex items-center justify-center mb-6 ring-8 ring-rose-50">
                   <XCircle className="w-12 h-12 text-rose-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">Touchless Processing Not Possible</h2>
+                <h2 className="text-sm font-semibold text-slate-800 mb-2">Touchless Processing Not Possible</h2>
                 <p className="text-slate-500 mb-6 max-w-sm">Ambiguous invoice match detected. User input is required to proceed.</p>
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 w-full max-w-sm text-left space-y-3">
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 w-full max-w-sm text-left space-y-3">
                   <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Allocation Summary</h3>
                   {[{ label: 'Customer', value: 'Sterling Trust Bank' }, { label: 'Payment Amount', value: '$98,000' }, { label: 'Possible Matches', value: '3' }].map((item, i) => (
                     <div key={i} className="flex justify-between items-center">
@@ -5787,9 +5787,9 @@ Thank you.`}
                   ))}
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-xl mx-auto space-y-6">
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-4">Controls Status</h3>
                     <div className="space-y-3">
                       {[{ label: 'Customer active', ok: true }, { label: 'Invoices open', ok: true }, { label: 'Manual selection required', ok: false }].map((item, i) => (
@@ -5802,7 +5802,7 @@ Thank you.`}
                       ))}
                     </div>
                   </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center"><User className="w-4 h-4 text-amber-700" /></div>
                       <h3 className="font-bold text-amber-900">Resolution Mode</h3>
@@ -5815,40 +5815,40 @@ Thank you.`}
           ) : (
             /* Aldridge Pharma Step 5 (Original) */
             <React.Fragment>
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar flex flex-col items-center justify-center text-center">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar flex flex-col items-center justify-center text-center">
                 <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mb-6 ring-8 ring-emerald-50">
                   <Zap className="w-12 h-12 text-emerald-600 fill-current" />
                 </div>
-                <h2 className="text-3xl font-bold text-slate-800 mb-2">Touchless Posting</h2>
-                <p className="text-slate-500 text-lg mb-8 max-w-md">AI has successfully matched payment, customer, and invoice with high confidence.</p>
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="text-center px-6 py-4 bg-slate-50 rounded-2xl">
+                <h2 className="text-base font-semibold text-slate-800 mb-2">Touchless Posting</h2>
+                <p className="text-slate-500 text-sm mb-5 max-w-md">AI has successfully matched payment, customer, and invoice with high confidence.</p>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="text-center px-4 py-3 bg-slate-50 rounded-lg">
                     <span className="block text-xs font-bold text-slate-500 uppercase mb-1">Confidence</span>
                     <span className="block text-4xl font-bold text-emerald-600">98%</span>
                   </div>
-                  <div className="text-center px-6 py-4 bg-slate-50 rounded-2xl">
+                  <div className="text-center px-4 py-3 bg-slate-50 rounded-lg">
                     <span className="block text-xs font-bold text-slate-500 uppercase mb-1">Risk Level</span>
                     <span className="block text-4xl font-bold text-slate-800">Low</span>
                   </div>
                 </div>
               </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-                <div className="max-w-2xl mx-auto space-y-6">
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+                <div className="max-w-xl mx-auto space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <h4 className="text-xs font-bold text-blue-800 uppercase tracking-wider mb-2">Probabilistic intelligence</h4>
                       <p className="text-sm text-blue-700">Match confidence, ranking rationale (amount, invoice ref, customer). Learning-to-rank + calibration.</p>
                     </div>
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                       <h4 className="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">Deterministic controls</h4>
                       <p className="text-sm text-emerald-700">Posting rules, SoD, approvals, audit. No external write until checks pass.</p>
                     </div>
                   </div>
                   <p className="text-xs text-slate-600 bg-slate-100 border border-slate-200 rounded-lg px-3 py-2">Auto-post eligible because confidence ≥ 0.97 and all control checks passed (Tier 2/3).</p>
-                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-4">Decision Factors</h3>
                     <div className="space-y-4">
-                      {[{ title: 'Review Not Required', desc: 'Confidence score > 90% threshold set by Treasury policy.' }, { title: 'No Exceptions Found', desc: 'No deductions, short-pays, or currency mismatches identified.' }, { title: 'ERP Ready', desc: 'Customer account is active and periods are open.' }].map((item, i) => (
+                      {[{ title: 'Review Not Required', desc: 'Confidence score > 90% threshold set by Treasury policy.' }, { title: 'No Exceptions Found', desc: 'No deductions, short-pays, or currency mismatches identified.' }, { title: 'D365 Ready', desc: 'Customer account is active and periods are open.' }].map((item, i) => (
                         <div key={i} className="flex items-start gap-4">
                           <div className="mt-1 w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0"><Check className="w-3 h-3 text-emerald-600" /></div>
                           <div><h4 className="font-bold text-slate-800 text-sm">{item.title}</h4><p className="text-xs text-slate-500">{item.desc}</p></div>
@@ -5856,7 +5856,7 @@ Thank you.`}
                       ))}
                     </div>
                   </div>
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                     <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">Model diagnostics (Payment matching, last 30 days)</h4>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="flex justify-between"><span className="text-slate-500">Precision@1</span><span className="font-semibold text-slate-800">0.94</span></div>
@@ -5865,10 +5865,10 @@ Thank you.`}
                       <div className="flex justify-between"><span className="text-slate-500">False auto-post rate</span><span className="font-semibold text-slate-800">0.4%</span></div>
                     </div>
                   </div>
-                  <div className="bg-blue-600 text-white rounded-xl p-6 shadow-lg shadow-blue-200">
+                  <div className="bg-[#00263A] text-white rounded-lg p-4 shadow-lg shadow-blue-200">
                     <h3 className="font-bold text-lg mb-2">Ready to Post?</h3>
-                    <p className="text-blue-100 text-sm mb-4">Proceeding will immediately clear the invoice INV-7845 in ERP.</p>
-                    <div className="flex items-center gap-2 text-xs font-mono bg-blue-700/50 p-2 rounded">
+                    <p className="text-blue-100 text-sm mb-4">Proceeding will immediately clear the invoice KRL-INV-4845 in D365.</p>
+                    <div className="flex items-center gap-2 text-xs font-mono bg-[#003354]/60 p-2 rounded">
                       <Loader2 className="w-3 h-3 animate-pulse" />
                       Waiting for user confirmation...
                     </div>
@@ -5884,75 +5884,75 @@ Thank you.`}
 
       {/* Next Step Button - Always Visible Fixed Footer */}
       {(isBlueWave && currentStep === 10) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handleBlueWaveBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handleBlueWaveBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <ArrowLeft className="w-5 h-5" />
           Back to Failed Cash Applications
         </button>
       </div>}
       {(isNihon && currentStep === 10) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handleNihonBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handleNihonBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <ArrowLeft className="w-5 h-5" />
           Back to Failed Cash Applications
         </button>
       </div>}
       {(isBankFee && currentStep === 8) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handleBankFeeBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handleBankFeeBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <ArrowLeft className="w-5 h-5" />
           Back to Failed Cash Applications
         </button>
       </div>}
       {(isBankFee && currentStep === 7) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <ArrowLeft className="w-5 h-5" />
           Back
         </button>
-        <button onClick={handleBankFeeApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handleBankFeeApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <CheckCircle2 className="w-5 h-5" />
-          Approve & Post to ERP
+          Approve & Post to D365
         </button>
       </div>}
       {(isBlueWave && currentStep === 9) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <ArrowLeft className="w-5 h-5" />
           Back
         </button>
-        <button onClick={handleBlueWaveApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handleBlueWaveApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <CheckCircle2 className="w-5 h-5" />
-          Approve & Post to ERP
+          Approve & Post to D365
         </button>
-        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <FileText className="w-5 h-5" />
           Create Journal Draft
         </button>
-        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <User className="w-5 h-5" />
           Escalate to Analyst
         </button>
       </div>}
       {(isNihon && currentStep === 9) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <ArrowLeft className="w-5 h-5" />
           Back
         </button>
-        <button onClick={handleNihonApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handleNihonApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <CheckCircle2 className="w-5 h-5" />
-          Approve & Post to ERP
+          Approve & Post to D365
         </button>
-        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <FileText className="w-5 h-5" />
           Create Journal Draft
         </button>
-        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <User className="w-5 h-5" />
           Escalate to Tax Team
         </button>
       </div>}
       {!(isBlueWave && currentStep === 10) && !(isBlueWave && currentStep === 9) && !(isNihon && currentStep === 10) && !(isNihon && currentStep === 9) && !(isBankFee && currentStep === 8) && !(isBankFee && currentStep === 7) && !(isNorthwind && currentStep === 4) && !(isNorthwind && currentStep === 5 && !emailSent) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <ArrowLeft className="w-5 h-5" />
           Back
         </button>
-        <button onClick={handleNextStep} className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handleNextStep} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           {isBankFee
             ? (currentStep < 8 ? 'Next Step' : 'Complete')
             : isBlueWave
@@ -6007,14 +6007,14 @@ Thank you.`}
       {/* Split Screen Content */}
       <div className="flex-1 flex flex-row overflow-hidden">
         {/* Left Panel: Posting Parameters */}
-        <div className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-          <div className="max-w-xl mx-auto space-y-8">
+        <div className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+          <div className="max-w-xl mx-auto space-y-4">
             <div>
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Posting to ERP</h2>
-              <p className="text-slate-500">Applying payment to customer account in ERP.</p>
+              <h2 className="text-sm font-semibold text-slate-800 mb-2">Posting to D365</h2>
+              <p className="text-slate-500">Applying payment to customer account in D365.</p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
               <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-6 flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 Posting Summary
@@ -6022,11 +6022,11 @@ Thank you.`}
               <div className="space-y-4">
                 <div className="flex justify-between items-center py-3 border-b border-slate-50">
                   <span className="text-slate-500 text-sm">Customer</span>
-                  <span className="font-bold text-slate-800">{isLitware ? 'Sterling Trust Bank Europe (C-44721)' : 'Aldridge Pharma Group (C-10221)'}</span>
+                  <span className="font-bold text-slate-800">{isLitware ? 'Sterling Trust Bank (CL-2025-0156)' : 'Aldridge Pharma Group (CL-2025-0072)'}</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-slate-50">
                   <span className="text-slate-500 text-sm">Invoice</span>
-                  <span className="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">{isLitware ? selectedInvoice : 'INV-7845'}</span>
+                  <span className="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">{isLitware ? selectedInvoice : 'KRL-INV-4845'}</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-slate-50">
                   <span className="text-slate-500 text-sm">Amount</span>
@@ -6038,18 +6038,18 @@ Thank you.`}
                 </div>
                 <div className="flex justify-between items-center py-3">
                   <span className="text-slate-500 text-sm">Company Code</span>
-                  <span className="font-bold text-slate-800">{isLitware ? 'EU01' : 'US01'}</span>
+                  <span className="font-bold text-slate-800">{isLitware ? 'KRL-EU' : 'KRL-US'}</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-6">
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
               <div className="flex gap-3">
                 <Building2 className="w-5 h-5 text-blue-600 flex-shrink-0" />
                 <div>
                   <h4 className="font-bold text-blue-900 text-sm mb-1">Target System</h4>
-                  <p className="text-xs text-blue-700">ERP</p>
-                  <p className="text-xs text-blue-700 mt-1">Environment: Production ({isLitware ? 'EU-West' : 'US-West'})</p>
+                  <p className="text-xs text-blue-700">D365</p>
+                  <p className="text-xs text-blue-700 mt-1">Environment: Production ({isLitware ? 'KRL-EU Region' : 'KRL-US Region'})</p>
                 </div>
               </div>
             </div>
@@ -6057,14 +6057,14 @@ Thank you.`}
         </div>
 
         {/* Right Panel: Execution Status */}
-        <div className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar flex flex-col justify-center">
+        <div className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar flex flex-col justify-center">
           <div className="max-w-md mx-auto w-full">
-            <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm text-center">
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-20 h-20 mx-auto mb-8 bg-blue-50 rounded-full flex items-center justify-center">
-                <RefreshCw className="w-10 h-10 text-blue-600" />
+            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm text-center">
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-16 h-16 mx-auto mb-5 bg-blue-50 rounded-full flex items-center justify-center">
+                <RefreshCw className="w-8 h-8 text-blue-600" />
               </motion.div>
 
-              <h3 className="text-lg font-bold text-slate-800 mb-6">Execution Status</h3>
+              <h3 className="text-sm font-semibold text-slate-800 mb-6">Execution Status</h3>
 
               <div className="space-y-4 text-left max-w-sm mx-auto">
                 <div className="flex items-center gap-4">
@@ -6105,11 +6105,11 @@ Thank you.`}
 
       {/* Fixed Footer */}
       <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <ArrowLeft className="w-5 h-5" />
           Back
         </button>
-        <button onClick={handlePostingComplete} className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handlePostingComplete} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           View Results
           <ArrowRight className="w-5 h-5" />
         </button>
@@ -6143,32 +6143,32 @@ Thank you.`}
               : <CheckCircle2 className="w-12 h-12 text-emerald-600" />}
           </motion.div>
 
-          <h2 className="text-3xl font-bold text-slate-800 mb-2 relative z-10">
+          <h2 className="text-base font-semibold text-slate-800 mb-2 relative z-10">
             {isLitware ? 'Cash Application Completed' : 'Cash Applied Successfully'}
           </h2>
           <p className="text-slate-500 text-lg mb-4 max-w-md relative z-10">
             {isLitware
               ? 'Resolved with AI assistance'
-              : <>Payment of <span className="font-bold text-slate-800">$180,000</span> has been posted and cleared against invoice <span className="font-bold text-slate-800">INV-7845</span>.</>}
+              : <>Payment of <span className="font-bold text-slate-800">$180,000</span> has been posted and cleared against invoice <span className="font-bold text-slate-800">KRL-INV-4845</span>.</>}
           </p>
 
-          <div className={`flex items-center gap-2 px-4 py-2 border rounded-full mb-8 relative z-10 ${isLitware ? 'bg-amber-50 border-amber-100' : 'bg-emerald-50 border-emerald-100'}`}>
+          <div className={`flex items-center gap-2 px-4 py-2 border rounded-full mb-5 relative z-10 ${isLitware ? 'bg-amber-50 border-amber-100' : 'bg-emerald-50 border-emerald-100'}`}>
             <div className={`w-2 h-2 rounded-full animate-pulse ${isLitware ? 'bg-amber-500' : 'bg-emerald-500'}`} />
             <span className={`text-sm font-bold ${isLitware ? 'text-amber-700' : 'text-emerald-700'}`}>
-              {isLitware ? 'Assisted Resolution — Posted to ERP' : 'Posted to ERP Finance'}
+              {isLitware ? 'Assisted Resolution — Posted to D365' : 'Posted to D365'}
             </span>
           </div>
 
           <div className="grid grid-cols-1 gap-4 w-full max-w-xs relative z-10">
-            <button onClick={handleBackToDashboard} className="flex items-center justify-center gap-3 px-6 py-4 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+            <button onClick={handleBackToDashboard} className="flex items-center justify-center gap-3 px-4 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
               <ArrowLeft className="w-5 h-5" />
               Back to Failed Cash Applications
             </button>
-            <button className="flex items-center justify-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors">
+            <button className="flex items-center justify-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
               <FileText className="w-4 h-4" />
               View Journal Entry
             </button>
-            <button className="flex items-center justify-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50 transition-colors">
+            <button className="flex items-center justify-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
               <Download className="w-4 h-4" />
               Download Audit Trail
             </button>
@@ -6176,22 +6176,22 @@ Thank you.`}
         </div>
 
         {/* Right Panel: Receipt & Summary */}
-        <div className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-          <div className="max-w-xl mx-auto space-y-6">
+        <div className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+          <div className="max-w-xl mx-auto space-y-4">
 
             {/* Transaction Record */}
-            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-              <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+            <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+              <div className="bg-slate-50 px-4 py-3 border-b border-slate-200 flex justify-between items-center">
                 <h3 className="font-bold text-slate-700 uppercase tracking-wider text-xs flex items-center gap-2">
                   <FileCheck className="w-4 h-4" />
                   Transaction Record
                 </h3>
-                <span className="font-mono text-xs text-slate-400">{isLitware ? '#1800002463' : '#DOC-882910'}</span>
+                <span className="font-mono text-xs text-slate-400">{isLitware ? '#KRL-DOC-2026-4721' : '#KRL-DOC-2026-4899'}</span>
               </div>
-              <div className="p-6 space-y-3">
+              <div className="p-4 space-y-3">
                 {isLitware ? (
                   <>
-                    {[{ label: 'Customer', value: 'Sterling Trust Bank' }, { label: 'Amount', value: '$98,000.00' }, { label: 'Invoice', value: selectedInvoice }, { label: 'Document Number', value: '1800002463' }, { label: 'Resolution Type', value: 'Assisted' }, { label: 'Posting Date', value: 'Feb 17, 2026' }, { label: 'Company Code', value: 'EU01' }].map((item, i) => (
+                    {[{ label: 'Customer', value: 'Sterling Trust Bank' }, { label: 'Amount', value: '$98,000.00' }, { label: 'Invoice', value: selectedInvoice }, { label: 'Document Number', value: 'KRL-DOC-2026-4721' }, { label: 'Resolution Type', value: 'Assisted' }, { label: 'Posting Date', value: 'Feb 17, 2026' }, { label: 'Company Code', value: 'KRL-EU' }].map((item, i) => (
                       <div key={i} className="flex justify-between items-center py-1.5 border-b border-slate-50 last:border-0">
                         <span className="text-sm text-slate-500">{item.label}</span>
                         <span className={`font-bold text-slate-800 ${item.label === 'Resolution Type' ? 'text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full text-xs' : ''}`}>{item.value}</span>
@@ -6201,24 +6201,24 @@ Thank you.`}
                 ) : (
                   <>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-slate-500">Document Type</span>
+                      <span className="text-xs text-slate-500">Document Type</span>
                       <span className="font-medium text-slate-800">Customer Payment (DZ)</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-slate-500">Posting Date</span>
+                      <span className="text-xs text-slate-500">Posting Date</span>
                       <span className="font-medium text-slate-800">Feb 17, 2026</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-slate-500">Fiscal Period</span>
+                      <span className="text-xs text-slate-500">Fiscal Period</span>
                       <span className="font-medium text-slate-800">02-2026</span>
                     </div>
                     <div className="my-4 border-t border-slate-100 border-dashed" />
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-slate-500">Amount Cleared</span>
+                      <span className="text-xs text-slate-500">Amount Cleared</span>
                       <span className="font-bold text-slate-800 text-lg">$180,000.00 USD</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-slate-500">Updated Balance</span>
+                      <span className="text-xs text-slate-500">Updated Balance</span>
                       <span className="font-bold text-emerald-600">$0.00</span>
                     </div>
                   </>
@@ -6227,7 +6227,7 @@ Thank you.`}
             </div>
 
             {/* AI Value Card */}
-            <div className={`text-white rounded-2xl shadow-lg p-6 relative overflow-hidden ${isLitware ? 'bg-amber-500 shadow-amber-200' : 'bg-blue-600 shadow-blue-200'}`}>
+            <div className={`text-white rounded-lg shadow-lg p-4 relative overflow-hidden ${isLitware ? 'bg-amber-500 shadow-amber-200' : 'bg-[#00263A] shadow-slate-200'}`}>
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
               <h3 className="font-bold uppercase tracking-wider text-xs mb-6 flex items-center gap-2 relative z-10 opacity-80">
                 <Cpu className="w-4 h-4" />
@@ -6235,11 +6235,11 @@ Thank you.`}
               </h3>
               <div className="grid grid-cols-2 gap-8 relative z-10">
                 <div>
-                  <span className="block text-3xl font-bold mb-1">{isLitware ? '82%' : '100%'}</span>
+                  <span className="block text-base font-semibold">{isLitware ? '82%' : '100%'}</span>
                   <span className="text-xs font-medium uppercase tracking-wide opacity-80">{isLitware ? 'Match Score' : 'Touchless'}</span>
                 </div>
                 <div>
-                  <span className="block text-3xl font-bold mb-1">{isLitware ? '8.4s' : '6.1s'}</span>
+                  <span className="block text-base font-semibold">{isLitware ? '8.4s' : '6.1s'}</span>
                   <span className="text-xs font-medium uppercase tracking-wide opacity-80">Processing</span>
                 </div>
               </div>
@@ -6269,11 +6269,11 @@ Thank you.`}
     <FlowStepper activeStep={5} />
     {/* Header */}
     <div className="bg-white border-b border-slate-200 px-8 py-5 flex items-center gap-4 shrink-0">
-      <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+      <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
         <AlertCircle className="w-5 h-5 text-amber-600" />
       </div>
       <div>
-        <h2 className="text-lg font-bold text-slate-800">Resolve Payment Allocation</h2>
+        <h2 className="text-sm font-semibold text-slate-800">Resolve Payment Allocation</h2>
         <p className="text-sm text-slate-500">Select the correct invoice to apply the Sterling Trust Bank payment against</p>
       </div>
       <div className="ml-auto flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full">
@@ -6293,10 +6293,10 @@ Thank you.`}
     {/* Split Screen Content */}
     <div className="flex-1 flex flex-row overflow-hidden">
       {/* Left: Payment Details + Invoice Selection */}
-      <div className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-8 custom-scrollbar">
-        <div className="max-w-xl mx-auto space-y-8">
+      <div className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
+        <div className="max-w-xl mx-auto space-y-4">
           {/* Payment Details */}
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Payment Details</h3>
             <div className="space-y-3">
               {[{ label: 'Customer', value: 'Sterling Trust Bank' }, { label: 'Amount', value: '$98,000' }, { label: 'Currency', value: 'USD' }].map((item, i) => (
@@ -6312,9 +6312,9 @@ Thank you.`}
           <div>
             <h3 className="font-bold text-slate-800 mb-4">Select Invoice</h3>
             <div className="space-y-4">
-              {[{ id: 'INV-4432', date: '9 Mar', amt: '$100,000', recommended: true }, { id: 'INV-4478', date: '18 Mar', amt: '$98,000', recommended: false }].map((inv) => (
+              {[{ id: 'KRL-INV-4432', date: '9 Mar', amt: '$100,000', recommended: true }, { id: 'KRL-INV-4478', date: '18 Mar', amt: '$98,000', recommended: false }].map((inv) => (
                 <button key={inv.id} onClick={() => setSelectedInvoice(inv.id)}
-                  className={`w-full text-left border-2 rounded-2xl p-5 transition-all ${selectedInvoice === inv.id
+                  className={`w-full text-left border-2 rounded-lg p-4 transition-all ${selectedInvoice === inv.id
                     ? 'border-blue-500 bg-blue-50/50 shadow-md shadow-blue-100'
                     : 'border-slate-200 bg-white hover:border-slate-300'
                     }`}>
@@ -6342,9 +6342,9 @@ Thank you.`}
       </div>
 
       {/* Right: AI Reasoning */}
-      <div className="flex-1 bg-slate-50/50 overflow-y-auto p-8 custom-scrollbar">
-        <div className="max-w-xl mx-auto space-y-6">
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+      <div className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
+        <div className="max-w-xl mx-auto space-y-4">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
               <Zap className="w-4 h-4 text-blue-500" />
               AI Reasoning
@@ -6361,9 +6361,9 @@ Thank you.`}
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <h3 className="font-bold text-slate-800 mb-3">Selected Invoice</h3>
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
               <span className="text-slate-500 text-sm">Posting against</span>
               <span className="font-mono font-bold text-blue-700 text-lg">{selectedInvoice}</span>
             </div>
@@ -6374,11 +6374,11 @@ Thank you.`}
 
     {/* Fixed Footer */}
     <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-      <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+      <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
         <ArrowLeft className="w-5 h-5" />
         Back
       </button>
-      <button onClick={handleConfirmPost} className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-xl text-base font-bold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+      <button onClick={handleConfirmPost} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
         <Check className="w-5 h-5" />
         Confirm &amp; Post
       </button>
@@ -6523,10 +6523,10 @@ Thank you.`}
 
     return <div className="space-y-6">
       {/* AI Summary Section - Dispute Triage & Routing Agent */}
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200 rounded-xl overflow-hidden">
+      <div className="bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
         <button onClick={() => toggleSection('summary')} className="w-full flex items-center justify-between p-5 hover:bg-blue-50/50 transition-colors">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
               <Brain className="w-5 h-5 text-blue-600" />
             </div>
             <div>
@@ -6598,7 +6598,7 @@ Thank you.`}
       </div>
 
       {/* Investigation Actions */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
         <button onClick={() => toggleSection('investigation')} className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors">
           <h3 className="text-slate-800 font-semibold">Investigation Actions</h3>
           {expandedSections.includes('investigation') ? <ChevronDown className="w-5 h-5 text-slate-500" /> : <ChevronRight className="w-5 h-5 text-slate-500" />}
@@ -6627,7 +6627,7 @@ Thank you.`}
                       : 'border-slate-200 hover:border-blue-300 hover:bg-slate-50'
                       }`}
                   >
-                    <div className={`flex items-center justify-center w-10 h-10 rounded-lg flex-shrink-0 ${isActive ? 'bg-emerald-100' : colorClasses[option.color] || 'bg-blue-100'}`}>
+                    <div className={`flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0 ${isActive ? 'bg-emerald-100' : colorClasses[option.color] || 'bg-blue-100'}`}>
                       {isActive ? (
                         <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                       ) : (
@@ -6647,7 +6647,7 @@ Thank you.`}
       </div>
 
       {/* SAP Data */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
         <button onClick={() => toggleSection('sap')} className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors">
           <div className="flex items-center gap-3">
             <Package className="w-5 h-5 text-blue-600" />
@@ -6672,7 +6672,7 @@ Thank you.`}
       </div>
 
       {/* Email Thread */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
         <button onClick={() => toggleSection('email')} className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors">
           <div className="flex items-center gap-3">
             <Mail className="w-5 h-5 text-blue-600" />
@@ -6685,12 +6685,12 @@ Thank you.`}
             <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-[#00263A] flex items-center justify-center">
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div>
                     <p className="text-slate-800 font-semibold">{dispute.customerName}</p>
-                    <p className="text-xs text-slate-500">to disputes@company.com</p>
+                    <p className="text-xs text-slate-500">to disputes@kroll.com</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -6715,7 +6715,7 @@ Thank you.`}
       </div>
 
       {/* Customer History */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
         <button onClick={() => toggleSection('customer')} className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors">
           <div className="flex items-center gap-3">
             <User className="w-5 h-5 text-blue-600" />
@@ -6765,7 +6765,7 @@ Thank you.`}
       </div>
 
       {/* Attachments */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
         <button onClick={() => toggleSection('attachments')} className="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors">
           <div className="flex items-center gap-3">
             <FileText className="w-5 h-5 text-blue-600" />
@@ -6778,7 +6778,7 @@ Thank you.`}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {attachments.map((attachment, i) => (
                 <button key={i} className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer text-left">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
                     <FileText className="w-5 h-5 text-blue-600" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -6794,10 +6794,10 @@ Thank you.`}
 
       {/* AI Decision */}
       {decisionMade && aiDecision && (
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-600 rounded-xl overflow-hidden shadow-lg animate-[fadeIn_0.5s_ease-in-out]">
-          <div className="bg-blue-600 p-4">
+        <div className="bg-slate-50 border-2 border-[#00263A] rounded-lg overflow-hidden shadow-lg animate-[fadeIn_0.5s_ease-in-out]">
+          <div className="bg-[#00263A] p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
                 <Brain className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -6824,7 +6824,7 @@ Thank you.`}
             </div>
             <div className={`rounded-lg p-4 ${dispute.touchLevel === 'high' ? 'bg-red-50 border-l-4 border-red-600' : dispute.touchLevel === 'medium' ? 'bg-blue-50 border-l-4 border-blue-600' : 'bg-emerald-50 border-l-4 border-emerald-600'}`}>
               <div className="flex items-center gap-3">
-                <span className={`px-2.5 py-1 rounded text-xs font-bold flex-shrink-0 ${dispute.touchLevel === 'high' ? 'bg-red-600 text-white' : dispute.touchLevel === 'medium' ? 'bg-blue-600 text-white' : 'bg-emerald-600 text-white'}`}>
+                <span className={`px-2.5 py-1 rounded text-xs font-bold flex-shrink-0 ${dispute.touchLevel === 'high' ? 'bg-red-600 text-white' : dispute.touchLevel === 'medium' ? 'bg-[#003354] text-white' : 'bg-emerald-600 text-white'}`}>
                   {dispute.touchLevel === 'high' ? 'HIGH TOUCH' : dispute.touchLevel === 'medium' ? 'MEDIUM TOUCH' : 'LOW TOUCH'}
                 </span>
                 <span className={`text-sm font-medium ${dispute.touchLevel === 'high' ? 'text-red-900' : dispute.touchLevel === 'medium' ? 'text-blue-900' : 'text-emerald-900'}`}>
@@ -6838,10 +6838,10 @@ Thank you.`}
 
       {/* Communication & Documentation */}
       {showCommunication && (
-        <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-600 rounded-xl overflow-hidden shadow-lg animate-[fadeIn_0.5s_ease-in-out]">
-          <div className="bg-purple-600 p-4">
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-600 rounded-lg overflow-hidden shadow-lg animate-[fadeIn_0.5s_ease-in-out]">
+          <div className="bg-[#00263A] p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
                 <Mail className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -6850,9 +6850,9 @@ Thank you.`}
               </div>
             </div>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-4 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {['Audit Trail Entry', 'Customer Email Draft', 'SAP Dispute Notes', 'ERP Timeline Update'].map((item, i) => (
+              {['Audit Trail Entry', 'Customer Email Draft', 'D365 Dispute Notes', 'D365 Timeline Update'].map((item, i) => (
                 <div key={i} className="flex items-start gap-3 p-3 bg-white border border-slate-200 rounded-lg">
                   <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -6893,7 +6893,7 @@ Thank you.`}
             </div>
             {!communicationSent && (
               <div className="flex justify-end">
-                <button onClick={() => setCommunicationSent(true)} className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hover:shadow-lg transition-all font-semibold">
+                <button onClick={() => setCommunicationSent(true)} className="flex items-center gap-2 px-6 py-3 bg-[#00263A] text-white rounded-lg hover:bg-[#003354] hover:shadow-lg transition-all font-semibold">
                   <Send className="w-4 h-4" />
                   Review & Send Communication
                 </button>
@@ -6911,10 +6911,10 @@ Thank you.`}
 
       {/* Case Closure */}
       {caseClosed && (
-        <div className="bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-600 rounded-xl overflow-hidden shadow-lg animate-[fadeIn_0.5s_ease-in-out]">
+        <div className="bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-600 rounded-lg overflow-hidden shadow-lg animate-[fadeIn_0.5s_ease-in-out]">
           <div className="bg-emerald-600 p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
                 <Lock className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -6923,7 +6923,7 @@ Thank you.`}
               </div>
             </div>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-4 space-y-4">
             <div className="bg-white border border-slate-200 rounded-lg p-4">
               <p className="text-xs text-slate-500 uppercase font-semibold mb-3">Closure Conditions Met</p>
               <div className="space-y-2">
@@ -7004,7 +7004,7 @@ Thank you.`}
     }, []);
 
     const mockEmail = {
-      from: `${dispute.customerName.toLowerCase().replace(/ /g, '.')}@company.com`,
+      from: `${dispute.customerName.toLowerCase().replace(/ /g, '.')}@kroll-client.com`,
       subject: `Dispute for Invoice ${dispute.id}`,
       date: dispute.createdDate,
       fullBody: `Dear Support Team,\n\nI am writing to dispute invoice ${dispute.id} dated ${dispute.createdDate}.\n\n${dispute.description}\n\nI have attached all relevant documentation for your review. Please address this matter urgently.\n\nBest regards,\n${dispute.customerName}`
@@ -7044,14 +7044,14 @@ Thank you.`}
       attachments: attachmentMap[dispute.reason] || [{ name: `Invoice-${dispute.id}.pdf`, type: 'Invoice' }]
     };
 
-    return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 overflow-y-auto p-8 bg-[#F8FAFC]">
+    return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 overflow-y-auto p-5 bg-[#F8FAFC]">
       <div className="mb-6">
         <button onClick={onClose} className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-colors mb-4">
           <ArrowLeft className="w-4 h-4" />
           <span className="font-semibold">Back to Disputes</span>
         </button>
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Dispute #{dispute.id}</h2>
+          <h2 className="text-sm font-semibold text-slate-800">Dispute #{dispute.id}</h2>
           <p className="text-slate-500 text-sm mt-1">{dispute.customerName}</p>
         </div>
       </div>
@@ -7072,19 +7072,19 @@ Thank you.`}
       </div>
 
       {activeTab === 'workflow' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
           <div className="grid grid-cols-4 gap-4">
             {/* Step 1: Customer Email */}
-            <div className="bg-white border border-slate-200 rounded-xl p-4">
+            <div className="bg-white border border-slate-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#00263A] flex items-center justify-center">
                   <Mail className="w-4 h-4 text-white" />
                 </div>
                 <h4 className="text-sm font-semibold text-slate-800">1. Customer Email</h4>
               </div>
               <div className="space-y-2 text-xs">
                 <div className="flex items-start gap-2"><span className="text-slate-500 font-semibold min-w-[40px]">From:</span><span className="text-slate-800 truncate">{mockEmail.from}</span></div>
-                <div className="flex items-start gap-2"><span className="text-slate-500 font-semibold min-w-[40px]">To:</span><span className="text-slate-800">disputes@company.com</span></div>
+                <div className="flex items-start gap-2"><span className="text-slate-500 font-semibold min-w-[40px]">To:</span><span className="text-slate-800">disputes@kroll.com</span></div>
                 <div className="flex items-start gap-2"><span className="text-slate-500 font-semibold min-w-[40px]">Subject:</span><span className="text-slate-800">{mockEmail.subject}</span></div>
                 <div className="flex items-start gap-2"><span className="text-slate-500 font-semibold min-w-[40px]">Date:</span><span className="text-slate-600">{mockEmail.date}</span></div>
                 <div className="flex items-start gap-2"><span className="text-slate-500 font-semibold min-w-[40px]">Priority:</span><span className="text-red-600 font-semibold">High</span></div>
@@ -7097,9 +7097,9 @@ Thank you.`}
             </div>
 
             {/* Step 2: AI Data Extraction */}
-            <div className={`bg-white border border-slate-200 rounded-xl p-4 transition-all ${visibleSteps >= 2 ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`bg-white border border-slate-200 rounded-lg p-4 transition-all ${visibleSteps >= 2 ? 'opacity-100' : 'opacity-0'}`}>
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#00263A] flex items-center justify-center">
                   <Brain className="w-4 h-4 text-white" />
                 </div>
                 <h4 className="text-sm font-semibold text-slate-800">2. AI Data Extraction</h4>
@@ -7139,9 +7139,9 @@ Thank you.`}
             </div>
 
             {/* Step 3: System Processing */}
-            <div className={`bg-white border border-slate-200 rounded-xl p-4 transition-all ${visibleSteps >= 3 ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`bg-white border border-slate-200 rounded-lg p-4 transition-all ${visibleSteps >= 3 ? 'opacity-100' : 'opacity-0'}`}>
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#00263A] flex items-center justify-center">
                   <Settings className="w-4 h-4 text-white" />
                 </div>
                 <h4 className="text-sm font-semibold text-slate-800">3. System Processing</h4>
@@ -7180,7 +7180,7 @@ Thank you.`}
             </div>
 
             {/* Step 4: Case Metadata */}
-            <div className={`bg-white border border-slate-200 rounded-xl p-4 transition-all ${visibleSteps >= 4 ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`bg-white border border-slate-200 rounded-lg p-4 transition-all ${visibleSteps >= 4 ? 'opacity-100' : 'opacity-0'}`}>
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
                 <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
                   <CheckCircle2 className="w-4 h-4 text-white" />
@@ -7246,7 +7246,7 @@ Thank you.`}
           </div>
           {workflowComplete && (
             <div className="mt-8 flex justify-center">
-              <button onClick={() => setActiveTab('investigation')} className="flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold shadow-md">
+              <button onClick={() => setActiveTab('investigation')} className="flex items-center gap-2 px-8 py-3 bg-[#00263A] text-white rounded-lg hover:bg-[#003354] transition-all font-semibold shadow-md">
                 <FileText className="w-5 h-5" />
                 <span>Start AI Investigation</span>
                 <ArrowRight className="w-5 h-5" />
@@ -7261,20 +7261,20 @@ Thank you.`}
       )}
 
       {activeTab === 'details' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-          <div className="grid grid-cols-3 gap-6 mb-6">
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+        <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
               <p className="text-xs text-slate-500 uppercase font-semibold mb-2">CUSTOMER</p>
               <p className="text-slate-800 font-semibold">{dispute.customerName}</p>
             </div>
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
               <p className="text-xs text-slate-500 uppercase font-semibold mb-2">DISPUTED AMOUNT</p>
-              <p className="text-2xl font-semibold text-blue-600">${dispute.amount.toLocaleString()}</p>
+              <p className="text-sm font-semibold text-[#00263A]">${dispute.amount.toLocaleString()}</p>
             </div>
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
               <p className="text-xs text-slate-500 uppercase font-semibold mb-2">ASSIGNED TO</p>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#00263A] flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-slate-800 font-semibold">{dispute.assignedTo}</span>
@@ -7283,7 +7283,7 @@ Thank you.`}
           </div>
           <div className="mb-6">
             <h4 className="text-slate-800 mb-3 font-semibold">Description</h4>
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
               <p className="text-slate-800">{dispute.description}</p>
             </div>
           </div>
@@ -7295,20 +7295,20 @@ Thank you.`}
   const DisputesView = () => {
     const [selectedDispute, setSelectedDispute] = useState<any>(null);
     const [disputes] = useState([
-      { id: 'DSP-2025-003', customerName: 'Pinnacle Global Industries', amount: 480000, assignedTo: 'James Wilson (Senior Specialist)', createdDate: 'Nov 24, 2025', dueDate: 'Nov 26, 2025', description: 'Pricing discrepancy across multi-year contract renewal. Requires negotiation, legal/contract review, and cross-functional involvement (sales, finance, legal). Dunning on hold, service restrictions suspended.', touchLevel: 'high' as const, reason: 'pricing' as const, priority: 'critical' as const, aiRisk: 'high' as const, sla: 'breach' as const, status: 'escalated' as const },
-      { id: 'DSP-2025-002', customerName: 'Regional Distributors LLC', amount: 18200, assignedTo: 'Michael Scott', createdDate: 'Nov 25, 2025', dueDate: 'Nov 27, 2025', description: 'Partial shipment and quantity mismatch identified. Email follow-ups to logistics & warehouse for POD/packing slip validation. One phone call to AP contact needed. Standard dispute workflow with AI-generated investigation summary.', touchLevel: 'medium' as const, reason: 'delivery' as const, priority: 'medium' as const, aiRisk: 'low' as const, sla: 'healthy' as const, status: 'in_progress' as const },
-      { id: 'DSP-2025-001', customerName: 'Acme Corporation', amount: 6530, assignedTo: 'Sarah Chen', createdDate: 'Nov 26, 2025', dueDate: 'Nov 27, 2025', description: 'Customer disputes invoice pricing - claims agreed rate was 15% lower than billed amount.', touchLevel: 'low' as const, reason: 'pricing' as const, priority: 'high' as const, aiRisk: 'medium' as const, sla: 'healthy' as const, status: 'in_progress' as const }
+      { id: 'DSP-2025-003', customerName: 'Pinnacle Capital Partners LLC', amount: 480000, assignedTo: 'James Wilson (Senior Specialist)', createdDate: 'Nov 24, 2025', dueDate: 'Nov 26, 2025', description: 'Billing dispute across multi-matter Valuation Advisory engagement KRL-MAT-2025-0847. Client contests $480K in fees citing scope creep on portfolio company valuations. Requires negotiation, legal/contract review, and cross-functional involvement (engagement partner, finance, legal). Dunning on hold.', touchLevel: 'high' as const, reason: 'pricing' as const, priority: 'critical' as const, aiRisk: 'high' as const, sla: 'breach' as const, status: 'escalated' as const },
+      { id: 'DSP-2025-002', customerName: 'Aldridge Capital Group', amount: 42500, assignedTo: 'Michael Scott (Senior Specialist)', createdDate: 'Nov 25, 2025', dueDate: 'Nov 27, 2025', description: 'Scope-of-work discrepancy on Transaction Advisory engagement KRL-MAT-2025-0712. Client disputes billable hours on financial due diligence phase. Engagement partner review and SOW amendment required.', touchLevel: 'medium' as const, reason: 'pricing' as const, priority: 'medium' as const, aiRisk: 'low' as const, sla: 'healthy' as const, status: 'in_progress' as const },
+      { id: 'DSP-2025-001', customerName: 'Sterling Trust Advisors', amount: 18750, assignedTo: 'Sarah Chen', createdDate: 'Nov 26, 2025', dueDate: 'Nov 27, 2025', description: 'Client disputes KRL-INV-4719 — claims agreed rate for Restructuring Advisory retainer was 12% lower than invoiced. Rate card reconciliation with engagement team needed.', touchLevel: 'low' as const, reason: 'pricing' as const, priority: 'high' as const, aiRisk: 'medium' as const, sla: 'healthy' as const, status: 'in_progress' as const }
     ]);
 
     if (selectedDispute) {
       return <DisputeDetailView dispute={selectedDispute} onClose={() => setSelectedDispute(null)} />;
     }
 
-    return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 overflow-y-auto p-8 bg-[#F8FAFC]">
-      <div className="mb-8"><h2 className="text-2xl font-bold text-slate-800">All Disputes</h2><p className="text-slate-500 text-sm mt-1">Dispute Triage &amp; Routing Agent classifies disputes (pricing, duplicate billing, chargeback, etc.) and routes with evidence. Auto-route ≥ 0.92 for top categories; else escalate.</p></div>
-      <div className="space-y-4">{disputes.map((d) => <div key={d.id} onClick={() => setSelectedDispute(d)} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md cursor-pointer transition-all">
-        <div className="flex items-start justify-between mb-4"><div className="flex-1"><h4 className="text-slate-800 font-mono text-sm mb-2">{d.id}</h4><h3 className="text-slate-800 font-semibold text-lg mb-2">{d.customerName}</h3><p className="text-slate-600 text-sm">{d.description}</p></div>
-          <div className="ml-6"><p className="text-xs text-slate-500 mb-1">AMOUNT</p><p className="text-2xl font-semibold text-blue-600">${d.amount.toLocaleString()}</p></div></div>
+    return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 overflow-y-auto p-5 bg-[#F8FAFC]">
+      <div className="mb-5"><h2 className="text-base font-semibold text-slate-800">All Disputes</h2><p className="text-slate-500 text-sm mt-1">Dispute Triage &amp; Routing Agent classifies disputes (pricing, duplicate billing, chargeback, etc.) and routes with evidence. Auto-route ≥ 0.92 for top categories; else escalate.</p></div>
+      <div className="space-y-4">{disputes.map((d) => <div key={d.id} onClick={() => setSelectedDispute(d)} className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md cursor-pointer transition-all">
+        <div className="flex items-start justify-between mb-4"><div className="flex-1"><h4 className="text-slate-800 font-mono text-sm mb-2">{d.id}</h4><h3 className="text-slate-800 font-semibold text-base mb-2">{d.customerName}</h3><p className="text-slate-600 text-sm">{d.description}</p></div>
+          <div className="ml-6"><p className="text-xs text-slate-500 mb-1">AMOUNT</p><p className="text-sm font-semibold text-[#00263A]">${d.amount.toLocaleString()}</p></div></div>
         <div className="flex items-center justify-between pt-4 border-t border-slate-200"><div className="flex items-center gap-4"><div className="flex items-center gap-2 text-sm text-slate-600"><User className="w-4 h-4 text-slate-400" /><span>{d.assignedTo}</span></div><div className="flex items-center gap-2 text-sm text-slate-600"><Calendar className="w-4 h-4 text-slate-400" /><span>{d.createdDate}</span></div></div>
           <span className={`px-3 py-1 rounded-full text-xs font-bold ${d.touchLevel === 'high' ? 'bg-red-50 text-red-700 border border-red-200' : d.touchLevel === 'medium' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>{d.touchLevel === 'high' ? 'High Touch' : d.touchLevel === 'medium' ? 'Medium Touch' : 'Low Touch'}</span></div></div>)}</div>
     </motion.div>;
@@ -7329,68 +7329,70 @@ Thank you.`}
     const mockEmails: IncomingEmail[] = [
       {
         id: "EMAIL-001",
-        from: "ap@acmewidgets.com",
-        subject: "Re: Invoice INV-10023 – Payment schedule",
+        from: "ap@pinnaclecp.com",
+        subject: "Re: Invoice KRL-INV-4831 – Payment schedule",
         body: `Hi,
 
-We confirm that payment for INV-10023 (USD 48,500) will be released on 15 Dec 2025, once internal approval is completed.
+We confirm that payment for KRL-INV-4831 (USD 48,500) — Valuation Advisory retainer for matter KRL-MAT-2025-0901 — will be released on 15 Dec 2025, once internal approval is completed by our CFO.
 
 Regards,
-AP Team`,
+AP Team
+Pinnacle Capital Partners LLC`,
         receivedDate: "2025-11-26T09:15:00",
         isProcessed: false
       },
       {
         id: "EMAIL-002",
-        from: "finance@northshoreretail.com",
-        subject: "Payment Confirmation - Invoice INV-20011",
+        from: "finance@aldridgecapital.com",
+        subject: "Payment Confirmation - Invoice KRL-INV-4799",
         body: `Dear Team,
 
-This is to confirm that we will process payment for Invoice INV-20011 amounting to EUR 12,300 by December 5th, 2025. Our finance team has already approved this payment.
+This is to confirm that we will process payment for Invoice KRL-INV-4799 amounting to EUR 12,300 — Transaction Advisory services, matter KRL-MAT-2025-0744 — by December 5th, 2025. Our finance team has already approved this payment.
 
 Best regards,
 Finance Department
-Northshore Retail Group`,
+Aldridge Capital Group`,
         receivedDate: "2025-11-25T14:22:00",
         isProcessed: false
       },
       {
         id: "EMAIL-003",
-        from: "accounting@globalfreight.net",
-        subject: "Re: Outstanding Invoice INV-45098",
+        from: "accounting@meridianpe.com",
+        subject: "Re: Outstanding Invoice KRL-INV-4756",
         body: `Hello,
 
-Regarding Invoice INV-45098 for $76,000 - we're working on getting this approved. We'll try to make a payment by November 20th, but there might be some delays due to internal processes.
+Regarding Invoice KRL-INV-4756 for $76,000 — Restructuring Advisory for portfolio company Argos Holdings — we're working on getting this approved internally. We'll try to make a payment by November 20th, but there might be some delays due to fund-level approval processes.
 
 Thanks,
-Accounting Team`,
+Accounting Team
+Meridian Private Equity`,
         receivedDate: "2025-11-24T11:05:00",
         isProcessed: false
       },
       {
         id: "EMAIL-004",
-        from: "payables@urbanbuilders.co.uk",
-        subject: "Invoice INV-33009 - Payment Update",
+        from: "payables@horizonrestructuring.co.uk",
+        subject: "Invoice KRL-INV-4712 - Payment Update",
         body: `Hi there,
 
-We received your invoice INV-33009. We're looking into the payment but need some time to review internally. Will get back to you soon.
+We received your invoice KRL-INV-4712 for Cyber Risk Advisory services. We're reviewing the engagement scope internally and need a few more days before we can confirm the payment date.
 
 Regards,
-Urban Builders Payables`,
+Horizon Restructuring Ltd — Payables`,
         receivedDate: "2025-11-23T16:40:00",
         isProcessed: false
       },
       {
         id: "EMAIL-005",
-        from: "ap@brightlinecomponents.com",
-        subject: "Re: Invoice INV-22077",
+        from: "ap@sterlingmgt.com",
+        subject: "Re: Invoice KRL-INV-4688",
         body: `Good afternoon,
 
-We have received invoice INV-22077 for USD 18,200. Based on our payment cycle, this should be processed by the end of November 2025.
+We have received invoice KRL-INV-4688 for USD 18,200 — Financial Crime Compliance advisory, matter KRL-MAT-2025-0698. Based on our payment cycle, this should be processed by the end of November 2025.
 
 Thank you,
 AP Department
-Brightline Components`,
+Sterling Asset Management`,
         receivedDate: "2025-11-22T10:30:00",
         isProcessed: false
       }
@@ -7399,12 +7401,12 @@ Brightline Components`,
     const initialPtpRecords: PtpRecord[] = [
       {
         id: 'PTP-10001',
-        customer: 'Northshore Retail Group',
-        invoice: 'INV-20011',
+        customer: 'Aldridge Capital Group',
+        invoice: 'KRL-INV-4799',
         amount: 12300,
         currency: 'EUR',
         commitment_date: '2025-12-05',
-        commitment_text: 'Will pay on 05 Dec',
+        commitment_text: 'Will pay on 05 Dec — finance team approved',
         predicted_pay_date: '2025-12-05',
         confidence_score: 93,
         risk_level: 'Low',
@@ -7422,12 +7424,12 @@ Brightline Components`,
       },
       {
         id: 'PTP-10002',
-        customer: 'Global Freight Logistics',
-        invoice: 'INV-45098',
+        customer: 'Meridian Private Equity',
+        invoice: 'KRL-INV-4756',
         amount: 76000,
         currency: 'USD',
         commitment_date: '2025-11-20',
-        commitment_text: 'Payment by 20 Nov',
+        commitment_text: 'Payment by 20 Nov — fund-level approval pending',
         predicted_pay_date: null,
         confidence_score: 32,
         risk_level: 'High',
@@ -7435,7 +7437,7 @@ Brightline Components`,
         owner: 'Collector – James K',
         last_interaction: 'Email',
         sentiment: 'Neutral',
-        recommended_action: 'Escalate to Senior Collector; consider credit hold',
+        recommended_action: 'Escalate to Senior Collector; engagement partner to follow up',
         created_date: '2025-11-24T11:15:00',
         history_total: 8,
         history_kept: 3,
@@ -7445,12 +7447,12 @@ Brightline Components`,
       },
       {
         id: 'PTP-10003',
-        customer: 'Urban Builders LLP',
-        invoice: 'INV-33009',
+        customer: 'Horizon Restructuring Ltd',
+        invoice: 'KRL-INV-4712',
         amount: 45200,
         currency: 'GBP',
         commitment_date: null,
-        commitment_text: 'Will try to clear some of the balance soon',
+        commitment_text: 'Reviewing scope internally — will confirm payment date shortly',
         predicted_pay_date: null,
         confidence_score: 18,
         risk_level: 'Critical',
@@ -7458,7 +7460,7 @@ Brightline Components`,
         owner: 'Collector – Sarah L',
         last_interaction: 'Email',
         sentiment: 'Cautious',
-        recommended_action: 'Call within 24 hours; review collateral and legal options',
+        recommended_action: 'Call within 24 hours; engage legal if no response by week end',
         created_date: '2025-11-23T16:50:00',
         history_total: 4,
         history_kept: 1,
@@ -7468,8 +7470,8 @@ Brightline Components`,
       },
       {
         id: 'PTP-10004',
-        customer: 'Brightline Components',
-        invoice: 'INV-22077',
+        customer: 'Sterling Asset Management',
+        invoice: 'KRL-INV-4688',
         amount: 18200,
         currency: 'USD',
         commitment_date: '2025-11-30',
@@ -7497,20 +7499,20 @@ Brightline Components`,
     const getExtractionData = (emailId: string): ExtractionData => {
       const extractionMap: { [key: string]: ExtractionData } = {
         "EMAIL-001": {
-          customer_name: "Acme Widgets Ltd",
-          email: "ap@acmewidgets.com",
-          invoice_numbers: ["INV-10023"],
+          customer_name: "Pinnacle Capital Partners LLC",
+          email: "ap@pinnaclecp.com",
+          invoice_numbers: ["KRL-INV-4831"],
           promised_amount: 48500,
           currency: "USD",
           promised_date: "2025-12-15",
-          free_text_notes: "once internal approval is completed",
+          free_text_notes: "once internal approval is completed by our CFO",
           sentiment: "Positive",
           tone: "Polite, confident"
         },
         "EMAIL-002": {
-          customer_name: "Northshore Retail Group",
-          email: "finance@northshoreretail.com",
-          invoice_numbers: ["INV-20011"],
+          customer_name: "Aldridge Capital Group",
+          email: "finance@aldridgecapital.com",
+          invoice_numbers: ["KRL-INV-4799"],
           promised_amount: 12300,
           currency: "EUR",
           promised_date: "2025-12-05",
@@ -7519,31 +7521,31 @@ Brightline Components`,
           tone: "Professional, confident"
         },
         "EMAIL-003": {
-          customer_name: "Global Freight Logistics",
-          email: "accounting@globalfreight.net",
-          invoice_numbers: ["INV-45098"],
+          customer_name: "Meridian Private Equity",
+          email: "accounting@meridianpe.com",
+          invoice_numbers: ["KRL-INV-4756"],
           promised_amount: 76000,
           currency: "USD",
           promised_date: "2025-11-20",
-          free_text_notes: "might be some delays due to internal processes",
+          free_text_notes: "delays due to fund-level approval processes",
           sentiment: "Non-committal",
           tone: "Uncertain, vague"
         },
         "EMAIL-004": {
-          customer_name: "Urban Builders LLP",
-          email: "payables@urbanbuilders.co.uk",
-          invoice_numbers: ["INV-33009"],
+          customer_name: "Horizon Restructuring Ltd",
+          email: "payables@horizonrestructuring.co.uk",
+          invoice_numbers: ["KRL-INV-4712"],
           promised_amount: 29950,
           currency: "GBP",
           promised_date: null,
-          free_text_notes: "need some time to review internally",
+          free_text_notes: "reviewing engagement scope internally",
           sentiment: "Vague",
           tone: "Non-committal"
         },
         "EMAIL-005": {
-          customer_name: "Brightline Components",
-          email: "ap@brightlinecomponents.com",
-          invoice_numbers: ["INV-22077"],
+          customer_name: "Sterling Asset Management",
+          email: "ap@sterlingmgt.com",
+          invoice_numbers: ["KRL-INV-4688"],
           promised_amount: 18200,
           currency: "USD",
           promised_date: "2025-11-30",
@@ -7564,7 +7566,7 @@ Brightline Components`,
           previous_ptp_kept: 2,
           previous_ptp_broken: 1,
           open_dispute: false,
-          customer_category: "Enterprise",
+          customer_category: "Private Equity",
           risk_segment: "Medium",
           payment_history_score: 78,
           open_amount: 48500,
@@ -7585,7 +7587,7 @@ Brightline Components`,
           previous_ptp_kept: 5,
           previous_ptp_broken: 0,
           open_dispute: false,
-          customer_category: "Mid-Market",
+          customer_category: "Corporate",
           risk_segment: "Low",
           payment_history_score: 93,
           open_amount: 12300,
@@ -7606,7 +7608,7 @@ Brightline Components`,
           previous_ptp_kept: 3,
           previous_ptp_broken: 5,
           open_dispute: false,
-          customer_category: "Enterprise",
+          customer_category: "Private Equity",
           risk_segment: "High",
           payment_history_score: 32,
           open_amount: 76000,
@@ -7627,7 +7629,7 @@ Brightline Components`,
           previous_ptp_kept: 1,
           previous_ptp_broken: 3,
           open_dispute: false,
-          customer_category: "Mid-Market",
+          customer_category: "Financial Institution",
           risk_segment: "Critical",
           payment_history_score: 18,
           open_amount: 29950,
@@ -7648,7 +7650,7 @@ Brightline Components`,
           previous_ptp_kept: 2,
           previous_ptp_broken: 0,
           open_dispute: false,
-          customer_category: "SMB",
+          customer_category: "Asset Manager",
           risk_segment: "Medium",
           payment_history_score: 70,
           open_amount: 18200,
@@ -7893,7 +7895,7 @@ Brightline Components`,
     if (selectedEmail) {
       return (
         <>
-          <header className="bg-white border-b border-slate-200 px-8 py-6">
+          <header className="bg-white border-b border-slate-200 px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <button
@@ -7904,10 +7906,10 @@ Brightline Components`,
                 </button>
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600">
+                    <div className="p-2 rounded-lg bg-[#00263A]">
                       <Mail className="w-6 h-6 text-white" />
                     </div>
-                    <h1 className="text-slate-800 text-2xl font-bold">Processing PTP Email</h1>
+                    <h1 className="text-slate-800 text-base font-semibold">Processing PTP Email</h1>
                   </div>
                   <p className="text-slate-500">
                     AI-powered extraction and risk assessment workflow
@@ -7917,7 +7919,7 @@ Brightline Components`,
               {currentStep === 'viewing' && !showProcessing && (
                 <button
                   onClick={startProcessing}
-                  className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 font-semibold"
+                  className="px-6 py-2.5 bg-[#00263A] text-white rounded-lg hover:bg-[#003354] transition-colors flex items-center gap-2 font-semibold"
                 >
                   <Brain className="w-4 h-4" />
                   <span>Process Email</span>
@@ -7926,15 +7928,15 @@ Brightline Components`,
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto bg-slate-50 p-8">
+          <main className="flex-1 overflow-y-auto bg-slate-50 p-6">
             {/* Processing Indicator - Full Screen Centered */}
             {showProcessing ? (
               <div className="fixed inset-0 flex items-center justify-center bg-slate-50/95 z-50">
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-12 max-w-md w-full shadow-xl">
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-12 max-w-md w-full shadow-xl">
                   <div className="flex flex-col items-center gap-4">
                     <Loader className="w-16 h-16 text-blue-600 animate-spin" />
                     <div className="text-center">
-                      <h3 className="text-blue-900 font-semibold text-xl mb-2">AI is processing...</h3>
+                      <h3 className="text-blue-900 font-semibold text-sm">AI is processing...</h3>
                       <p className="text-blue-800">Analyzing payment commitment and extracting data</p>
                     </div>
                   </div>
@@ -7948,8 +7950,8 @@ Brightline Components`,
                   {(currentStep === 'viewing' || currentStep === 'extracting') && (
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-1 h-5 bg-blue-600 rounded"></div>
-                        <h3 className="text-slate-800 text-lg font-semibold">Incoming Email</h3>
+                        <div className="w-1 h-5 bg-[#00263A] rounded"></div>
+                        <h3 className="text-slate-800 text-sm font-semibold">Incoming Email</h3>
                       </div>
 
                       <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
@@ -7967,7 +7969,7 @@ Brightline Components`,
                             <div className="text-slate-500">{formatDate(selectedEmail.receivedDate)}</div>
                           </div>
                         </div>
-                        <div className="p-6">
+                        <div className="p-4">
                           <pre className="whitespace-pre-wrap font-sans text-sm text-slate-800 leading-relaxed">
                             {selectedEmail.body}
                           </pre>
@@ -7986,12 +7988,12 @@ Brightline Components`,
                                   <span>Invoice matched in SAP</span>
                                 </div>
                                 <div className="text-xs text-slate-400 ml-6">
-                                  {invoiceNum} found in SAP ERP
+                                  {invoiceNum} found in D365
                                 </div>
 
                                 <div className="flex items-center gap-2 text-sm text-emerald-700 mt-3">
                                   <CheckCircle className="w-4 h-4" />
-                                  <span>Customer matched in ERP</span>
+                                  <span>Customer matched in D365</span>
                                 </div>
                                 <div className="text-xs text-slate-400 ml-6">
                                   Domain {domain} linked to {customerName}
@@ -8008,11 +8010,11 @@ Brightline Components`,
                   {extractedData && currentStep === 'complete' && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-1 h-5 bg-blue-600 rounded"></div>
-                        <h3 className="text-slate-800 text-lg font-semibold">Extracted From Email</h3>
+                        <div className="w-1 h-5 bg-[#00263A] rounded"></div>
+                        <h3 className="text-slate-800 text-sm font-semibold">Extracted From Email</h3>
                       </div>
 
-                      <div className="bg-white border border-slate-200 rounded-xl p-4">
+                      <div className="bg-white border border-slate-200 rounded-lg p-4">
                         <div className="grid grid-cols-2 gap-4 mb-4">
                           <div>
                             <div className="text-xs text-slate-400 mb-0.5">Customer</div>
@@ -8020,7 +8022,7 @@ Brightline Components`,
                           </div>
                           <div>
                             <div className="text-xs text-slate-400 mb-0.5">Promised Amount</div>
-                            <div className="text-lg font-bold text-blue-600">{formatCurrency(extractedData.promised_amount, extractedData.currency)}</div>
+                            <div className="text-base font-semibold text-blue-600">{formatCurrency(extractedData.promised_amount, extractedData.currency)}</div>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4 mb-4">
@@ -8063,28 +8065,28 @@ Brightline Components`,
                   {enrichmentData && currentStep === 'complete' && (
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-1 h-5 bg-blue-600 rounded"></div>
-                        <h3 className="text-slate-800 text-lg font-semibold">Enriched Data (SAP + ERP)</h3>
+                        <div className="w-1 h-5 bg-[#00263A] rounded"></div>
+                        <h3 className="text-slate-800 text-sm font-semibold">Enriched Data (D365 + SAP Ariba)</h3>
                       </div>
 
-                      <div className="bg-white border border-slate-200 rounded-xl p-4">
+                      <div className="bg-white border border-slate-200 rounded-lg p-4">
                         {/* Key Metrics Row */}
                         <div className="grid grid-cols-4 gap-3 mb-4">
                           <div className="bg-blue-50 rounded p-2.5 text-center border border-blue-200">
                             <div className="text-xs text-blue-600">CLTV</div>
-                            <div className="text-lg font-bold text-blue-900">${(enrichmentData.cltv / 1000).toFixed(0)}K</div>
+                            <div className="text-base font-semibold text-blue-900">${(enrichmentData.cltv / 1000).toFixed(0)}K</div>
                           </div>
                           <div className="bg-emerald-50 rounded p-2.5 text-center border border-emerald-200">
                             <div className="text-xs text-emerald-600">Revenue YTD</div>
-                            <div className="text-lg font-bold text-emerald-900">${(enrichmentData.total_revenue_ytd / 1000).toFixed(0)}K</div>
+                            <div className="text-base font-semibold text-emerald-900">${(enrichmentData.total_revenue_ytd / 1000).toFixed(0)}K</div>
                           </div>
                           <div className="bg-orange-50 rounded p-2.5 text-center border border-orange-200">
                             <div className="text-xs text-orange-600">Days Past Due</div>
-                            <div className="text-lg font-bold text-orange-900">{enrichmentData.days_past_due}</div>
+                            <div className="text-base font-semibold text-orange-900">{enrichmentData.days_past_due}</div>
                           </div>
                           <div className="bg-purple-50 rounded p-2.5 text-center border border-purple-200">
                             <div className="text-xs text-purple-600">Pay Score</div>
-                            <div className="text-lg font-bold text-purple-900">{enrichmentData.payment_history_score}%</div>
+                            <div className="text-base font-semibold text-purple-900">{enrichmentData.payment_history_score}%</div>
                           </div>
                         </div>
 
@@ -8150,13 +8152,13 @@ Brightline Components`,
                   {scoringData && currentStep === 'complete' && (
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-1 h-5 bg-blue-600 rounded"></div>
-                        <h3 className="text-slate-800 text-lg font-semibold">PTP Scoring & Prediction</h3>
+                        <div className="w-1 h-5 bg-[#00263A] rounded"></div>
+                        <h3 className="text-slate-800 text-sm font-semibold">PTP Scoring & Prediction</h3>
                       </div>
 
-                      <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-300 rounded-lg p-6">
+                      <div className="bg-slate-50 border border-[#7AADCB]/40 rounded-lg p-4">
                         <div className="flex items-start gap-3">
-                          <div className="p-2 rounded-lg bg-blue-600">
+                          <div className="p-2 rounded-lg bg-[#00263A]">
                             <Award className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1">
@@ -8167,11 +8169,11 @@ Brightline Components`,
                               <div>
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="text-xs font-semibold text-blue-900">PTP Confidence Score</div>
-                                  <span className="text-lg font-bold text-blue-900">{scoringData.ptp_confidence_score}%</span>
+                                  <span className="text-sm font-semibold text-blue-900">{scoringData.ptp_confidence_score}%</span>
                                 </div>
                                 <div className="h-3 bg-blue-200 rounded-full overflow-hidden">
                                   <div
-                                    className="h-full bg-blue-600 transition-all duration-1000"
+                                    className="h-full bg-[#00263A] transition-all duration-1000"
                                     style={{ width: `${scoringData.ptp_confidence_score}%` }}
                                   ></div>
                                 </div>
@@ -8277,14 +8279,14 @@ Brightline Components`,
     // Email List View
     return (
       <>
-        <header className="bg-white border-b border-slate-200 px-8 py-6">
+        <header className="bg-white border-b border-slate-200 px-4 py-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600">
+                <div className="p-2 rounded-lg bg-[#00263A]">
                   <Mail className="w-6 h-6 text-white" />
                 </div>
-                <h1 className="text-slate-800 text-2xl font-bold">Promise to Pay (PTP)</h1>
+                <h1 className="text-slate-800 text-base font-semibold">Promise to Pay (PTP)</h1>
               </div>
               <p className="text-slate-500">
                 AI-powered payment commitment extraction and risk assessment
@@ -8293,18 +8295,18 @@ Brightline Components`,
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto bg-slate-50 p-8">
+        <main className="flex-1 overflow-y-auto bg-slate-50 p-6">
           {/* PTP capability card */}
-          <div className="mb-8 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 md:p-8">
-              <div className="flex flex-col sm:flex-row sm:items-start gap-5">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-                  <Brain className="w-6 h-6 text-white" />
+          <div className="mb-5 bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+            <div className="p-4">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#00263A] flex items-center justify-center shadow-md">
+                  <Brain className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-slate-800 font-bold text-lg mb-2">AI-Powered PTP Detection &amp; Prediction</h3>
+                  <h3 className="text-slate-800 font-semibold text-base mb-2">AI-Powered PTP Detection &amp; Prediction</h3>
                   <p className="text-slate-600 text-sm leading-relaxed mb-5">
-                    Incoming customer emails are processed automatically: payment commitments are extracted, data is enriched from SAP and ERP, and machine learning predicts payment likelihood and recommends optimal collection actions.
+                    Incoming customer emails are processed automatically: payment commitments are extracted, data is enriched from D365 and SAP Ariba, and machine learning predicts payment likelihood and recommends optimal collection actions.
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {[
@@ -8329,7 +8331,7 @@ Brightline Components`,
             <button
               onClick={() => setActiveTab('incoming')}
               className={`px-6 py-2.5 rounded-lg transition-all ${activeTab === 'incoming'
-                ? 'bg-blue-600 text-white font-medium'
+                ? 'bg-[#00263A] text-white font-medium'
                 : 'text-slate-500 hover:bg-slate-50'
                 }`}
             >
@@ -8347,7 +8349,7 @@ Brightline Components`,
             <button
               onClick={() => setActiveTab('records')}
               className={`px-6 py-2.5 rounded-lg transition-all ${activeTab === 'records'
-                ? 'bg-blue-600 text-white font-medium'
+                ? 'bg-[#00263A] text-white font-medium'
                 : 'text-slate-500 hover:bg-slate-50'
                 }`}
             >
@@ -8368,8 +8370,8 @@ Brightline Components`,
           {activeTab === 'incoming' && (
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-1 h-5 bg-blue-600 rounded"></div>
-                <h3 className="text-slate-800 text-lg font-semibold">Incoming PTP Emails</h3>
+                <div className="w-1 h-5 bg-[#00263A] rounded"></div>
+                <h3 className="text-slate-800 text-sm font-semibold">Incoming PTP Emails</h3>
                 <span className="px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
                   {mockEmails.length} Unprocessed
                 </span>
@@ -8406,14 +8408,14 @@ Brightline Components`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">INV-10023 found in SAP ERP</div>
+                                <div className="text-xs text-slate-500">INV-10023 found in D365</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in ERP</div>
-                                <div className="text-xs text-slate-500">Domain acmewidgets.com linked to Acme Widgets Ltd</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs text-slate-500">Domain pinnaclecp.com linked to Pinnacle Capital Partners LLC</div>
                               </div>
                             </div>
                           </div>
@@ -8424,14 +8426,14 @@ Brightline Components`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">INV-20011 found in SAP ERP</div>
+                                <div className="text-xs text-slate-500">KRL-INV-4799 found in D365</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in ERP</div>
-                                <div className="text-xs text-slate-500">Domain northshoreretail.com linked to Northshore Retail Group</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs text-slate-500">Domain aldridgecapital.com linked to Aldridge Capital Group</div>
                               </div>
                             </div>
                           </div>
@@ -8442,14 +8444,14 @@ Brightline Components`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">INV-45098 found in SAP ERP</div>
+                                <div className="text-xs text-slate-500">KRL-INV-4756 found in D365</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in ERP</div>
-                                <div className="text-xs text-slate-500">Domain globalfreight.net linked to Global Freight Solutions</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs text-slate-500">Domain meridianpe.com linked to Meridian Private Equity</div>
                               </div>
                             </div>
                           </div>
@@ -8460,14 +8462,14 @@ Brightline Components`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">INV-33009 found in SAP ERP</div>
+                                <div className="text-xs text-slate-500">KRL-INV-4712 found in D365</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in ERP</div>
-                                <div className="text-xs text-slate-500">Domain urbanbuilders.co.uk linked to Urban Builders Ltd</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs text-slate-500">Domain horizonrestructuring.co.uk linked to Horizon Restructuring Ltd</div>
                               </div>
                             </div>
                           </div>
@@ -8478,14 +8480,14 @@ Brightline Components`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">INV-22077 found in SAP ERP</div>
+                                <div className="text-xs text-slate-500">KRL-INV-4688 found in D365</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in ERP</div>
-                                <div className="text-xs text-slate-500">Domain brightlinecomponents.com linked to Brightline Components Inc</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs text-slate-500">Domain sterlingmgt.com linked to Sterling Asset Management</div>
                               </div>
                             </div>
                           </div>
@@ -8497,7 +8499,7 @@ Brightline Components`,
                             e.stopPropagation();
                             handleProcessOnPage(email);
                           }}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm font-medium"
+                          className="px-4 py-2 bg-[#00263A] text-white rounded-lg hover:bg-[#003354] transition-colors flex items-center gap-2 text-sm font-medium"
                         >
                           <Brain className="w-4 h-4" />
                           <span>Process Email</span>
@@ -8514,8 +8516,8 @@ Brightline Components`,
           {activeTab === 'records' && (
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-1 h-5 bg-blue-600 rounded"></div>
-                <h3 className="text-slate-800 text-lg font-semibold">PTP Predictor Dashboard</h3>
+                <div className="w-1 h-5 bg-[#00263A] rounded"></div>
+                <h3 className="text-slate-800 text-sm font-semibold">PTP Predictor Dashboard</h3>
                 <span className="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">
                   {ptpRecords.length} Records
                 </span>
@@ -8569,8 +8571,8 @@ Brightline Components`,
                       </div>
 
                       {/* Content Row */}
-                      <div className="px-6 py-4">
-                        <div className="grid grid-cols-5 gap-6 mb-4">
+                      <div className="px-4 py-3">
+                        <div className="grid grid-cols-5 gap-4 mb-4">
                           <div>
                             <div className="text-xs text-slate-400 mb-1 flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
@@ -8603,11 +8605,11 @@ Brightline Components`,
                               Confidence Score
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="text-lg font-bold text-blue-600">{record.confidence_score}%</span>
+                              <span className="text-sm font-semibold text-[#00263A]">{record.confidence_score}%</span>
                             </div>
                             <div className="w-full h-1.5 bg-slate-200 rounded-full mt-2">
                               <div
-                                className="h-full bg-blue-600 rounded-full"
+                                className="h-full bg-[#00263A] rounded-full"
                                 style={{ width: `${record.confidence_score}%` }}
                               ></div>
                             </div>
@@ -8655,7 +8657,7 @@ Brightline Components`,
 
                           <div className="flex items-center gap-2 ml-6">
                             <button
-                              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 text-sm"
+                              className="px-4 py-2 bg-[#00263A] text-white rounded-lg hover:bg-[#003354] transition-colors flex items-center gap-2 text-sm"
                               onClick={() => setSelectedAction({ recordId: record.id, action: 'reminder' })}
                             >
                               <Mail className="w-3.5 h-3.5" />
@@ -8687,9 +8689,9 @@ Brightline Components`,
           {/* Action Modal */}
           {selectedAction && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-xl max-w-2xl w-full mx-4 shadow-2xl">
+              <div className="bg-white rounded-lg max-w-2xl w-full mx-4 shadow-2xl">
                 <div className="p-6 border-b border-slate-200 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-slate-800">
+                  <h3 className="text-sm font-semibold text-slate-800">
                     {selectedAction.action === 'reminder' && 'Send Payment Reminder'}
                     {selectedAction.action === 'call' && 'Schedule Follow-up Call'}
                     {selectedAction.action === 'more' && 'More Actions'}
@@ -8702,7 +8704,7 @@ Brightline Components`,
                   </button>
                 </div>
 
-                <div className="p-6">
+                <div className="p-4">
                   {selectedAction.action === 'reminder' && (
                     <div className="space-y-4">
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -8748,7 +8750,7 @@ Brightline Components`,
                             toast.success('Reminder email sent successfully!');
                             setSelectedAction(null);
                           }}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                          className="px-4 py-2 bg-[#00263A] text-white rounded-lg hover:bg-[#003354] transition-colors flex items-center gap-2"
                         >
                           <Send className="w-4 h-4" />
                           Send Reminder
@@ -8765,7 +8767,7 @@ Brightline Components`,
                           <div>
                             <h4 className="font-semibold text-purple-900 mb-2">Schedule Call Task</h4>
                             <p className="text-sm text-purple-800">
-                              This will create a task in your ERP calendar and send notifications.
+                              This will create a task in your D365 calendar and send notifications.
                             </p>
                           </div>
                         </div>
@@ -8798,7 +8800,7 @@ Brightline Components`,
                             toast.success('Call scheduled and added to your calendar!');
                             setSelectedAction(null);
                           }}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                          className="px-4 py-2 bg-[#00263A] text-white rounded-lg hover:bg-[#003354] transition-colors flex items-center gap-2"
                         >
                           <Calendar className="w-4 h-4" />
                           Schedule Call
@@ -8909,7 +8911,7 @@ Brightline Components`,
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-800 mb-2">QA Dashboard</h1>
+            <h1 className="text-base font-semibold text-slate-800 mb-2">QA Dashboard</h1>
             <p className="text-slate-500 text-sm">Monitor call quality and agent performance.</p>
           </div>
           <div className="flex items-center gap-3">
@@ -8935,7 +8937,7 @@ Brightline Components`,
         </div>
 
         {/* Observability */}
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-3">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 flex items-start gap-3">
           <Monitor className="w-5 h-5 text-slate-500 flex-shrink-0 mt-0.5" />
           <div>
             <h4 className="text-sm font-semibold text-slate-800 mb-1">Observability</h4>
@@ -8991,7 +8993,7 @@ Brightline Components`,
         {/* Key Metric Cards */}
         <div className="grid grid-cols-5 gap-4">
           {/* Calls Analyzed */}
-          <div className="bg-blue-600 rounded-xl p-6 text-white shadow-sm">
+          <div className="bg-[#00263A] rounded-lg p-6 text-white shadow-sm">
             <div className="text-sm font-medium text-blue-100 mb-2">Calls Analyzed</div>
             <div className="text-4xl font-bold mb-2">261</div>
             <div className="flex items-center gap-1 text-sm text-blue-100">
@@ -9001,46 +9003,46 @@ Brightline Components`,
           </div>
 
           {/* Avg QA Score */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Avg QA Score</div>
-            <div className="text-3xl font-bold text-slate-800 mb-3">81 <span className="text-lg text-green-600">Good</span></div>
+            <div className="text-base font-semibold text-slate-800 mb-3">81 <span className="text-lg text-green-600">Good</span></div>
             <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
               <div className="h-full bg-green-500 rounded-full" style={{ width: '81%' }}></div>
             </div>
           </div>
 
           {/* Compliance */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Compliance</div>
             <div className="flex items-center gap-2 mb-1">
               <AlertTriangle className="w-5 h-5 text-amber-500" />
-              <div className="text-3xl font-bold text-slate-800">54</div>
+              <div className="text-base font-semibold text-slate-800">54</div>
             </div>
             <div className="text-sm text-slate-600">breaches</div>
             <div className="text-xs text-slate-500 mt-1">21% of filtered calls</div>
           </div>
 
           {/* Neg. Sentiment */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Neg. Sentiment</div>
-            <div className="text-3xl font-bold text-slate-800 mb-1">3%</div>
+            <div className="text-base font-semibold text-slate-800 mb-1">3%</div>
             <div className="text-sm text-slate-600">1 negative calls</div>
             <TrendingDown className="w-4 h-4 text-slate-400 mt-2" />
           </div>
 
           {/* Escalations */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <div className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2">Escalations</div>
-            <div className="text-3xl font-bold text-slate-800 mb-1">54</div>
+            <div className="text-base font-semibold text-slate-800 mb-1">54</div>
             <div className="text-sm text-slate-600">calls</div>
             <div className="text-xs text-rose-600 mt-1">Score below 60</div>
           </div>
         </div>
 
         {/* Model performance (primary metrics by problem) */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
           <h3 className="font-bold text-slate-800 mb-4">Model performance (primary metrics)</h3>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-4">
             <div className="border border-slate-100 rounded-lg p-4">
               <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Payment matching (cash apps)</div>
               <div className="space-y-1 text-sm">
@@ -9068,9 +9070,9 @@ Brightline Components`,
         </div>
 
         {/* Charts Grid */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-4">
           {/* Call Quality Breakdown */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <h3 className="font-bold text-slate-800 mb-1">Call Quality Breakdown</h3>
             <p className="text-xs text-slate-500 mb-6">How 261 calls scored on quality assessment.</p>
             <ResponsiveContainer width="100%" height={200}>
@@ -9091,7 +9093,7 @@ Brightline Components`,
           </div>
 
           {/* Average Score Trend */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <h3 className="font-bold text-slate-800 mb-1">Average Score Trend</h3>
             <p className="text-xs text-slate-500 mb-6">QA score progression over the past 4 weeks.</p>
             <ResponsiveContainer width="100%" height={200}>
@@ -9108,10 +9110,10 @@ Brightline Components`,
           </div>
 
           {/* Customer Sentiment */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <h3 className="font-bold text-slate-800 mb-1">Customer Sentiment</h3>
             <p className="text-xs text-slate-500 mb-6">How customers felt during their calls.</p>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <ResponsiveContainer width="50%" height={180}>
                 <PieChart>
                   <Pie
@@ -9159,7 +9161,7 @@ Brightline Components`,
           </div>
 
           {/* Call Categories */}
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
             <h3 className="font-bold text-slate-800 mb-1">Call Categories</h3>
             <p className="text-xs text-slate-500 mb-6">What issues are customers calling about.</p>
             <ResponsiveContainer width="100%" height={200}>
@@ -9181,16 +9183,16 @@ Brightline Components`,
 
   const CallReviewsView = ({ onSelectCall }: { onSelectCall: (call: any) => void }) => {
     const mockCalls = [
-      { id: 'CALL-001', agentName: 'John Smith', customerName: 'Acme Corp', dateTime: '2025-01-15 10:30 AM', duration: '5:23', qaScore: 85, sentiment: 'Positive', category: 'Pricing', disputeId: 'DISP-123', compliance: 'Pass' },
-      { id: 'CALL-002', agentName: 'Jane Doe', customerName: 'Tech Solutions', dateTime: '2025-01-15 11:15 AM', duration: '8:45', qaScore: 72, sentiment: 'Neutral', category: 'Delivery', disputeId: 'DISP-124', compliance: 'Fail', flags: ['Missing verification'] },
+      { id: 'CALL-001', agentName: 'John Smith', customerName: 'Pinnacle Capital Partners', dateTime: '2025-01-15 10:30 AM', duration: '5:23', qaScore: 85, sentiment: 'Positive', category: 'Pricing', disputeId: 'DSP-2025-001', compliance: 'Pass' },
+      { id: 'CALL-002', agentName: 'Jane Doe', customerName: 'Aldridge Capital Group', dateTime: '2025-01-15 11:15 AM', duration: '8:45', qaScore: 72, sentiment: 'Neutral', category: 'Billing', disputeId: 'DSP-2025-002', compliance: 'Fail', flags: ['Missing verification'] },
     ];
 
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-slate-800">Call Reviews</h2>
+          <h2 className="text-sm font-semibold text-slate-800">Call Reviews</h2>
         </div>
-        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+        <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
           <table className="w-full">
             <thead className="bg-slate-50">
               <tr>
@@ -9204,11 +9206,11 @@ Brightline Components`,
             <tbody>
               {mockCalls.map((call) => (
                 <tr key={call.id} onClick={() => onSelectCall(call)} className="hover:bg-slate-50 cursor-pointer">
-                  <td className="px-6 py-4 text-sm font-medium text-slate-800">{call.id}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{call.agentName}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{call.customerName}</td>
-                  <td className="px-6 py-4 text-sm font-semibold text-slate-800">{call.qaScore}/100</td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3 text-sm font-medium text-slate-800">{call.id}</td>
+                  <td className="px-4 py-3 text-sm text-slate-600">{call.agentName}</td>
+                  <td className="px-4 py-3 text-sm text-slate-600">{call.customerName}</td>
+                  <td className="px-4 py-3 text-sm font-semibold text-slate-800">{call.qaScore}/100</td>
+                  <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${call.compliance === 'Pass' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                       }`}>
                       {call.compliance}
@@ -9225,8 +9227,8 @@ Brightline Components`,
 
   const AutoAuditView = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold text-slate-800">Auto-Audit</h2>
-      <div className="bg-white border border-slate-200 rounded-xl p-6">
+      <h2 className="text-sm font-semibold text-slate-800">Auto-Audit</h2>
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <p className="text-slate-600">Auto-audit functionality coming soon...</p>
       </div>
     </div>
@@ -9234,8 +9236,8 @@ Brightline Components`,
 
   const PatternsInsightsView = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold text-slate-800">Patterns & Insights</h2>
-      <div className="bg-white border border-slate-200 rounded-xl p-6">
+      <h2 className="text-sm font-semibold text-slate-800">Patterns & Insights</h2>
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <p className="text-slate-600">Patterns and insights functionality coming soon...</p>
       </div>
     </div>
@@ -9243,8 +9245,8 @@ Brightline Components`,
 
   const AgentCoachingView = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold text-slate-800">Agent Coaching</h2>
-      <div className="bg-white border border-slate-200 rounded-xl p-6">
+      <h2 className="text-sm font-semibold text-slate-800">Agent Coaching</h2>
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <p className="text-slate-600">Agent coaching functionality coming soon...</p>
       </div>
     </div>
@@ -9252,8 +9254,8 @@ Brightline Components`,
 
   const QAConfigurationView = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold text-slate-800">QA Configuration</h2>
-      <div className="bg-white border border-slate-200 rounded-xl p-6">
+      <h2 className="text-sm font-semibold text-slate-800">QA Configuration</h2>
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <p className="text-slate-600">QA configuration functionality coming soon...</p>
       </div>
     </div>
@@ -9325,14 +9327,14 @@ Brightline Components`,
 
       return (
         <div className="flex flex-col h-full bg-gradient-to-br from-blue-50 to-white -m-8">
-          <div className="bg-white border-b border-blue-200 px-6 py-4 flex items-center justify-between shrink-0 shadow-sm">
+          <div className="bg-white border-b border-blue-200 px-4 py-3 flex items-center justify-between shrink-0 shadow-sm">
             <div className="flex items-center gap-4">
               <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-lg transition-all">
                 <ArrowLeft className="w-5 h-5 text-slate-500" />
               </button>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-slate-800">Call Review: {call.id}</h2>
+                  <h2 className="text-sm font-semibold text-slate-800">Call Review: {call.id}</h2>
                   <span className={`px-3 py-1 rounded-full text-xs font-semibold ${call.sentiment === 'Positive' ? 'bg-green-100 text-green-700' :
                     call.sentiment === 'Negative' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'
                     }`}>
@@ -9347,12 +9349,12 @@ Brightline Components`,
             <div className="flex items-center gap-4">
               <div className="text-right">
                 <div className="text-xs text-slate-500 font-medium">QA Score</div>
-                <div className={`text-2xl font-bold ${adjustedScore >= 85 ? 'text-green-600' : adjustedScore >= 70 ? 'text-yellow-600' : 'text-red-600'
+                <div className={`text-lg font-semibold ${adjustedScore >= 85 ? 'text-green-600' : adjustedScore >= 70 ? 'text-yellow-600' : 'text-red-600'
                   }`}>
                   {adjustedScore}/100
                 </div>
               </div>
-              <button onClick={() => setShowConfirmDialog(true)} className="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2">
+              <button onClick={() => setShowConfirmDialog(true)} className="px-5 py-2.5 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 Submit Review
               </button>
@@ -9361,12 +9363,12 @@ Brightline Components`,
 
           {showConfirmDialog && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6">
+              <div className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
                     <Info className="w-6 h-6 text-blue-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-800">Complete Review?</h3>
+                  <h3 className="text-sm font-semibold text-slate-800">Complete Review?</h3>
                 </div>
                 <p className="text-slate-600 mb-6">
                   Are you sure you want to submit this review? The final score is <span className="font-bold text-blue-600">{adjustedScore}/100</span>.
@@ -9375,7 +9377,7 @@ Brightline Components`,
                   <button onClick={() => setShowConfirmDialog(false)} className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">
                     Cancel
                   </button>
-                  <button onClick={handleCompleteReview} disabled={isSubmitting} className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2">
+                  <button onClick={handleCompleteReview} disabled={isSubmitting} className="flex-1 px-4 py-2.5 bg-[#00263A] text-white rounded-lg font-semibold hover:bg-[#003354] disabled:opacity-50 flex items-center justify-center gap-2">
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</> : <><CheckCircle2 className="w-4 h-4" /> Confirm</>}
                   </button>
                 </div>
@@ -9387,12 +9389,12 @@ Brightline Components`,
             <div className="col-span-3 bg-white border-r border-slate-200 flex flex-col overflow-hidden">
               <div className="p-5 border-b border-blue-200 bg-gradient-to-br from-blue-50 to-white">
                 <div className="flex items-center gap-3 mb-3">
-                  <button onClick={() => setIsPlaying(!isPlaying)} className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700">
+                  <button onClick={() => setIsPlaying(!isPlaying)} className="w-12 h-12 rounded-full bg-[#00263A] text-white flex items-center justify-center hover:bg-[#003354]">
                     {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 pl-0.5" />}
                   </button>
                   <div className="flex-1 h-14 bg-transparent rounded-lg border-2 border-blue-200 flex items-center px-3 gap-1">
                     {Array.from({ length: 40 }).map((_, i) => (
-                      <div key={i} className={`w-1.5 rounded-full ${isPlaying && i < 15 ? 'bg-blue-600' : 'bg-blue-300'}`} style={{ height: `${Math.random() * 80 + 20}%` }}></div>
+                      <div key={i} className={`w-1.5 rounded-full ${isPlaying && i < 15 ? 'bg-[#00263A]' : 'bg-slate-300'}`} style={{ height: `${Math.random() * 80 + 20}%` }}></div>
                     ))}
                   </div>
                 </div>
@@ -9410,11 +9412,11 @@ Brightline Components`,
                 <div className="flex-1 overflow-y-auto p-5 space-y-4 border-t border-blue-200 bg-blue-50">
                   {transcript.map((entry, idx) => (
                     <div key={idx} className={`flex gap-3 ${entry.speaker === 'Agent' ? 'flex-row-reverse' : ''}`}>
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${entry.speaker === 'Agent' ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${entry.speaker === 'Agent' ? 'bg-[#00263A] text-white' : 'bg-slate-400 text-white'}`}>
                         {entry.speaker === 'Agent' ? <Mic className="w-5 h-5" /> : <User className="w-5 h-5" />}
                       </div>
                       <div className={`flex flex-col max-w-[85%] ${entry.speaker === 'Agent' ? 'items-end' : 'items-start'}`}>
-                        <div className={`p-3.5 rounded-xl text-sm ${entry.speaker === 'Agent' ? 'bg-blue-50 text-blue-900 rounded-tr-none border border-blue-200' : 'bg-white text-gray-900 rounded-tl-none border border-gray-200'
+                        <div className={`p-3.5 rounded-lg text-sm ${entry.speaker === 'Agent' ? 'bg-blue-50 text-blue-900 rounded-tr-none border border-blue-200' : 'bg-white text-gray-900 rounded-tl-none border border-gray-200'
                           }`}>
                           {entry.text}
                         </div>
@@ -9425,10 +9427,10 @@ Brightline Components`,
                 </div>
               )}
             </div>
-            <div className="col-span-5 bg-gradient-to-br from-blue-50 to-white border-r border-blue-200 overflow-y-auto p-6 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl border-2 border-blue-200 p-6">
-                  <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4">
+            <div className="col-span-5 bg-gradient-to-br from-blue-50 to-white border-r border-blue-200 overflow-y-auto p-5 space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white rounded-lg border-2 border-blue-200 p-4">
+                  <h3 className="font-semibold text-base text-slate-800 flex items-center gap-2 mb-4">
                     <Info className="w-5 h-5 text-blue-600" />
                     Call Summary
                   </h3>
@@ -9504,8 +9506,8 @@ Brightline Components`,
                     </div>
                   </div>
                 </div>
-                <div className="bg-white rounded-xl border-2 border-blue-200 p-6">
-                  <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4">
+                <div className="bg-white rounded-lg border-2 border-blue-200 p-4">
+                  <h3 className="font-semibold text-base text-slate-800 flex items-center gap-2 mb-4">
                     <ThumbsUp className="w-5 h-5 text-blue-600" />
                     Sentiment & Empathy
                   </h3>
@@ -9526,7 +9528,7 @@ Brightline Components`,
                         <span className="text-blue-600 font-semibold">9.2/10</span>
                       </div>
                       <div className="h-2.5 bg-blue-100 rounded-full overflow-hidden">
-                        <div className="w-[92%] bg-blue-600 h-full"></div>
+                        <div className="w-[92%] bg-[#00263A] h-full"></div>
                       </div>
                     </div>
                   </div>
@@ -9534,8 +9536,8 @@ Brightline Components`,
               </div>
             </div>
             <div className="col-span-4 bg-white flex flex-col overflow-y-auto">
-              <div className="p-6 space-y-6">
-                <div className="bg-white rounded-xl border border-blue-200 p-6">
+              <div className="p-4 space-y-4">
+                <div className="bg-white rounded-lg border border-blue-200 p-4">
                   <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-blue-600" />
                     AI Coaching Insights
@@ -9551,15 +9553,15 @@ Brightline Components`,
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-white rounded-xl border border-blue-200 p-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white rounded-lg border border-blue-200 p-4">
                     <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
                       <FileText className="w-4 h-4 text-blue-600" />
                       Reviewer Notes
                     </h3>
                     <textarea value={reviewerNotes} onChange={(e) => setReviewerNotes(e.target.value)} className="w-full min-h-[120px] p-3 border border-blue-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" placeholder="Add your notes here..."></textarea>
                   </div>
-                  <div className="bg-white rounded-xl border border-blue-200 p-6">
+                  <div className="bg-white rounded-lg border border-blue-200 p-4">
                     <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-blue-600" />
                       Final Score
@@ -9574,7 +9576,7 @@ Brightline Components`,
                 </div>
               </div>
               <div className="p-6 bg-white mt-auto sticky bottom-0">
-                <button onClick={() => setShowConfirmDialog(true)} disabled={isCompleted} className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-base hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2">
+                <button onClick={() => setShowConfirmDialog(true)} disabled={isCompleted} className="w-full py-4 bg-[#00263A] text-white rounded-lg font-bold text-base hover:bg-[#003354] disabled:opacity-50 flex items-center justify-center gap-2">
                   {isCompleted ? <><CheckCircle2 className="w-5 h-5" /> Review Completed</> : <><FileText className="w-5 h-5" /> Complete Review</>}
                 </button>
               </div>
@@ -9590,11 +9592,11 @@ Brightline Components`,
     }
 
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col h-full bg-[#F8FAFC]">
-        <div className="bg-white border-b border-slate-200 px-8 py-4">
+      <div className="flex flex-col h-full bg-[#F8FAFC]">
+        <div className="bg-white border-b border-slate-200 px-4 py-3">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-semibold text-slate-800">Quality Assurance</h1>
+              <h1 className="text-base font-semibold text-slate-800">Quality Assurance</h1>
               <p className="text-slate-500 text-sm">Monitor, analyze, and improve agent performance</p>
             </div>
             <div className="flex items-center gap-3">
@@ -9605,7 +9607,7 @@ Brightline Components`,
                   className="pl-4 pr-4 py-2 border border-slate-200 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
               </div>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+              <button className="px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-medium hover:bg-[#003354] transition-colors">
                 New Audit
               </button>
             </div>
@@ -9632,7 +9634,7 @@ Brightline Components`,
           </nav>
         </div>
 
-        <div className="flex-1 overflow-auto p-8">
+        <div className="flex-1 overflow-auto p-6">
           {activeTab === 'dashboard' && <QADashboardView onViewAllReviews={() => setActiveTab('reviews')} />}
           {activeTab === 'reviews' && <CallReviewsView onSelectCall={(call) => setSelectedCallReview(call)} />}
           {activeTab === 'audit' && <AutoAuditView />}
@@ -9640,7 +9642,7 @@ Brightline Components`,
           {activeTab === 'coaching' && <AgentCoachingView />}
           {activeTab === 'config' && <QAConfigurationView />}
         </div>
-      </motion.div>
+      </div>
     );
   };
 
@@ -9696,9 +9698,9 @@ Brightline Components`,
     });
 
     // System prompt for ElevenLabs ConvAI
-    const systemPromptOverride = `You are Sarah, a helpful and empathetic Microsoft Treasury Support representative. Your role is to assist customers with invoice disputes, particularly pricing discrepancies and missing contract discounts.
-When the call begins, greet the customer warmly:
-"Hello, thank you for calling Microsoft Treasury Support. My name is Sarah — how may I assist you today?"
+    const systemPromptOverride = `You are Sarah, a helpful and empathetic Kroll Receivables Intelligence support representative. Your role is to assist clients with invoice disputes, particularly fee discrepancies and missing engagement-level contract discounts on Kroll advisory invoices.
+When the call begins, greet the client warmly:
+"Hello, thank you for calling Kroll Receivables Intelligence. My name is Sarah — how may I assist you today?"
 You must speak naturally and professionally, like a real treasury support representative on a live call. Never refer to yourself as an AI, assistant, or bot. Do not use headings or structured section titles in conversation.
 
 ---
@@ -10136,20 +10138,20 @@ If you ask a question, you must wait for the customer's response before continui
         <elevenlabs-convai agent-id="agent_4401kazwsr78etrvjdcdef110sbb"></elevenlabs-convai>
       )}
 
-      <div className="bg-white border-b border-slate-200 px-8 py-4">
+      <div className="bg-white border-b border-slate-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
-              <HelpCircle className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-[#00263A] flex items-center justify-center">
+              <HelpCircle className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h1 className="text-slate-800 text-lg font-semibold">Get Assistance</h1>
+              <h1 className="text-slate-800 text-base font-semibold">Get Assistance</h1>
               <p className="text-slate-500 text-sm">{helpMode === 'assist' ? 'Automated invoice extraction and analysis' : 'Architecture, risk tiers, and agent catalog'}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setHelpMode('assist')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${helpMode === 'assist' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>Assist</button>
-            <button onClick={() => setHelpMode('architecture')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${helpMode === 'architecture' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>Architecture &amp; governance</button>
+            <button onClick={() => setHelpMode('assist')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${helpMode === 'assist' ? 'bg-[#00263A] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>Assist</button>
+            <button onClick={() => setHelpMode('architecture')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${helpMode === 'architecture' ? 'bg-[#00263A] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>Architecture &amp; governance</button>
           </div>
           {helpMode === 'assist' && currentPhase !== 'search' && (
             <button onClick={handleReset} className="px-4 py-2 text-sm font-medium border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors flex items-center gap-2">
@@ -10160,11 +10162,11 @@ If you ask a question, you must wait for the customer's response before continui
         </div>
       </div>
 
-      <div className="p-8">
+      <div className="p-4">
         {helpMode === 'architecture' && (
           <div className="max-w-4xl space-y-10">
             <section>
-              <h2 className="text-xl font-bold text-slate-800 mb-4">Target reference architecture (logical)</h2>
+              <h2 className="text-sm font-semibold text-slate-800 mb-4">Target reference architecture (logical)</h2>
               <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
                 <li><strong>Ingestion &amp; normalisation:</strong> Parse camt.053, MT940, BAI2 and remittance channels; produce canonical BankLine and Remittance objects.</li>
                 <li><strong>Event backbone:</strong> Publish BankLineReceived, RemittanceReceived, CaseUpdated; pub/sub with dead-lettering.</li>
@@ -10176,9 +10178,9 @@ If you ask a question, you must wait for the customer's response before continui
               </ul>
             </section>
             <section>
-              <h2 className="text-xl font-bold text-slate-800 mb-4">Human-in-the-loop rules and risk tiers</h2>
+              <h2 className="text-sm font-semibold text-slate-800 mb-4">Human-in-the-loop rules and risk tiers</h2>
               <p className="text-sm text-slate-600 mb-4">A deterministic Risk Engine gates automation. Initial tiering is conservative; expanded as controls prove effective.</p>
-              <div className="overflow-x-auto border border-slate-200 rounded-xl">
+              <div className="overflow-x-auto border border-slate-200 rounded-lg">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50">
                     <tr>
@@ -10190,7 +10192,7 @@ If you ask a question, you must wait for the customer's response before continui
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     <tr><td className="px-4 py-3 font-medium">Tier 0 (Assist)</td><td className="px-4 py-3 text-slate-600">High uncertainty or high impact</td><td className="px-4 py-3 text-slate-600">Suggestions only; no external writes</td><td className="px-4 py-3 text-slate-600">Analyst approves every action</td></tr>
-                    <tr><td className="px-4 py-3 font-medium">Tier 1 (Draft)</td><td className="px-4 py-3 text-slate-600">Medium confidence, moderate impact</td><td className="px-4 py-3 text-slate-600">Draft emails/tasks; propose match plans</td><td className="px-4 py-3 text-slate-600">Human sends emails; human posts to ERP</td></tr>
+                    <tr><td className="px-4 py-3 font-medium">Tier 1 (Draft)</td><td className="px-4 py-3 text-slate-600">Medium confidence, moderate impact</td><td className="px-4 py-3 text-slate-600">Draft emails/tasks; propose match plans</td><td className="px-4 py-3 text-slate-600">Human sends emails; human posts to D365</td></tr>
                     <tr><td className="px-4 py-3 font-medium">Tier 2 (Controlled auto)</td><td className="px-4 py-3 text-slate-600">High confidence + low impact + stable counterparty</td><td className="px-4 py-3 text-slate-600">Auto-post low-value/high-confidence; auto-route routine disputes</td><td className="px-4 py-3 text-slate-600">Post-action sampling audit + rollback playbook</td></tr>
                     <tr><td className="px-4 py-3 font-medium">Tier 3 (Scaled agentic)</td><td className="px-4 py-3 text-slate-600">Proven controls; mature monitoring</td><td className="px-4 py-3 text-slate-600">Auto-resolve high-volume classes; limited auto-send for low-risk templates</td><td className="px-4 py-3 text-slate-600">Continuous controls testing; tighter change management</td></tr>
                   </tbody>
@@ -10199,7 +10201,7 @@ If you ask a question, you must wait for the customer's response before continui
               <p className="text-xs text-slate-500 mt-3">Governance remains visible; consent and proper server implementations are key for tool-connected conversations.</p>
             </section>
             <section>
-              <h2 className="text-xl font-bold text-slate-800 mb-4">Agent catalog</h2>
+              <h2 className="text-sm font-semibold text-slate-800 mb-4">Agent catalog</h2>
               <p className="text-sm text-slate-600 mb-4">Agents used across Cash Applications, Disputes, Calls, and PTP. You see their outputs and risk tiers throughout this app.</p>
               <div className="space-y-4">
                 {[
@@ -10229,11 +10231,11 @@ If you ask a question, you must wait for the customer's response before continui
         {helpMode === 'assist' && currentPhase === 'search' && (
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-1 h-6 bg-blue-600 rounded-sm"></div>
-              <h3 className="text-slate-800 text-xl font-semibold">Invoice Lookup</h3>
+              <div className="w-1 h-6 bg-[#00263A] rounded-sm"></div>
+              <h3 className="text-slate-800 text-base font-semibold">Invoice Lookup</h3>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
               <div className="max-w-3xl">
                 <label className="block text-base font-medium text-slate-800 mb-3">Enter Invoice Number</label>
                 <div className="flex gap-4 mb-4">
@@ -10244,16 +10246,16 @@ If you ask a question, you must wait for the customer's response before continui
                       onChange={(e) => setInvoiceNumber(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                       placeholder="e.g., 54829"
-                      className="w-full px-5 py-3.5 text-lg border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      className="w-full px-5 py-3.5 text-lg border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00263A] focus:border-transparent"
                     />
                   </div>
-                  <button onClick={handleSearch} className="px-8 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 text-base font-medium">
+                  <button onClick={handleSearch} className="px-8 py-3.5 bg-[#00263A] text-white rounded-lg hover:bg-[#003354] transition-colors flex items-center gap-2 text-base font-medium">
                     <Search className="w-5 h-5" />
                     <span>Search</span>
                   </button>
                 </div>
 
-                <button onClick={handleDontKnowInvoice} className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-2">
+                <button onClick={handleDontKnowInvoice} className="text-[#00263A] text-sm font-medium hover:underline flex items-center gap-2">
                   <FileSearch className="w-4 h-4" />
                   I don't know my invoice number
                 </button>
@@ -10265,13 +10267,13 @@ If you ask a question, you must wait for the customer's response before continui
         {helpMode === 'assist' && currentPhase === 'loading-recent' && (
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-1 h-6 bg-blue-600 rounded-sm"></div>
-              <h3 className="text-slate-800 text-xl font-semibold">Retrieving Recent Invoices for MetroTech Supplies…</h3>
+              <div className="w-1 h-6 bg-[#00263A] rounded-sm"></div>
+              <h3 className="text-slate-800 text-base font-semibold">Retrieving Recent Invoices for MetroTech Supplies…</h3>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
               <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-200">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                   <Loader className="w-6 h-6 text-blue-600 animate-spin" />
                 </div>
                 <div>
@@ -10299,15 +10301,15 @@ If you ask a question, you must wait for the customer's response before continui
         {helpMode === 'assist' && currentPhase === 'recent-invoices' && (
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-1 h-6 bg-blue-600 rounded-sm"></div>
-              <h3 className="text-slate-800 text-xl font-semibold">Recent Invoices for MetroTech Supplies</h3>
+              <div className="w-1 h-6 bg-[#00263A] rounded-sm"></div>
+              <h3 className="text-slate-800 text-base font-semibold">Recent Invoices for MetroTech Supplies</h3>
             </div>
 
             <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
-              <div className="px-6 py-4 border-b border-slate-200">
+              <div className="px-4 py-3 border-b border-slate-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-slate-900">Recent Invoices</h3>
-                  <span className="text-sm text-slate-500">Customer: MetroTech Supplies</span>
+                  <h3 className="text-sm font-semibold text-slate-900">Recent Invoices</h3>
+                  <span className="text-xs text-slate-500">Customer: MetroTech Supplies</span>
                 </div>
               </div>
 
@@ -10325,13 +10327,13 @@ If you ask a question, you must wait for the customer's response before continui
                 <tbody className="divide-y divide-slate-200">
                   {recentInvoices.map((invoice) => (
                     <tr key={invoice.number} className={invoice.status === 'Flagged' ? 'bg-amber-50' : 'bg-white hover:bg-slate-50'}>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <span className="font-semibold text-slate-900">#{invoice.number}</span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <span className="text-slate-900 font-medium">{invoice.amount}</span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <span className={`inline-flex px-3 py-1 text-xs font-bold rounded-full ${invoice.status === 'Closed' ? 'bg-slate-200 text-slate-800' :
                           invoice.status === 'Open' ? 'bg-blue-100 text-blue-800' :
                             'bg-orange-200 text-orange-800 border border-orange-400'
@@ -10339,7 +10341,7 @@ If you ask a question, you must wait for the customer's response before continui
                           {invoice.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <div className={`flex items-center gap-2 ${invoice.discountStatus === 'Discount Applied' ? 'text-emerald-700' : 'text-red-700'
                           }`}>
                           {invoice.discountStatus === 'Discount Applied' ? (
@@ -10350,14 +10352,14 @@ If you ask a question, you must wait for the customer's response before continui
                           <span className="font-semibold">{invoice.discountStatus}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-4 py-3 whitespace-nowrap text-center">
                         {invoice.state === 'success' && <CheckCircle className="w-5 h-5 text-emerald-600 inline-block" />}
                         {invoice.state === 'warning' && <AlertTriangle className="w-5 h-5 text-orange-600 inline-block" />}
                         {invoice.state === 'pending' && <Clock className="w-5 h-5 text-blue-600 inline-block" />}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <td className="px-4 py-3 whitespace-nowrap text-right">
                         {invoice.status === 'Flagged' ? (
-                          <button onClick={() => handleViewInvoiceDetails(invoice)} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-semibold hover:bg-blue-700 shadow-sm">
+                          <button onClick={() => handleViewInvoiceDetails(invoice)} className="inline-flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-md text-sm font-semibold hover:bg-[#003354] shadow-sm">
                             <Eye className="w-4 h-4" />
                             <span>View Details</span>
                           </button>
@@ -10376,21 +10378,21 @@ If you ask a question, you must wait for the customer's response before continui
         {helpMode === 'assist' && currentPhase === 'invoice-detail' && (
           <div className="p-6 bg-slate-50 min-h-full">
             <div className="max-w-5xl mx-auto space-y-5">
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+              <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-11 h-11 bg-orange-100 rounded-lg flex items-center justify-center">
                       <AlertTriangle className="w-5 h-5 text-orange-600" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold text-slate-900">Invoice #54829</h2>
+                      <h2 className="text-sm font-semibold text-slate-900">Invoice #54829</h2>
                       <p className="text-sm text-slate-500">MetroTech Supplies</p>
                     </div>
                     <span className="px-2.5 py-1 bg-red-100 text-red-700 rounded text-xs font-bold">HIGH PRIORITY</span>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <button onClick={handleStartResolution} disabled={actionStates.creditMemo !== 'idle'} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${actionStates.creditMemo === 'done' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-600 text-white hover:bg-blue-700'
+                    <button onClick={handleStartResolution} disabled={actionStates.creditMemo !== 'idle'} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${actionStates.creditMemo === 'done' ? 'bg-emerald-100 text-emerald-700' : 'bg-[#00263A] text-white hover:bg-[#003354]'
                       }`}>
                       {actionStates.creditMemo === 'done' ? <CheckCircle className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
                       Credit Memo
@@ -10410,30 +10412,30 @@ If you ask a question, you must wait for the customer's response before continui
               </div>
 
               <div className="grid grid-cols-4 gap-4">
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <div className="bg-white rounded-lg border border-slate-200 p-4">
                   <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Billed Amount</div>
-                  <div className="text-2xl font-bold text-red-600">$128,600</div>
+                  <div className="text-lg font-semibold text-red-600">$128,600</div>
                 </div>
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <div className="bg-white rounded-lg border border-slate-200 p-4">
                   <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Contract Discount</div>
-                  <div className="text-2xl font-bold text-blue-600">15%</div>
+                  <div className="text-sm font-semibold text-[#00263A]">15%</div>
                 </div>
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <div className="bg-white rounded-lg border border-slate-200 p-4">
                   <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Correct Amount</div>
-                  <div className="text-2xl font-bold text-emerald-600">$109,310</div>
+                  <div className="text-lg font-semibold text-emerald-600">$109,310</div>
                 </div>
-                <div className="bg-orange-50 rounded-xl border border-orange-200 p-4">
+                <div className="bg-orange-50 rounded-lg border border-orange-200 p-4">
                   <div className="text-xs text-orange-600 uppercase tracking-wide mb-1">Overcharge</div>
-                  <div className="text-2xl font-bold text-orange-600">$19,290</div>
+                  <div className="text-lg font-semibold text-orange-600">$19,290</div>
                 </div>
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-center gap-3">
                 <AlertTriangle className="w-5 h-5 text-amber-600" />
                 <span className="text-amber-800"><strong>Root Cause:</strong> Pricing file mismatch (v5 vs v6) - Contract discount was not applied</span>
               </div>
 
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
+              <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
                 <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
                   <h3 className="font-semibold text-slate-900">Document Comparison</h3>
                   <div className="flex bg-slate-100 rounded-lg p-1">
@@ -10447,7 +10449,7 @@ If you ask a question, you must wait for the customer's response before continui
                 </div>
 
                 <div className="p-5">
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="border border-red-200 rounded-lg overflow-hidden">
                       <div className="bg-red-50 px-4 py-2.5 flex items-center justify-between border-b border-red-200">
                         <div className="flex items-center gap-2">
@@ -10531,9 +10533,9 @@ If you ask a question, you must wait for the customer's response before continui
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+              <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
                 <h3 className="font-semibold text-slate-900 mb-4">Activity Timeline</h3>
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
                   {activities.map((activity, idx) => (
                     <div key={activity.id} className="flex items-center gap-3">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center ${activity.status === 'complete' ? 'bg-emerald-100' : 'bg-slate-100'
@@ -10562,10 +10564,10 @@ If you ask a question, you must wait for the customer's response before continui
         )}
 
         {helpMode === 'assist' && currentPhase === 'resolving' && (
-          <div className="p-8">
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-blue-50 to-white">
+          <div className="p-4">
+            <div className="max-w-xl mx-auto">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="px-4 py-3 border-b border-slate-200 bg-slate-50/50 border-b border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-blue-100 rounded-lg">
                       <Loader className="w-5 h-5 text-blue-600 animate-spin" />
@@ -10577,7 +10579,7 @@ If you ask a question, you must wait for the customer's response before continui
                   </div>
                 </div>
 
-                <div className="p-6 space-y-4">
+                <div className="p-4 space-y-4">
                   <div className="mb-6">
                     <div className="flex justify-between text-sm text-slate-500 mb-2">
                       <span>Progress</span>
@@ -10608,9 +10610,9 @@ If you ask a question, you must wait for the customer's response before continui
         )}
 
         {helpMode === 'assist' && currentPhase === 'resolved' && (
-          <div className="p-8">
-            <div className="max-w-3xl mx-auto space-y-6">
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="p-4">
+            <div className="max-w-3xl mx-auto space-y-4">
+              <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-slate-200 bg-emerald-600">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -10618,7 +10620,7 @@ If you ask a question, you must wait for the customer's response before continui
                         <CheckCircle className="w-7 h-7 text-white" />
                       </div>
                       <div>
-                        <h2 className="text-xl font-bold text-white">Dispute Resolved</h2>
+                        <h2 className="text-base font-semibold text-white">Dispute Resolved</h2>
                         <p className="text-white/80 text-sm">All actions completed successfully</p>
                       </div>
                     </div>
@@ -10628,7 +10630,7 @@ If you ask a question, you must wait for the customer's response before continui
                   </div>
                 </div>
 
-                <div className="p-6">
+                <div className="p-4">
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     {[
                       { icon: CreditCard, label: 'Credit memo issued', value: '$19,290', color: 'emerald' },
@@ -10638,7 +10640,7 @@ If you ask a question, you must wait for the customer's response before continui
                     ].map((item, idx) => (
                       <div key={idx} className="p-4 rounded-lg border border-slate-200 bg-slate-50">
                         <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-${item.color}-100`}>
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-${item.color}-100`}>
                             <item.icon className={`w-5 h-5 text-${item.color}-600`} />
                           </div>
                           <div className="min-w-0">
@@ -10654,7 +10656,7 @@ If you ask a question, you must wait for the customer's response before continui
                     <button onClick={handleReset} className="flex-1 px-6 py-3 border border-slate-200 text-slate-800 rounded-lg font-semibold hover:bg-slate-50 transition-colors">
                       Close Case
                     </button>
-                    <button className="px-6 py-3 rounded-lg font-semibold text-white bg-blue-600 flex items-center gap-2 transition-colors hover:bg-blue-700">
+                    <button className="px-6 py-3 rounded-lg font-semibold text-white bg-[#00263A] flex items-center gap-2 transition-colors hover:bg-[#003354]">
                       <Download className="w-4 h-4" />
                       Download Report
                     </button>

@@ -43,12 +43,12 @@ const MAINTENANCE_STEPS = [
   { id: 5, title: 'Confirmation & closure', short: 'Close', hint: 'Ticket & SLA' },
 ];
 
-const SAMPLE_EMAIL = `Please onboard ABC Industrial Pvt Ltd for our APAC region. Attached: GST certificate, billing address in Mumbai, and primary contacts for AP and invoicing.
+const SAMPLE_EMAIL = `Please onboard Meridian Capital Partners (Asia) Pte Ltd for our APAC region. Attached: incorporation certificate, billing address in Singapore, and primary contacts for AP and invoicing.
 
-We need NET45 terms if policy allows.
+We need NET30 terms as agreed with the engagement partner.
 
 Thanks,
-Procurement`;
+Client Services`;
 
 type DuplicateChoice = 'none' | 'create' | 'link' | 'merge';
 
@@ -63,16 +63,16 @@ function ProgressStepper({
   onPick: (i: number) => void;
   variant: 'creation' | 'maintenance';
 }) {
-  const accent = variant === 'creation' ? 'violet' : 'cyan';
+  const accent = variant === 'creation' ? 'navy' : 'teal';
   const activeRing =
-    accent === 'violet' ? 'ring-violet-400/50 shadow-violet-200/50' : 'ring-cyan-400/50 shadow-cyan-200/50';
-  const activeBg = accent === 'violet' ? 'bg-violet-600' : 'bg-cyan-600';
-  const doneColor = accent === 'violet' ? 'bg-emerald-500' : 'bg-emerald-500';
+    accent === 'navy' ? 'ring-[#00263A]/30 shadow-[#00263A]/20' : 'ring-[#7AADCB]/40 shadow-[#7AADCB]/20';
+  const activeBg = accent === 'navy' ? 'bg-[#00263A]' : 'bg-[#003354]';
+  const doneColor = accent === 'navy' ? 'bg-emerald-500' : 'bg-emerald-500';
   const lineDone = 'bg-emerald-400';
   const lineTodo = 'bg-slate-200';
 
   return (
-    <div className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 shadow-sm">
+    <div className="w-full rounded-lg border border-slate-200 bg-white px-3 py-3 shadow-sm">
       <div className="mb-1 flex items-center justify-between gap-2 px-1">
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Flow steps</span>
         <span className="text-xs font-medium tabular-nums text-slate-500">
@@ -103,7 +103,7 @@ function ProgressStepper({
                 <span
                   className={clsx(
                     'mt-1 max-w-[4.5rem] text-center text-xs font-medium leading-tight',
-                    isActive && (accent === 'violet' ? 'text-violet-800' : 'text-cyan-800'),
+                    isActive && 'text-[#00263A]',
                     isDone && 'text-emerald-700',
                     !isDone && !isActive && 'text-slate-400'
                   )}
@@ -139,7 +139,7 @@ function Card({
   return (
     <div
       className={clsx(
-        'rounded-xl border border-slate-200/90 bg-white p-4 text-sm leading-relaxed shadow-sm shadow-slate-200/30',
+        'rounded-lg border border-slate-200/90 bg-white p-4 text-sm leading-relaxed shadow-sm shadow-slate-200/30',
         className
       )}
     >
@@ -170,8 +170,8 @@ export const CustomerMasterDataView: React.FC = () => {
 
   const copyAccount = async () => {
     try {
-      await navigator.clipboard.writeText('CUST-APAC-104829');
-      toast.success('Copied to clipboard', { description: 'CUST-APAC-104829' });
+      await navigator.clipboard.writeText('CUST-APAC-2025-8047');
+      toast.success('Copied to clipboard', { description: 'CUST-APAC-2025-8047' });
     } catch {
       toast.error('Could not copy');
     }
@@ -198,7 +198,7 @@ export const CustomerMasterDataView: React.FC = () => {
   }) => {
     const isFirst = stepIndex === 0;
     const isLast = stepIndex === totalSteps - 1;
-    const primary = 'bg-blue-600 hover:bg-blue-700 focus-visible:ring-blue-500';
+    const primary = 'bg-[#00263A] hover:bg-[#003354] focus-visible:ring-[#00263A]';
 
     return (
       <div className="sticky bottom-0 z-20 mt-4 border-t border-slate-200/90 bg-slate-50/95 px-0 py-2.5 backdrop-blur supports-[backdrop-filter]:bg-slate-50/80">
@@ -247,7 +247,7 @@ export const CustomerMasterDataView: React.FC = () => {
                   <button
                     type="button"
                     onClick={onSwitchToOtherFlow}
-                    className="inline-flex items-center gap-2 rounded-lg border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-900 transition-colors hover:bg-cyan-100"
+                    className="inline-flex items-center gap-2 rounded-lg border border-[#7AADCB]/30 bg-[#7AADCB]/10 px-4 py-2 text-sm font-semibold text-[#00263A] transition-colors hover:bg-[#7AADCB]/20"
                   >
                     Move to Maintenance flow
                     <ArrowRight className="h-4 w-4" />
@@ -269,7 +269,7 @@ export const CustomerMasterDataView: React.FC = () => {
             <Card className="overflow-hidden p-0">
               <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-blue-50/50 px-3 py-2">
                 <div className="flex items-center gap-2 text-slate-900">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#00263A] text-white shadow-sm">
                     <Mail className="h-3.5 w-3.5" />
                   </span>
                   <div>
@@ -287,11 +287,11 @@ export const CustomerMasterDataView: React.FC = () => {
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="truncate text-sm font-semibold text-slate-900">Procurement Team</span>
+                          <span className="truncate text-sm font-semibold text-slate-900">Client Services Team</span>
                           <span className="text-xs text-slate-500 whitespace-nowrap">Today, 9:14 AM</span>
                         </div>
-                        <p className="truncate text-xs text-slate-600">Subject: New customer onboarding request — ABC Industrial Pvt Ltd</p>
-                        <p className="text-xs text-slate-400">To: customermaster@microsolve.com</p>
+                        <p className="truncate text-xs text-slate-600">Subject: New customer onboarding request — Meridian Capital Partners (Asia) Pte Ltd</p>
+                        <p className="text-xs text-slate-400">To: customermaster@kroll.com</p>
                       </div>
                     </div>
                   </div>
@@ -320,7 +320,7 @@ export const CustomerMasterDataView: React.FC = () => {
             <Card>
               <div className="mb-3 flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-violet-700">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#00263A]/10 text-[#00263A]">
                     <Sparkles className="h-4 w-4" />
                   </span>
                   <div>
@@ -352,10 +352,10 @@ export const CustomerMasterDataView: React.FC = () => {
               </div>
               <div className="grid grid-cols-2 gap-1.5">
                 {[
-                  ['Legal name', 'ABC Industrial Pvt Ltd'],
-                  ['Country / market', 'India · APAC'],
+                  ['Legal name', 'Meridian Capital Partners (Asia) Pte Ltd'],
+                  ['Country / market', 'Singapore · APAC'],
                   ['Tax ID (GST)', '27AABCA1234F1Z5'],
-                  ['Billing address', 'Mumbai, MH'],
+                  ['Billing address', 'Singapore, SG'],
                   ['Primary contact', 'R. Sharma'],
                   ['Currency', 'INR'],
                 ].map(([k, v]) => (
@@ -397,7 +397,7 @@ export const CustomerMasterDataView: React.FC = () => {
             <ul className="space-y-1.5">
               <li className="flex gap-2 rounded-lg border border-emerald-100 bg-emerald-50/60 p-2 text-sm text-emerald-900">
                 <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-emerald-600" />
-                <span>Company / legal name consistent with GST certificate</span>
+                <span>Company / legal name consistent with incorporation certificate</span>
               </li>
               <li className="flex gap-2 rounded-lg border border-emerald-100 bg-emerald-50/60 p-2 text-sm text-emerald-900">
                 <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-emerald-600" />
@@ -413,7 +413,7 @@ export const CustomerMasterDataView: React.FC = () => {
                 type="button"
                 onClick={() => {
                   setCorrectionClicked(true);
-                  toast.success('Correction applied', { description: 'Mumbai postal format standardized in draft.' });
+                  toast.success('Correction applied', { description: 'Singapore postal format standardized in draft.' });
                 }}
                 className={clsx(
                   'w-full rounded-lg border px-2.5 py-2 text-left text-sm font-medium transition-all sm:w-auto',
@@ -424,10 +424,10 @@ export const CustomerMasterDataView: React.FC = () => {
               >
                 {correctionClicked ? (
                   <span className="flex items-center gap-2">
-                    <Check className="h-4 w-4" /> Applied: standardized Mumbai postal format
+                    <Check className="h-4 w-4" /> Applied: standardized Singapore postal format
                   </span>
                 ) : (
-                  'Suggested correction: use standardized Mumbai postal format'
+                  'Suggested correction: use standardized Singapore postal format'
                 )}
               </button>
             </div>
@@ -452,7 +452,7 @@ export const CustomerMasterDataView: React.FC = () => {
               <div className="space-y-2">
                 {[
                   { name: 'ABC Industries Ltd', score: 88, reason: 'Similar name + partial address match', action: 'Review — possible duplicate' },
-                  { name: 'ABC Industrial Pvt Ltd', score: 42, reason: 'Different GST · different region', action: 'Likely distinct' },
+                  { name: 'Meridian Capital Partners (Asia) Pte Ltd', score: 42, reason: 'Different GST · different region', action: 'Likely distinct' },
                 ].map((row, i) => (
                   <div
                     key={i}
@@ -497,7 +497,7 @@ export const CustomerMasterDataView: React.FC = () => {
                       duplicateChoice === id
                         ? id === 'merge'
                           ? 'border-amber-400 bg-amber-100 text-amber-950 shadow-md'
-                          : 'border-blue-500 bg-blue-600 text-white shadow-md'
+                          : 'border-[#00263A] bg-[#00263A] text-white shadow-md'
                         : 'border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50'
                     )}
                   >
@@ -523,7 +523,7 @@ export const CustomerMasterDataView: React.FC = () => {
               {[
                 { k: 'Customer group', v: 'APAC-TRD', ai: true },
                 { k: 'Currency / language', v: 'INR / en-IN', ai: true },
-                { k: 'Bill-to / Ship-to', v: 'Mumbai (bill) · — (ship TBD)', ai: true },
+                { k: 'Bill-to / Ship-to', v: 'Singapore (bill) · — (ship TBD)', ai: true },
                 { k: 'Tax registration', v: 'GST 27AABCA1234F1Z5', ai: true },
                 { k: 'Contacts & roles', v: 'AP + Invoice email', ai: true },
                 { k: 'Payment terms', v: 'NET45 (pending policy)', ai: false },
@@ -573,7 +573,7 @@ export const CustomerMasterDataView: React.FC = () => {
                   ? 'bg-emerald-600'
                   : reviewStatus === 'sent'
                     ? 'bg-amber-500'
-                    : 'bg-violet-600 hover:bg-violet-700'
+                    : 'bg-[#00263A] hover:bg-[#003354]'
               )}
             >
               {reviewStatus === 'approved' ? (
@@ -594,10 +594,10 @@ export const CustomerMasterDataView: React.FC = () => {
       case 4:
         return (
           <div className="space-y-2.5">
-            <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-2.5 shadow-sm">
+            <div className="rounded-lg border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-2.5 shadow-sm">
               <h3 className="text-xs font-bold uppercase tracking-wide text-emerald-800">Customer account created</h3>
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <span className="font-mono text-base font-bold tracking-tight text-emerald-950">CUST-APAC-104829</span>
+                <span className="font-mono text-base font-bold tracking-tight text-emerald-950">CUST-APAC-2025-8047</span>
                 <button
                   type="button"
                   onClick={copyAccount}
@@ -615,10 +615,10 @@ export const CustomerMasterDataView: React.FC = () => {
                 <span className="text-xs font-semibold">Auto-generated message to requester</span>
               </div>
               <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 p-2.5 font-sans text-sm leading-snug text-slate-700 ring-1 ring-slate-100">
-                {`Your onboarding for ABC Industrial Pvt Ltd is complete. Customer account: CUST-APAC-104829.`}
+                {`Your onboarding for Meridian Capital Partners (Asia) Pte Ltd is complete. Customer account: CUST-APAC-2025-8047.`}
               </pre>
             </Card>
-            <Card className="border-violet-100 bg-violet-50/30">
+            <Card className="border-slate-200 bg-slate-50/30">
               <div className="flex items-center gap-1.5 text-slate-900">
                 <ClipboardList className="h-4 w-4 text-violet-600" />
                 <span className="text-xs font-semibold">Credit Risk — limit approval task</span>
@@ -664,7 +664,7 @@ export const CustomerMasterDataView: React.FC = () => {
               </div>
               <div className="p-3">
                 <pre className="whitespace-pre-wrap rounded-lg bg-slate-900 p-2.5 font-sans text-sm leading-snug text-slate-100">
-                  {`Please change the billing address for ABC Industrial Pvt Ltd (CUST-APAC-104829) to our new Pune office. Letterhead attached.`}
+                  {`Please change the billing address for Meridian Capital Partners (Asia) Pte Ltd (CUST-APAC-2025-8047) to our new Hong Kong office. Letterhead attached.`}
                 </pre>
               </div>
             </Card>
@@ -678,12 +678,12 @@ export const CustomerMasterDataView: React.FC = () => {
               <dl className="space-y-1 text-sm">
                 <div className="flex justify-between gap-4 border-b border-slate-100 py-1.5">
                   <dt className="text-slate-500">Account</dt>
-                  <dd className="font-mono font-semibold text-slate-900">CUST-APAC-104829</dd>
+                  <dd className="font-mono font-semibold text-slate-900">CUST-APAC-2025-8047</dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b border-slate-100 py-1.5">
                   <dt className="text-slate-500">Classified</dt>
                   <dd>
-                    <span className="rounded bg-cyan-100 px-1.5 py-0.5 text-xs font-semibold text-cyan-900">
+                    <span className="rounded bg-[#7AADCB]/20 px-1.5 py-0.5 text-xs font-semibold text-[#00263A]">
                       Address change
                     </span>
                   </dd>
@@ -692,7 +692,7 @@ export const CustomerMasterDataView: React.FC = () => {
               <div className="mt-2">
                 <div className="text-xs font-bold uppercase tracking-wide text-slate-500">Current D365 snapshot</div>
                 <div className="mt-1 rounded-lg border border-slate-100 bg-slate-50 p-2 text-sm text-slate-800">
-                  Bill-to: Tower A, Mumbai · Ship-to: same · GST on file
+                  Bill-to: Tower A, Singapore · Ship-to: same · tax registration on file
                 </div>
               </div>
               <p className="mt-2 text-xs italic text-slate-500">
@@ -735,7 +735,7 @@ export const CustomerMasterDataView: React.FC = () => {
             <p className="text-xs text-slate-500">Contact updates · Email domain vs company domain</p>
             <p className="mt-2 text-sm text-slate-700">
               Scenario: add contact <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-xs">ap@abctools.com</code>{' '}
-              vs company <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-xs">@abcindustrial.com</code>
+              vs company <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-xs">@meridiancapital-asia.com</code>
             </p>
             <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
               <div className="flex items-center gap-1.5 text-sm font-semibold text-amber-950">
@@ -755,7 +755,7 @@ export const CustomerMasterDataView: React.FC = () => {
                   className={clsx(
                     'rounded-md border px-2.5 py-1 text-xs font-medium transition-all',
                     domainAction === 'verify'
-                      ? 'border-cyan-500 bg-cyan-600 text-white shadow-sm'
+                      ? 'border-[#00263A] bg-[#00263A] text-white shadow-sm'
                       : 'border-amber-300 bg-white text-amber-950 hover:bg-amber-100'
                   )}
                 >
@@ -792,7 +792,7 @@ export const CustomerMasterDataView: React.FC = () => {
         return (
           <Card>
             <div className="mb-3 flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#00263A]/10 text-[#00263A]">
                 <GitCompare className="h-4 w-4" />
               </span>
               <div>
@@ -803,18 +803,18 @@ export const CustomerMasterDataView: React.FC = () => {
             <div className="grid gap-2 md:grid-cols-2">
               <div className="rounded-lg border border-red-200/80 bg-red-50/50 p-2.5">
                 <div className="text-xs font-bold uppercase text-red-800">Before</div>
-                <p className="mt-1 text-sm font-medium text-slate-800">Bill-to: Tower A, Mumbai, 400001</p>
+                <p className="mt-1 text-sm font-medium text-slate-800">Bill-to: One Raffles Quay, Singapore 048583</p>
               </div>
               <div className="rounded-lg border border-emerald-200/80 bg-emerald-50/50 p-2.5">
                 <div className="text-xs font-bold uppercase text-emerald-800">After</div>
-                <p className="mt-1 text-sm font-medium text-slate-800">Bill-to: Plot 12, Hinjewadi, Pune, 411057</p>
+                <p className="mt-1 text-sm font-medium text-slate-800">Bill-to: 8 Marina Boulevard, Hong Kong office, 999077</p>
               </div>
             </div>
             <p className="mt-2 text-xs text-slate-500">
               Reason: customer request · Proof: letterhead_CMD.pdf
             </p>
-            <div className="mt-2 rounded-lg border border-cyan-200 bg-cyan-50/70 p-2.5">
-              <p className="text-xs leading-relaxed text-cyan-950">
+            <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50/70 p-2.5">
+              <p className="text-xs leading-relaxed text-[#00263A]">
                 Note: Bank account number and other key financial details are unchanged, and this request is only an
                 address update, so it does not go to manual approval. If bank/account or other sensitive master data
                 fields were changed, the request would be routed for manual review.
@@ -828,7 +828,7 @@ export const CustomerMasterDataView: React.FC = () => {
               }}
               className={clsx(
                 'mt-3 w-full rounded-lg py-2 text-xs font-semibold text-white shadow-sm transition-all sm:w-auto sm:min-w-[180px]',
-                appliedUpdate ? 'bg-emerald-600' : 'bg-cyan-600 hover:bg-cyan-700'
+                appliedUpdate ? 'bg-emerald-600' : 'bg-[#00263A] hover:bg-[#003354]'
               )}
             >
               {appliedUpdate ? (
@@ -850,17 +850,17 @@ export const CustomerMasterDataView: React.FC = () => {
             <Card>
               <h3 className="text-xs font-semibold text-slate-900">Closure note (auto-generated)</h3>
               <pre className="mt-2 whitespace-pre-wrap rounded-lg bg-slate-50 p-2.5 font-sans text-sm text-slate-700 ring-1 ring-slate-100">
-                {`Billing address updated for CUST-APAC-104829 effective ${new Date().toLocaleDateString()}.
-Invoice delivery will use Pune bill-to. Ticket updated with D365 reference and proof link.`}
+                {`Billing address updated for CUST-APAC-2025-8047 effective ${new Date().toLocaleDateString()}.
+Invoice delivery will use Hong Kong bill-to. Ticket updated with D365 reference and proof link.`}
               </pre>
             </Card>
-            <div className="rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-100/80 to-emerald-50 px-3 py-2 text-center shadow-sm">
+            <div className="rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-100/80 to-emerald-50 px-3 py-2 text-center shadow-sm">
               <p className="text-sm font-bold text-emerald-900">SLA achieved</p>
               <p className="text-xs text-emerald-800/90">Update completed within target window</p>
             </div>
-            <Card className="border-cyan-100 bg-cyan-50/40">
-              <div className="text-xs font-bold uppercase tracking-wider text-cyan-950">Demo KPIs</div>
-              <ul className="mt-2 space-y-1 text-sm text-cyan-950">
+            <Card className="border-slate-100 bg-slate-50/40">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#00263A]">Demo KPIs</div>
+              <ul className="mt-2 space-y-1 text-sm text-[#003354]">
                 {[
                   '20–35% faster turnaround on master updates',
                   'Reduced rework due to first-time-right validation',
@@ -892,7 +892,7 @@ Invoice delivery will use Pune bill-to. Ticket updated with D365 reference and p
       <header className="shrink-0 border-b border-slate-200 bg-white px-8 py-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex min-w-0 items-start gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
               <Database className="h-6 w-6 text-white" />
             </div>
             <div className="min-w-0">
@@ -909,7 +909,7 @@ Invoice delivery will use Pune bill-to. Ticket updated with D365 reference and p
               className={clsx(
                 'inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all',
                 flow === 'creation'
-                  ? 'bg-white text-violet-800 shadow-sm ring-1 ring-slate-200'
+                  ? 'bg-white text-[#00263A] shadow-sm ring-1 ring-slate-200'
                   : 'text-slate-600 hover:text-slate-900'
               )}
             >
@@ -922,7 +922,7 @@ Invoice delivery will use Pune bill-to. Ticket updated with D365 reference and p
               className={clsx(
                 'inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all',
                 flow === 'maintenance'
-                  ? 'bg-white text-cyan-900 shadow-sm ring-1 ring-slate-200'
+                  ? 'bg-white text-[#003354] shadow-sm ring-1 ring-slate-200'
                   : 'text-slate-600 hover:text-slate-900'
               )}
             >
@@ -947,9 +947,9 @@ Invoice delivery will use Pune bill-to. Ticket updated with D365 reference and p
               <div className="shrink-0 border-b border-slate-200 bg-white px-8 py-4">
                 <ProgressStepper steps={cSteps} current={cIdx} onPick={setCreationStep} variant="creation" />
               </div>
-              <main className={clsx('min-h-0 flex-1 overflow-y-auto bg-slate-50', cIdx === 4 ? 'p-6' : 'p-8')}>
+              <main className={clsx('min-h-0 flex-1 overflow-y-auto bg-slate-50', cIdx === 4 ? 'p-4' : 'p-5')}>
                 <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-                  <h2 className="text-lg font-bold text-slate-800">{cSteps[cIdx].title}</h2>
+                  <h2 className="text-base font-semibold text-slate-700">{cSteps[cIdx].title}</h2>
                   <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Onboarding · D365</span>
                 </div>
                 <CreationContent />
@@ -980,7 +980,7 @@ Invoice delivery will use Pune bill-to. Ticket updated with D365 reference and p
               </div>
               <main className="min-h-0 flex-1 overflow-y-auto bg-slate-50 p-8">
                 <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-                  <h2 className="text-lg font-bold text-slate-800">{mSteps[mIdx].title}</h2>
+                  <h2 className="text-base font-semibold text-slate-700">{mSteps[mIdx].title}</h2>
                   <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Updates · D365</span>
                 </div>
                 <MaintenanceContent />
