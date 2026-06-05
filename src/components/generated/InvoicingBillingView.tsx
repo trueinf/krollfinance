@@ -1787,7 +1787,7 @@ const HubView: React.FC<{ onSelect: (id: ProcessId) => void; taskStatuses: Recor
                   </div>
                   <div>
                     <div className="text-xs font-bold text-slate-800">Pending Invoice Generation</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">3 draft invoices require AI validation</div>
+                    <div className="text-[10px] text-slate-500 mt-0.5">Invoice KRL-INV-4821 requires AI validation</div>
                   </div>
                 </div>
               </td>
@@ -1795,8 +1795,8 @@ const HubView: React.FC<{ onSelect: (id: ProcessId) => void; taskStatuses: Recor
                 <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">End-to-End</span>
               </td>
               <td className="px-4 py-4">
-                <div className="text-xs text-slate-700 font-medium">Multiple (3)</div>
-                <div className="text-[10px] font-mono text-slate-400">Pinnacle Capital & Others</div>
+                <div className="text-xs text-slate-700 font-medium">KRL-INV-4821</div>
+                <div className="text-[10px] font-mono text-slate-400">Pinnacle Capital</div>
               </td>
               <td className="px-4 py-4">
                 {taskStatuses.generation === 'Pending' ? (
@@ -1959,3 +1959,4 @@ export const InvoicingBillingView: React.FC = () => {
     </div>
   );
 };
+
