@@ -968,30 +968,6 @@ export const MicroSolveDashboard = () => {
           <Upload className="w-4 h-4" />
           Invoice Delivery
         </button>
-        <button onClick={() => setCurrentView('call-analysis')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'call-analysis' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
-          <PhoneCall className="w-4 h-4" />
-          Call Analysis
-        </button>
-        <button onClick={() => setCurrentView('disputes')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'disputes' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
-          <FileText className="w-4 h-4" />
-          Disputes
-        </button>
-        <button onClick={() => setCurrentView('ptp')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'ptp' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
-          <Calendar className="w-4 h-4" />
-          Promise to Pay
-        </button>
-        <button onClick={() => setCurrentView('customer-master')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'customer-master' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
-          <Database className="w-4 h-4" />
-          Customer Master Data
-        </button>
-        <button onClick={() => setCurrentView('qa')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'qa' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
-          <Shield className="w-4 h-4" />
-          Quality Assurance
-        </button>
-        <button onClick={() => setCurrentView('help')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'help' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
-          <HelpCircle className="w-4 h-4" />
-          Get Assistance
-        </button>
       </nav>
     </div>
 
@@ -1335,27 +1311,96 @@ export const MicroSolveDashboard = () => {
     return { tier: 'Tier 0', label: 'Assist', color: 'bg-slate-100 text-slate-700' };
   };
 
-  const DashboardView = () => <div className="flex-1 overflow-y-auto p-5">
-    <div className="flex flex-wrap gap-4 mb-5">
-      <StatCard label="Auto-application rate" value={`${kpis.touchlessRate}%`} colorClass="text-emerald-600" />
-      <StatCard label="Failed Today" value={kpis.failedToday} colorClass="text-rose-600" />
-      <StatCard label="Exception Queue" value="24" colorClass="text-amber-500" />
-      <StatCard label="Cash Applied Today" value="$18.4M" colorClass="text-slate-800" />
-      <StatCard label="Unapplied Cash" value="$3.2M" colorClass="text-amber-500" />
-      <StatCard label="Exception cycle time" value={`${kpis.exceptionCycleTimeMins} mins`} colorClass="text-slate-800" />
-      <StatCard label="False auto-post rate" value={`${kpis.falseAutoPostRate}%`} colorClass="text-slate-800" />
-      <StatCard label="Auto-Resolved by AI" value={kpis.autoResolved} colorClass="text-blue-600" />
+  const DashboardView = () => <div className="flex-1 overflow-y-auto p-5 bg-[#F8FAFC]">
+
+    {/* Page Header */}
+    <div className="flex items-start justify-between mb-5">
+      <div>
+        <div className="flex items-center gap-2 mb-0.5">
+          <h1 className="text-base font-semibold text-slate-800">Failed Cash Applications</h1>
+          <span className="flex items-center gap-1 px-2 py-0.5 bg-rose-50 border border-rose-100 rounded-full">
+            <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse" />
+            <span className="text-[10px] font-semibold text-rose-700">{kpis.failedToday} Requiring Attention</span>
+          </span>
+        </div>
+        <p className="text-xs text-slate-400">Kroll Receivables Intelligence · Engagement-based receivables · D365 / SAP Ariba · Audit trail active</p>
+      </div>
+      <div className="flex items-center gap-3">
+        <button onClick={handleRefresh} disabled={isRefreshing} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${isRefreshing ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 active:scale-95'}`}>
+          <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+          {isRefreshing ? 'Refreshing...' : 'Refresh Queue'}
+        </button>
+        <div className="text-right">
+          <div className="text-xs font-semibold text-slate-700">Alex Rivers</div>
+          <div className="text-[10px] text-slate-400">Director, Receivables · Global Finance</div>
+        </div>
+      </div>
     </div>
 
-    <div className="flex items-center justify-between mb-4">
-      <div>
-        <h2 className="text-md font-bold text-slate-800">Failed Cash Applications Requiring Attention</h2>
-        <p className="text-xs text-slate-500 mt-0.5">Engagement-based receivables · Multi-matter allocation, cross-border withholding & intermediary-fee shortfalls — KPIs: Auto-application rate, Unapplied cash, Exception cycle time, DSO impact</p>
+    {/* Primary KPIs — 4-col grid */}
+    <div className="grid grid-cols-4 gap-4 mb-5">
+      <div className="bg-[#00263A] rounded-lg p-4 text-white shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] font-semibold text-[#7AADCB] uppercase tracking-wider">Cash Applied Today</span>
+          <TrendingUp className="w-3.5 h-3.5 text-[#7AADCB]" />
+        </div>
+        <div className="text-2xl font-semibold tracking-tight mb-0.5">$18.4M</div>
+        <div className="text-[10px] text-[#7AADCB]">+8% vs. prior day · Audit-ready</div>
       </div>
-      <button onClick={handleRefresh} disabled={isRefreshing} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm ${isRefreshing ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 active:scale-95'}`}>
-        <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-        {isRefreshing ? 'Refreshing...' : 'Refresh Queue'}
-      </button>
+
+      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Touchless Rate</span>
+          <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+        </div>
+        <div className="text-2xl font-semibold text-emerald-600 tracking-tight mb-1">{kpis.touchlessRate}%</div>
+        <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
+          <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${kpis.touchlessRate}%` }} />
+        </div>
+        <div className="text-[10px] text-slate-400 mt-1">Auto-applied without human review</div>
+      </div>
+
+      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Open Exceptions</span>
+          <AlertCircle className="w-3.5 h-3.5 text-rose-500" />
+        </div>
+        <div className="text-2xl font-semibold text-rose-600 tracking-tight mb-0.5">{kpis.failedToday}</div>
+        <div className="text-[10px] text-slate-400">Routed to analyst workbench · SLA tracked</div>
+      </div>
+
+      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Resolved by AI</span>
+          <CheckCircle className="w-3.5 h-3.5 text-[#00263A]" />
+        </div>
+        <div className="text-2xl font-semibold text-[#00263A] tracking-tight mb-0.5">{kpis.autoResolved}</div>
+        <div className="text-[10px] text-slate-400">Closed end-to-end without escalation today</div>
+      </div>
+    </div>
+
+    {/* Secondary Operational Metrics — 4-col grid */}
+    <div className="grid grid-cols-4 gap-3 mb-5">
+      {[
+        { label: 'Exception Queue', value: '24', sub: 'items open' },
+        { label: 'Cycle Time', value: `${kpis.exceptionCycleTimeMins}m`, sub: 'avg resolution' },
+        { label: 'False Post Rate', value: `${kpis.falseAutoPostRate}%`, sub: 'false auto-postings' },
+        { label: 'Unapplied Cash', value: '$3.2M', sub: 'unmatched · at risk' },
+      ].map((m) => (
+        <div key={m.label} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
+          <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">{m.label}</div>
+          <div className="text-sm font-semibold text-slate-800 leading-tight">{m.value}</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">{m.sub}</div>
+        </div>
+      ))}
+    </div>
+
+    {/* Queue Table Header */}
+    <div className="flex items-center justify-between mb-3">
+      <div>
+        <h3 className="text-xs font-semibold text-slate-700">Exception Queue — Requiring Analyst Review</h3>
+        <p className="text-[10px] text-slate-400 mt-0.5">Multi-matter allocation · cross-border withholding · intermediary-fee shortfalls · DSO impact tracked</p>
+      </div>
     </div>
 
     <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
@@ -1834,40 +1879,40 @@ Thank you.`}
         </div>
 
         {/* Footer: Back + Next Step for Castellan steps 6–11 */}
-        <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
+        <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
           {currentStep === 10 ? (
-            <button onClick={handleNihonBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-              <ArrowLeft className="w-5 h-5" />
+            <button onClick={handleNihonBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+              <ArrowLeft className="w-4 h-4" />
               Back to Failed Cash Applications
             </button>
           ) : currentStep === 8 ? (
             <>
-              <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-                <ArrowLeft className="w-5 h-5" />
+              <button onClick={handlePrevStep} className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <ArrowLeft className="w-4 h-4" />
                 Back
               </button>
-              <button onClick={handleNihonApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-                <CheckCircle2 className="w-5 h-5" />
+              <button onClick={handleNihonApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+                <CheckCircle2 className="w-4 h-4" />
                 Approve & Post to D365
               </button>
-              <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-                <FileText className="w-5 h-5" />
+              <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <FileText className="w-4 h-4" />
                 Create Journal Draft
               </button>
-              <button className="flex items-center gap-3 px-6 py-3 bg-white text-rose-700 border border-rose-200 rounded-lg text-base font-bold hover:bg-rose-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-                <XCircle className="w-5 h-5" />
+              <button className="flex items-center gap-2 px-5 py-2 bg-white text-rose-700 border border-rose-200 rounded-lg text-sm font-semibold hover:bg-rose-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <XCircle className="w-4 h-4" />
                 Reject Recommendation
               </button>
             </>
           ) : (
             <>
-              <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-                <ArrowLeft className="w-5 h-5" />
+              <button onClick={handlePrevStep} className="flex items-center gap-2 px-6 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <ArrowLeft className="w-4 h-4" />
                 Back
               </button>
-              <button onClick={handleNextStep} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+              <button onClick={handleNextStep} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
                 Next Step
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
             </>
           )}
@@ -5883,76 +5928,76 @@ Thank you.`}
       </div>
 
       {/* Next Step Button - Always Visible Fixed Footer */}
-      {(isBlueWave && currentStep === 10) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handleBlueWaveBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-          <ArrowLeft className="w-5 h-5" />
+      {(isBlueWave && currentStep === 10) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <button onClick={handleBlueWaveBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+          <ArrowLeft className="w-4 h-4" />
           Back to Failed Cash Applications
         </button>
       </div>}
-      {(isNihon && currentStep === 10) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handleNihonBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-          <ArrowLeft className="w-5 h-5" />
+      {(isNihon && currentStep === 10) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <button onClick={handleNihonBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+          <ArrowLeft className="w-4 h-4" />
           Back to Failed Cash Applications
         </button>
       </div>}
-      {(isBankFee && currentStep === 8) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handleBankFeeBackToDashboard} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-          <ArrowLeft className="w-5 h-5" />
+      {(isBankFee && currentStep === 8) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <button onClick={handleBankFeeBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+          <ArrowLeft className="w-4 h-4" />
           Back to Failed Cash Applications
         </button>
       </div>}
-      {(isBankFee && currentStep === 7) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <ArrowLeft className="w-5 h-5" />
+      {(isBankFee && currentStep === 7) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
+        <button onClick={handlePrevStep} className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <ArrowLeft className="w-4 h-4" />
           Back
         </button>
-        <button onClick={handleBankFeeApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-          <CheckCircle2 className="w-5 h-5" />
+        <button onClick={handleBankFeeApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+          <CheckCircle2 className="w-4 h-4" />
           Approve & Post to D365
         </button>
       </div>}
-      {(isBlueWave && currentStep === 9) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <ArrowLeft className="w-5 h-5" />
+      {(isBlueWave && currentStep === 9) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
+        <button onClick={handlePrevStep} className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <ArrowLeft className="w-4 h-4" />
           Back
         </button>
-        <button onClick={handleBlueWaveApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-          <CheckCircle2 className="w-5 h-5" />
+        <button onClick={handleBlueWaveApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+          <CheckCircle2 className="w-4 h-4" />
           Approve & Post to D365
         </button>
-        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <FileText className="w-5 h-5" />
+        <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <FileText className="w-4 h-4" />
           Create Journal Draft
         </button>
-        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <User className="w-5 h-5" />
+        <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <User className="w-4 h-4" />
           Escalate to Analyst
         </button>
       </div>}
-      {(isNihon && currentStep === 9) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <ArrowLeft className="w-5 h-5" />
+      {(isNihon && currentStep === 9) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
+        <button onClick={handlePrevStep} className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <ArrowLeft className="w-4 h-4" />
           Back
         </button>
-        <button onClick={handleNihonApproveAndPost} className="flex items-center gap-3 px-6 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-          <CheckCircle2 className="w-5 h-5" />
+        <button onClick={handleNihonApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+          <CheckCircle2 className="w-4 h-4" />
           Approve & Post to D365
         </button>
-        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <FileText className="w-5 h-5" />
+        <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <FileText className="w-4 h-4" />
           Create Journal Draft
         </button>
-        <button className="flex items-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <User className="w-5 h-5" />
+        <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <User className="w-4 h-4" />
           Escalate to Tax Team
         </button>
       </div>}
-      {!(isBlueWave && currentStep === 10) && !(isBlueWave && currentStep === 9) && !(isNihon && currentStep === 10) && !(isNihon && currentStep === 9) && !(isBankFee && currentStep === 8) && !(isBankFee && currentStep === 7) && !(isNorthwind && currentStep === 4) && !(isNorthwind && currentStep === 5 && !emailSent) && <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <ArrowLeft className="w-5 h-5" />
+      {!(isBlueWave && currentStep === 10) && !(isBlueWave && currentStep === 9) && !(isNihon && currentStep === 10) && !(isNihon && currentStep === 9) && !(isBankFee && currentStep === 8) && !(isBankFee && currentStep === 7) && !(isNorthwind && currentStep === 4) && !(isNorthwind && currentStep === 5 && !emailSent) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <button onClick={handlePrevStep} className="flex items-center gap-2 px-6 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <ArrowLeft className="w-4 h-4" />
           Back
         </button>
-        <button onClick={handleNextStep} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handleNextStep} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           {isBankFee
             ? (currentStep < 8 ? 'Next Step' : 'Complete')
             : isBlueWave
@@ -5960,7 +6005,7 @@ Thank you.`}
             : isNorthwind
             ? (currentStep < 12 ? 'Next Step' : 'Complete')
             : (currentStep < 4 ? 'Next Step' : ((isLitware) ? 'Resolve Exception' : 'Proceed to Posting'))}
-          <ArrowRight className="w-5 h-5" />
+          <ArrowRight className="w-4 h-4" />
         </button>
       </div>}
     </motion.div>;
@@ -6015,30 +6060,30 @@ Thank you.`}
             </div>
 
             <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-              <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-6 flex items-center gap-2">
-                <FileText className="w-4 h-4" />
+              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <FileText className="w-3.5 h-3.5" />
                 Posting Summary
               </h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center py-3 border-b border-slate-50">
-                  <span className="text-slate-500 text-sm">Customer</span>
-                  <span className="font-bold text-slate-800">{isLitware ? 'Sterling Trust Bank (CL-2025-0156)' : 'Aldridge Pharma Group (CL-2025-0072)'}</span>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                  <span className="text-slate-500 text-xs">Customer</span>
+                  <span className="text-sm font-semibold text-slate-800">{isLitware ? 'Sterling Trust Bank (CL-2025-0156)' : 'Aldridge Pharma Group (CL-2025-0072)'}</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-slate-50">
-                  <span className="text-slate-500 text-sm">Invoice</span>
-                  <span className="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">{isLitware ? selectedInvoice : 'KRL-INV-4845'}</span>
+                <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                  <span className="text-slate-500 text-xs">Invoice</span>
+                  <span className="font-mono text-sm font-semibold text-[#00263A] bg-slate-50 px-2 py-0.5 rounded">{isLitware ? selectedInvoice : 'KRL-INV-4845'}</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-slate-50">
-                  <span className="text-slate-500 text-sm">Amount</span>
-                  <span className="font-bold text-slate-800">{isLitware ? '$98,000.00' : '$180,000.00'}</span>
+                <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                  <span className="text-slate-500 text-xs">Amount</span>
+                  <span className="text-sm font-semibold text-slate-800">{isLitware ? '$98,000.00' : '$180,000.00'}</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-slate-50">
-                  <span className="text-slate-500 text-sm">Posting Date</span>
-                  <span className="font-bold text-slate-800">17 Feb 2026</span>
+                <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                  <span className="text-slate-500 text-xs">Posting Date</span>
+                  <span className="text-sm font-semibold text-slate-800">17 Feb 2026</span>
                 </div>
-                <div className="flex justify-between items-center py-3">
-                  <span className="text-slate-500 text-sm">Company Code</span>
-                  <span className="font-bold text-slate-800">{isLitware ? 'KRL-EU' : 'KRL-US'}</span>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-slate-500 text-xs">Company Code</span>
+                  <span className="text-sm font-semibold text-slate-800">{isLitware ? 'KRL-EU' : 'KRL-US'}</span>
                 </div>
               </div>
             </div>
@@ -6104,14 +6149,14 @@ Thank you.`}
       </div>
 
       {/* Fixed Footer */}
-      <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-          <ArrowLeft className="w-5 h-5" />
+      <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <button onClick={handlePrevStep} className="flex items-center gap-2 px-6 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+          <ArrowLeft className="w-4 h-4" />
           Back
         </button>
-        <button onClick={handlePostingComplete} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <button onClick={handlePostingComplete} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           View Results
-          <ArrowRight className="w-5 h-5" />
+          <ArrowRight className="w-4 h-4" />
         </button>
       </div>
     </motion.div>;
@@ -6126,7 +6171,7 @@ Thank you.`}
       {/* Split screen */}
       <div className="flex-1 flex flex-row overflow-hidden">
         {/* Left Panel: Outcome & Actions */}
-        <div className="flex-1 border-r border-slate-200 bg-white flex flex-col justify-center items-center p-12 text-center relative overflow-hidden">
+        <div className="flex-1 border-r border-slate-200 bg-white flex flex-col justify-center items-center p-5 text-center relative overflow-hidden">
           {/* Background Pattern */}
           <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none">
             <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, ${isLitware ? '#f59e0b' : '#10b981'} 1px, transparent 1px)`, backgroundSize: '24px 24px' }}></div>
@@ -6146,10 +6191,10 @@ Thank you.`}
           <h2 className="text-base font-semibold text-slate-800 mb-2 relative z-10">
             {isLitware ? 'Cash Application Completed' : 'Cash Applied Successfully'}
           </h2>
-          <p className="text-slate-500 text-lg mb-4 max-w-md relative z-10">
+          <p className="text-slate-500 text-sm mb-4 max-w-md relative z-10">
             {isLitware
               ? 'Resolved with AI assistance'
-              : <>Payment of <span className="font-bold text-slate-800">$180,000</span> has been posted and cleared against invoice <span className="font-bold text-slate-800">KRL-INV-4845</span>.</>}
+              : <>Payment of <span className="font-semibold text-slate-800">$180,000</span> has been posted and cleared against invoice <span className="font-semibold text-slate-800">KRL-INV-4845</span>.</>}
           </p>
 
           <div className={`flex items-center gap-2 px-4 py-2 border rounded-full mb-5 relative z-10 ${isLitware ? 'bg-amber-50 border-amber-100' : 'bg-emerald-50 border-emerald-100'}`}>
@@ -6160,15 +6205,15 @@ Thank you.`}
           </div>
 
           <div className="grid grid-cols-1 gap-4 w-full max-w-xs relative z-10">
-            <button onClick={handleBackToDashboard} className="flex items-center justify-center gap-3 px-4 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-              <ArrowLeft className="w-5 h-5" />
+            <button onClick={handleBackToDashboard} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+              <ArrowLeft className="w-4 h-4" />
               Back to Failed Cash Applications
             </button>
-            <button className="flex items-center justify-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
+            <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
               <FileText className="w-4 h-4" />
               View Journal Entry
             </button>
-            <button className="flex items-center justify-center gap-3 px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
+            <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
               <Download className="w-4 h-4" />
               Download Audit Trail
             </button>
@@ -6268,13 +6313,13 @@ Thank you.`}
     {/* Flow Stepper */}
     <FlowStepper activeStep={5} />
     {/* Header */}
-    <div className="bg-white border-b border-slate-200 px-8 py-5 flex items-center gap-4 shrink-0">
-      <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-        <AlertCircle className="w-5 h-5 text-amber-600" />
+    <div className="bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-3 shrink-0">
+      <div className="w-7 h-7 bg-amber-100 rounded-lg flex items-center justify-center">
+        <AlertCircle className="w-4 h-4 text-amber-600" />
       </div>
       <div>
         <h2 className="text-sm font-semibold text-slate-800">Resolve Payment Allocation</h2>
-        <p className="text-sm text-slate-500">Select the correct invoice to apply the Sterling Trust Bank payment against</p>
+        <p className="text-xs text-slate-500">Select the correct invoice to apply the Sterling Trust Bank payment against</p>
       </div>
       <div className="ml-auto flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full">
         <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
@@ -6283,9 +6328,9 @@ Thank you.`}
     </div>
 
     {/* Human oversight from this stage onwards */}
-    <div className="bg-amber-50 border-b border-amber-200 px-8 py-3 flex items-center gap-3 shrink-0">
-      <User className="w-5 h-5 text-amber-700 flex-shrink-0" />
-      <p className="text-sm text-amber-900 font-medium">
+    <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center gap-3 shrink-0">
+      <User className="w-4 h-4 text-amber-700 flex-shrink-0" />
+      <p className="text-xs text-amber-900 font-medium">
         <span className="font-semibold">Human oversight from this stage onwards.</span> An analyst is now reviewing this case and will approve the allocation before any posting.
       </p>
     </div>
@@ -6310,7 +6355,7 @@ Thank you.`}
 
           {/* Invoice Selection */}
           <div>
-            <h3 className="font-bold text-slate-800 mb-4">Select Invoice</h3>
+            <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-3">Select Invoice</h3>
             <div className="space-y-4">
               {[{ id: 'KRL-INV-4432', date: '9 Mar', amt: '$100,000', recommended: true }, { id: 'KRL-INV-4478', date: '18 Mar', amt: '$98,000', recommended: false }].map((inv) => (
                 <button key={inv.id} onClick={() => setSelectedInvoice(inv.id)}
@@ -6345,8 +6390,8 @@ Thank you.`}
       <div className="flex-1 bg-slate-50/50 overflow-y-auto p-5 custom-scrollbar">
         <div className="max-w-xl mx-auto space-y-4">
           <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-            <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <Zap className="w-4 h-4 text-blue-500" />
+            <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <Zap className="w-3.5 h-3.5 text-[#00263A]" />
               AI Reasoning
             </h3>
             <div className="space-y-3">
@@ -6362,10 +6407,10 @@ Thank you.`}
           </div>
 
           <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-            <h3 className="font-bold text-slate-800 mb-3">Selected Invoice</h3>
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-              <span className="text-slate-500 text-sm">Posting against</span>
-              <span className="font-mono font-bold text-blue-700 text-lg">{selectedInvoice}</span>
+            <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-3">Selected Invoice</h3>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+              <span className="text-slate-500 text-xs">Posting against</span>
+              <span className="font-mono font-semibold text-[#00263A] text-sm">{selectedInvoice}</span>
             </div>
           </div>
         </div>
@@ -6373,13 +6418,13 @@ Thank you.`}
     </div>
 
     {/* Fixed Footer */}
-    <div className="bg-white border-t border-slate-200 p-6 flex justify-center gap-4 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-      <button onClick={handlePrevStep} className="flex items-center gap-3 px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg text-base font-bold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
-        <ArrowLeft className="w-5 h-5" />
+    <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+      <button onClick={handlePrevStep} className="flex items-center gap-2 px-6 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+        <ArrowLeft className="w-4 h-4" />
         Back
       </button>
-      <button onClick={handleConfirmPost} className="flex items-center gap-3 px-8 py-3 bg-[#00263A] text-white rounded-lg text-base font-bold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
-        <Check className="w-5 h-5" />
+      <button onClick={handleConfirmPost} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+        <Check className="w-4 h-4" />
         Confirm &amp; Post
       </button>
     </div>
