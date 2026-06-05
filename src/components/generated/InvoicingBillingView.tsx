@@ -6,7 +6,8 @@ import {
   XCircle, Brain, Shield, User, Zap, ChevronRight,
   TrendingUp, FileCheck, RotateCcw, ArrowDown,
   Download, Eye, Search, Clock, Building2, Filter,
-  Mail, ArrowRight, Settings, RefreshCw
+  Mail, ArrowRight, Settings, RefreshCw,
+  Loader2, Sparkles, UserCheck, Database
 } from 'lucide-react';
 import { InvoiceDeliveryView } from './InvoiceDeliveryView';
 
@@ -1065,23 +1066,37 @@ const InvoiceReviewApprovalView: React.FC<{ onBack: () => void; fromGeneration?:
 // ─── Manual Billing ───────────────────────────────────────────────────────────
 
 const ManualBillingView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'processing' | 'done'>('idle');
+  const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    if (status === 'processing') {
+      const timers = [
+        setTimeout(() => setCurrentStep(1), 1500),
+        setTimeout(() => setCurrentStep(2), 3500),
+        setTimeout(() => setCurrentStep(3), 5500),
+        setTimeout(() => setStatus('done'), 7500),
+      ];
+      return () => timers.forEach(clearTimeout);
+    }
+  }, [status]);
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       className="flex-1 overflow-hidden flex flex-col h-full bg-[#F8FAFC]">
-      <SubViewHeader title="Manual Billing" badge="AI-Assisted" badgeColor="amber" onBack={onBack} />
+      <SubViewHeader title="Manual Billing Request" badge="AI-Assisted Workflow" badgeColor="amber" onBack={onBack} />
       <div className="flex-1 flex flex-row overflow-hidden">
-        <Panel className="border-r border-slate-200 bg-white">
+        <Panel className="w-1/2 border-r border-slate-200 bg-white overflow-y-auto">
           <div className="flex items-center gap-2 mb-1">
             <User className="w-4 h-4 text-[#00263A]" />
-            <span className="text-sm font-semibold text-slate-800">Manual Billing Request</span>
+            <span className="text-sm font-semibold text-slate-800">Source Request & Evidence</span>
           </div>
           <p className="text-xs text-slate-400 mb-4">Exception-based billing for non-standard or one-time scenarios</p>
           <Card title="Request Details">
             <FieldRow label="Request Type" value="One-Time Charge" highlight />
             <FieldRow label="Client" value="Meridian Capital Partners" />
             <FieldRow label="Matter" value="KRL-MAT-2025-0143" mono />
-            <FieldRow label="Description" value="Expert witness fee — deposition 18 Feb 2026" />
+            <FieldRow label="Description" value="Expert witness fee - deposition 18 Feb 2026" />
             <FieldRow label="Amount" value="$15,000.00" highlight />
             <FieldRow label="Requested by" value="Rachel Ford, Engagement Dir." />
           </Card>
@@ -1095,61 +1110,91 @@ const ManualBillingView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <div className="flex items-center gap-2 min-w-0">
                   <FileText className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
                   <div className="min-w-0">
-                    <p className="text-xs font-medium text-slate-800 truncate">{doc.file}</p>
-                    <p className="text-[10px] text-slate-400">{doc.type}</p>
+                    <div className="text-xs text-slate-700 font-medium truncate">{doc.file}</div>
+                    <div className="text-[10px] text-slate-400">{doc.type}</div>
                   </div>
                 </div>
-                <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Attached</span>
+                <button className="text-[10px] font-semibold text-[#00263A] hover:underline">View</button>
               </div>
             ))}
           </Card>
         </Panel>
-        <Panel className="bg-slate-50/50">
-          <div className="flex items-center gap-2 mb-1">
-            <Shield className="w-4 h-4 text-[#00263A]" />
-            <span className="text-sm font-semibold text-slate-800">AI Validation & Controls</span>
-          </div>
-          <p className="text-xs text-slate-400 mb-4">Validated, approved and documented per customer controls</p>
-          <Card title="Automated Validation" accent="emerald">
-            <div className="space-y-0.5">
-              <CheckRow status="pass" text="Client account active — Meridian Capital Partners verified" />
-              <CheckRow status="pass" text="Amount within threshold — $15,000 ≤ $50,000 limit" />
-              <CheckRow status="pass" text="Documentation complete — 3 of 3 required documents attached" />
-              <CheckRow status="pass" text="No duplicate charge for this engagement and date" />
-              <CheckRow status="pass" text="Billing entity confirmed — KRL-US, tax treatment identified" />
-            </div>
-          </Card>
-          <Card title="Approval Gate — Required Before Posting">
-            <div className={`flex items-center gap-3 p-3 rounded-lg border mb-3 ${submitted ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'}`}>
-              {submitted
-                ? <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                : <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />}
-              <div>
-                <p className="text-xs font-semibold text-slate-800">{submitted ? 'Controller Approved' : 'Awaiting Controller Approval'}</p>
-                <p className="text-[10px] text-slate-500">{submitted ? 'Sarah Chen — Approved 14:22' : 'Sarah Chen — Billing Controller'}</p>
+        
+        {/* Right Panel: AI Processing Workflow */}
+        <Panel className="w-1/2 bg-slate-50 overflow-y-auto">
+          <div className="max-w-md mx-auto space-y-4">
+            
+            <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden mt-6">
+              <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Brain className="w-4 h-4 text-[#00263A]" />
+                  <span className="text-sm font-semibold text-slate-800">AI Processing Workflow</span>
+                </div>
+                {status === 'processing' && <Loader2 className="w-3.5 h-3.5 text-[#00263A] animate-spin" />}
+                {status === 'done' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+              </div>
+              <div className="p-4 space-y-4">
+                {status === 'idle' ? (
+                  <div className="text-center py-6">
+                    <div className="w-12 h-12 bg-[#E8F0F5] rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Sparkles className="w-5 h-5 text-[#00263A]" />
+                    </div>
+                    <h3 className="text-sm font-semibold text-slate-800 mb-1">Ready to Process</h3>
+                    <p className="text-xs text-slate-500 mb-6 px-4">AI will extract terms, validate approvals, and generate the draft invoice.</p>
+                    <button onClick={() => setStatus('processing')} className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#00263A] text-white rounded-lg text-xs font-bold hover:bg-[#003354] transition-colors mx-auto w-full">
+                      <Brain className="w-3.5 h-3.5" />
+                      Begin AI Analysis
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4 relative before:absolute before:inset-0 before:ml-[11px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+                    {[
+                      { title: 'Document Extraction', desc: 'Analyzed 3 files. Found $15,000 match in Fee Agreement.', icon: FileText, done: currentStep >= 1 },
+                      { title: 'Approval Validation', desc: 'Verified Partner Approval (R. Ford) via email thread.', icon: UserCheck, done: currentStep >= 2 },
+                      { title: 'Core ERP Data Sync', desc: 'Validated Matter KRL-MAT-2025-0143 and Client ID.', icon: Database, done: currentStep >= 3 },
+                    ].map((step, idx) => {
+                      const isActive = status === 'processing' && currentStep === idx;
+                      const isPast = currentStep > idx || status === 'done';
+                      return (
+                        <div key={idx} className={`relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active transition-opacity duration-300 ${isPast || isActive ? 'opacity-100' : 'opacity-40'}`}>
+                          <div className={`flex items-center justify-center w-6 h-6 rounded-full border-2 bg-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 ${isPast ? 'border-emerald-500' : isActive ? 'border-[#00263A]' : 'border-slate-300'}`}>
+                            {isPast ? <Check className="w-3 h-3 text-emerald-500" /> : <step.icon className={`w-3 h-3 ${isActive ? 'text-[#00263A] animate-pulse' : 'text-slate-400'}`} />}
+                          </div>
+                          <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-lg border border-slate-200 bg-white shadow-sm">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className={`text-xs font-bold ${isPast ? 'text-emerald-700' : isActive ? 'text-[#00263A]' : 'text-slate-700'}`}>{step.title}</span>
+                              {isActive && <Loader2 className="w-3 h-3 text-[#00263A] animate-spin" />}
+                            </div>
+                            <p className="text-[10px] text-slate-500">{step.desc}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
-            {!submitted && (
-              <button onClick={() => setSubmitted(true)}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-xs font-semibold hover:bg-[#003354] transition-colors">
-                <Check className="w-3.5 h-3.5" />Approve Manual Charge
-              </button>
+
+            {status === 'done' && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-emerald-50 border border-emerald-200 rounded-lg p-5 text-center mt-6">
+                <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-3" />
+                <h3 className="text-sm font-bold text-emerald-900 mb-1">Draft KRL-INV-4941 Generated</h3>
+                <p className="text-xs text-emerald-700 mb-5">Manual billing request successfully processed into a draft invoice.</p>
+                <div className="flex flex-col gap-2">
+                  <button onClick={onBack} className="w-full px-4 py-2 bg-white border border-emerald-200 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-colors">
+                    Return to Hub
+                  </button>
+                </div>
+              </motion.div>
             )}
-          </Card>
-          {submitted && (
-            <Card title="Posting Result" accent="emerald">
-              <FieldRow label="Invoice Generated" value="KRL-INV-2026-5011" mono highlight />
-              <FieldRow label="Posted to Core ERP" value="Yes — AR entry created" highlight />
-              <FieldRow label="Audit Reference" value="KRL-AUD-MAN-5011" mono />
-              <FieldRow label="Revenue Period" value="Feb 2026" />
-              <div className="mt-3 text-[10px] font-semibold text-emerald-700">Manual invoice posted · Audit trail complete</div>
-            </Card>
-          )}
+
+          </div>
         </Panel>
       </div>
     </motion.div>
   );
 };
+
 
 // ─── Credit / Rebill ──────────────────────────────────────────────────────────
 
