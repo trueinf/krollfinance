@@ -3,7 +3,7 @@ import { LayoutDashboard, Inbox, AlertCircle, Cpu, BarChart3, History, Settings,
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
-import { InvoiceDeliveryView } from './InvoiceDeliveryView';
+import { InvoicingBillingView } from './InvoicingBillingView';
 import { CustomerMasterDataView } from './CustomerMasterDataView';
 
 interface Remittance {
@@ -11936,12 +11936,7 @@ If you ask a question, you must wait for the customer's response before continui
         {currentView === 'customer-master' && <CustomerMasterDataView key="customer-master" />}
         {currentView === 'qa' && <QAView key="qa" />}
         {currentView === 'invoice-delivery' && (
-          <InvoiceDeliveryView
-            key="invoice-delivery"
-            onPostedToCoreERP={() => {
-              setCurrentView('dashboard');
-            }}
-          />
+          <InvoicingBillingView key="invoice-delivery" />
         )}
         {currentView === 'help' && <HelpView key="help" />}
       </AnimatePresence>
