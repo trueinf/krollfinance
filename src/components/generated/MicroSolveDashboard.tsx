@@ -11938,7 +11938,7 @@ If you ask a question, you must wait for the customer's response before continui
         {currentView === 'invoice-delivery' && (
           <InvoiceDeliveryView
             key="invoice-delivery"
-            onPostedToCore ERP={() => {
+            onPostedToCoreERP={() => {
               setCurrentView('dashboard');
             }}
           />

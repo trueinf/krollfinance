@@ -88,7 +88,7 @@ const CheckItem: React.FC<{ text: string; warn?: boolean }> = ({ text, warn }) =
   </div>
 );
 
-export const InvoiceDeliveryView: React.FC<{ onPostedToCore ERP?: () => void }> = ({ onPostedToCore ERP }) => {
+export const InvoiceDeliveryView: React.FC<{ onPostedToCoreERP?: () => void }> = ({ onPostedToCoreERP }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isApproved, setIsApproved] = useState(false);
   const [showApprovedPopup, setShowApprovedPopup] = useState(false);
@@ -97,7 +97,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToCore ERP?: () => void }> 
   const handleNext = () => setCurrentStep((s) => Math.min(s + 1, totalSteps - 1));
   const handlePrev = () => setCurrentStep((s) => Math.max(s - 1, 0));
   const handleApprove = () => { setIsApproved(true); setShowApprovedPopup(true); };
-  const handlePopupOk = () => { setShowApprovedPopup(false); onPostedToCore ERP?.(); };
+  const handlePopupOk = () => { setShowApprovedPopup(false); onPostedToCoreERP?.(); };
 
   const steps = INVOICE_DELIVERY_STEPS;
 
