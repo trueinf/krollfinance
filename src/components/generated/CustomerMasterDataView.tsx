@@ -30,8 +30,8 @@ type FlowTab = 'creation' | 'maintenance';
 const CREATION_STEPS = [
   { id: 1, title: 'Intake & structuring', short: 'Intake', hint: 'Email → structured request' },
   { id: 2, title: 'Validation & enrichment', short: 'Validate', hint: 'Tax, address, risk flags' },
-  { id: 3, title: 'Duplicate check', short: 'Duplicates', hint: 'D365 fuzzy match' },
-  { id: 4, title: 'D365 draft (HITL)', short: 'Draft', hint: 'Review & create' },
+  { id: 3, title: 'Duplicate check', short: 'Duplicates', hint: 'Core ERP fuzzy match' },
+  { id: 4, title: 'Core ERP draft (HITL)', short: 'Draft', hint: 'Review & create' },
   { id: 5, title: 'Account + handoff', short: 'Done', hint: 'Account # & Credit Risk' },
 ];
 
@@ -39,7 +39,7 @@ const MAINTENANCE_STEPS = [
   { id: 1, title: 'Intake & classification', short: 'Intake', hint: 'Match customer & classify' },
   { id: 2, title: 'Proof & policy', short: 'Proof', hint: 'Evidence & rules' },
   { id: 3, title: 'Domain verification', short: 'Domain', hint: 'Email domain check' },
-  { id: 4, title: 'Delta & D365 update', short: 'Apply', hint: 'Before / after' },
+  { id: 4, title: 'Delta & Core ERP update', short: 'Apply', hint: 'Before / after' },
   { id: 5, title: 'Confirmation & closure', short: 'Close', hint: 'Ticket & SLA' },
 ];
 
@@ -446,7 +446,7 @@ export const CustomerMasterDataView: React.FC = () => {
                 </span>
                 <div>
                   <h3 className="text-xs font-semibold text-slate-900">Potential duplicate matches</h3>
-                  <p className="text-xs text-slate-500">D365 · Name, address, tax ID</p>
+                  <p className="text-xs text-slate-500">Core ERP · Name, address, tax ID</p>
                 </div>
               </div>
               <div className="space-y-2">
@@ -515,7 +515,7 @@ export const CustomerMasterDataView: React.FC = () => {
       case 3:
         return (
           <Card>
-            <h3 className="text-xs font-semibold text-slate-900">Draft Customer Record (D365)</h3>
+            <h3 className="text-xs font-semibold text-slate-900">Draft Customer Record (Core ERP)</h3>
             <p className="mt-0.5 text-xs text-slate-500">
               AR → Customers · Address book · Tax · Terms
             </p>
@@ -561,7 +561,7 @@ export const CustomerMasterDataView: React.FC = () => {
                 toast.message('Sent for manual review', { description: 'Waiting for reviewer approval.' });
                 setTimeout(() => {
                   setReviewStatus('approved');
-                  toast.success('Human approved and created in D365', {
+                  toast.success('Human approved and created in Core ERP', {
                     description: 'Draft posted after manual review.',
                   });
                 }, 3500);
@@ -578,7 +578,7 @@ export const CustomerMasterDataView: React.FC = () => {
             >
               {reviewStatus === 'approved' ? (
                 <span className="inline-flex items-center justify-center gap-1.5">
-                  <Check className="h-4 w-4" /> Human approved · Created in D365
+                  <Check className="h-4 w-4" /> Human approved · Created in Core ERP
                 </span>
               ) : reviewStatus === 'sent' ? (
                 'Sent for manual review'
@@ -607,7 +607,7 @@ export const CustomerMasterDataView: React.FC = () => {
                   Copy
                 </button>
               </div>
-              <p className="mt-1 text-sm font-medium text-emerald-800">Status: Active · D365 sync complete</p>
+              <p className="mt-1 text-sm font-medium text-emerald-800">Status: Active · Core ERP sync complete</p>
             </div>
             <Card>
               <div className="mb-1.5 flex items-center gap-1.5 text-slate-900">
@@ -690,7 +690,7 @@ export const CustomerMasterDataView: React.FC = () => {
                 </div>
               </dl>
               <div className="mt-2">
-                <div className="text-xs font-bold uppercase tracking-wide text-slate-500">Current D365 snapshot</div>
+                <div className="text-xs font-bold uppercase tracking-wide text-slate-500">Current Core ERP snapshot</div>
                 <div className="mt-1 rounded-lg border border-slate-100 bg-slate-50 p-2 text-sm text-slate-800">
                   Bill-to: Tower A, Singapore · Ship-to: same · tax registration on file
                 </div>
@@ -723,7 +723,7 @@ export const CustomerMasterDataView: React.FC = () => {
             </ul>
             <div className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-2.5 text-sm text-slate-600">
               <span className="font-semibold text-slate-800">If proof were missing:</span> auto-response would request
-              signed letterhead or registration update before any D365 change.
+              signed letterhead or registration update before any Core ERP change.
             </div>
             <p className="mt-2 text-xs text-slate-500">The agent enforces controls upfront—no proof, no change.</p>
           </Card>
@@ -824,7 +824,7 @@ export const CustomerMasterDataView: React.FC = () => {
               type="button"
               onClick={() => {
                 setAppliedUpdate(true);
-                toast.success('Update applied in D365', { description: 'Address book and audit notes updated.' });
+                toast.success('Update applied in Core ERP', { description: 'Address book and audit notes updated.' });
               }}
               className={clsx(
                 'mt-3 w-full rounded-lg py-2 text-xs font-semibold text-white shadow-sm transition-all sm:w-auto sm:min-w-[180px]',
@@ -833,10 +833,10 @@ export const CustomerMasterDataView: React.FC = () => {
             >
               {appliedUpdate ? (
                 <span className="inline-flex items-center justify-center gap-1.5">
-                  <Check className="h-4 w-4" /> Applied in D365
+                  <Check className="h-4 w-4" /> Applied in Core ERP
                 </span>
               ) : (
-                'Apply update in D365'
+                'Apply update in Core ERP'
               )}
             </button>
             <p className="mt-2 text-xs text-slate-500">
@@ -851,7 +851,7 @@ export const CustomerMasterDataView: React.FC = () => {
               <h3 className="text-xs font-semibold text-slate-900">Closure note (auto-generated)</h3>
               <pre className="mt-2 whitespace-pre-wrap rounded-lg bg-slate-50 p-2.5 font-sans text-sm text-slate-700 ring-1 ring-slate-100">
                 {`Billing address updated for CUST-APAC-2025-8047 effective ${new Date().toLocaleDateString()}.
-Invoice delivery will use Hong Kong bill-to. Ticket updated with D365 reference and proof link.`}
+Invoice delivery will use Hong Kong bill-to. Ticket updated with Core ERP reference and proof link.`}
               </pre>
             </Card>
             <div className="rounded-lg border border-emerald-200 bg-gradient-to-r from-emerald-100/80 to-emerald-50 px-3 py-2 text-center shadow-sm">
@@ -897,7 +897,7 @@ Invoice delivery will use Hong Kong bill-to. Ticket updated with D365 reference 
             </div>
             <div className="min-w-0">
               <p className="text-base leading-relaxed text-slate-600">
-                AI structures, validates, deduplicates, and executes in D365 with human-in-the-loop controls—aligned with the
+                AI structures, validates, deduplicates, and executes in Core ERP with human-in-the-loop controls—aligned with the
                 same agents you see in the main dashboard.
               </p>
             </div>
@@ -950,7 +950,7 @@ Invoice delivery will use Hong Kong bill-to. Ticket updated with D365 reference 
               <main className={clsx('min-h-0 flex-1 overflow-y-auto bg-slate-50', cIdx === 4 ? 'p-4' : 'p-5')}>
                 <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
                   <h2 className="text-base font-semibold text-slate-700">{cSteps[cIdx].title}</h2>
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Onboarding · D365</span>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Onboarding · Core ERP</span>
                 </div>
                 <CreationContent />
                 <FlowNavFooter
@@ -981,7 +981,7 @@ Invoice delivery will use Hong Kong bill-to. Ticket updated with D365 reference 
               <main className="min-h-0 flex-1 overflow-y-auto bg-slate-50 p-8">
                 <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
                   <h2 className="text-base font-semibold text-slate-700">{mSteps[mIdx].title}</h2>
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Updates · D365</span>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Updates · Core ERP</span>
                 </div>
                 <MaintenanceContent />
                 <FlowNavFooter

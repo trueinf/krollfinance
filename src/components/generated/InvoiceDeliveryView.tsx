@@ -20,14 +20,14 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 const INVOICE_DELIVERY_STEPS = [
-  { id: 1, title: 'Invoice Approved in D365', details: ['D365 billing approval triggers delivery agent'] },
-  { id: 2, title: 'Check Client Portal Requirement', details: ['Verify Ariba access & PO linkage'] },
+  { id: 1, title: 'Invoice Approved in Core ERP', details: ['Core ERP billing approval triggers delivery agent'] },
+  { id: 2, title: 'Check Client Portal Requirement', details: ['Verify Portal access & PO linkage'] },
   { id: 3, title: 'Validate Invoice Data', details: ['Matter code, billing entity, tax & schema checks'] },
-  { id: 4, title: 'Submit to SAP Ariba', details: ['Upload & submit invoice to client portal'] },
+  { id: 4, title: 'Submit to Client Portal', details: ['Upload & submit invoice to client portal'] },
   { id: 5, title: 'Capture Status + Evidence', details: ['Record outcomes & store audit evidence'] },
   { id: 6, title: 'Exception Handling', details: ['Rejections, rework, controlled retries'] },
   { id: 7, title: 'Trigger Status Identified', details: ['Root cause & resolution routing'] },
-  { id: 8, title: 'Post to D365', details: ['Final AR posting & revenue recognition'] },
+  { id: 8, title: 'Post to Core ERP', details: ['Final AR posting & revenue recognition'] },
 ];
 
 // Shared sub-components aligned to dashboard typography
@@ -88,7 +88,7 @@ const CheckItem: React.FC<{ text: string; warn?: boolean }> = ({ text, warn }) =
   </div>
 );
 
-export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({ onPostedToD365 }) => {
+export const InvoiceDeliveryView: React.FC<{ onPostedToCore ERP?: () => void }> = ({ onPostedToCore ERP }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isApproved, setIsApproved] = useState(false);
   const [showApprovedPopup, setShowApprovedPopup] = useState(false);
@@ -97,7 +97,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
   const handleNext = () => setCurrentStep((s) => Math.min(s + 1, totalSteps - 1));
   const handlePrev = () => setCurrentStep((s) => Math.max(s - 1, 0));
   const handleApprove = () => { setIsApproved(true); setShowApprovedPopup(true); };
-  const handlePopupOk = () => { setShowApprovedPopup(false); onPostedToD365?.(); };
+  const handlePopupOk = () => { setShowApprovedPopup(false); onPostedToCore ERP?.(); };
 
   const steps = INVOICE_DELIVERY_STEPS;
 
@@ -110,7 +110,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
             <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
               <Check className="w-6 h-6 text-emerald-600" />
             </div>
-            <h2 id="popup-title" className="text-sm font-semibold text-slate-800 mb-1">Posted to D365</h2>
+            <h2 id="popup-title" className="text-sm font-semibold text-slate-800 mb-1">Posted to Core ERP</h2>
             <p className="text-xs text-slate-500 mb-4">AR ledger entries created · Revenue recognition triggered · Audit trail complete</p>
             <button onClick={handlePopupOk}
               className="px-6 py-2 bg-[#00263A] text-white rounded-lg text-xs font-semibold hover:bg-[#003354] transition-colors">
@@ -132,7 +132,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                 <h1 className="text-sm font-semibold text-slate-800">Invoice Delivery</h1>
                 <span className="text-[10px] font-semibold text-[#7AADCB] bg-[#00263A] px-2 py-0.5 rounded-full">Kroll Billing Intelligence</span>
               </div>
-              <p className="text-[10px] text-slate-400 mt-0.5">Pinnacle Capital Partners LLC · Matter KRL-MAT-2025-0847 · Valuation Advisory · SAP Ariba → D365</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">Pinnacle Capital Partners LLC · Matter KRL-MAT-2025-0847 · Valuation Advisory · Client Portal → Core ERP</p>
             </div>
             <div className="flex items-center gap-4 text-[10px] text-slate-400">
               <span>3 invoices · $180,000 total</span>
@@ -174,12 +174,12 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
         <div className="flex-1 overflow-hidden">
           <AnimatePresence mode="wait">
 
-            {/* Step 1: Invoice Approved in D365 */}
+            {/* Step 1: Invoice Approved in Core ERP */}
             {currentStep === 0 && (
               <motion.div key="step1" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="h-full flex flex-row">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
                   <div className="max-w-xl mx-auto space-y-4">
-                    <PanelHeader icon={<FileText className="w-4 h-4" />} title="Billing Record — Kroll D365" sub="Engagement billing approved for portal delivery" />
+                    <PanelHeader icon={<FileText className="w-4 h-4" />} title="Billing Record — Kroll Core ERP" sub="Engagement billing approved for portal delivery" />
                     <CardBlock title="Engagement Details">
                       <DataTable rows={[
                         { field: 'Client', value: 'Pinnacle Capital Partners LLC', highlight: true },
@@ -188,7 +188,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                         { field: 'Engagement Partner', value: 'Michael Thornton, MD — Valuation Advisory' },
                         { field: 'Billing Entity', value: 'Kroll, LLC (Delaware)' },
                         { field: 'Service Line', value: 'Valuation Advisory · Transaction Advisory · Restructuring' },
-                        { field: 'Delivery Method', value: 'SAP Ariba Network (client-mandated)' },
+                        { field: 'Delivery Method', value: 'Client Portal Network (client-mandated)' },
                         { field: 'Payment Terms', value: 'Net 30 · Due Apr 15, 2026' },
                       ]} />
                     </CardBlock>
@@ -204,14 +204,14 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                 </motion.div>
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 border-l border-slate-200">
                   <div className="max-w-lg mx-auto space-y-4">
-                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="D365 Billing Agent — Trigger Fired" sub="Approval captured · delivery routing initiated" kroll />
+                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="Core ERP Billing Agent — Trigger Fired" sub="Approval captured · delivery routing initiated" kroll />
                     <CardBlock title="Approval Checks Passed" accent="emerald">
                       <div className="space-y-2.5">
                         <CheckItem text="Engagement partner sign-off confirmed — Michael Thornton" />
-                        <CheckItem text="D365 billing approval status: Approved" />
+                        <CheckItem text="Core ERP billing approval status: Approved" />
                         <CheckItem text="Revenue recognition schedule validated (ASC 606)" />
-                        <CheckItem text="Client mandates SAP Ariba — portal delivery agent selected" />
-                        <CheckItem text="3 invoices queued for Ariba submission" />
+                        <CheckItem text="Client mandates Client Portal — portal delivery agent selected" />
+                        <CheckItem text="3 invoices queued for Portal submission" />
                       </div>
                     </CardBlock>
                     <div className="bg-[#F0F5F8] border border-[#C5D8E4] rounded-lg p-4">
@@ -220,7 +220,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                         <SectionLabel>Kroll AI — System Message</SectionLabel>
                       </div>
                       <p className="text-xs text-[#00263A] leading-relaxed">
-                        D365 billing approval received for matter KRL-MAT-2025-0847. Pinnacle Capital Partners requires SAP Ariba submission. Invoice delivery agent triggered — proceeding to portal access verification.
+                        Core ERP billing approval received for matter KRL-MAT-2025-0847. Pinnacle Capital Partners requires Client Portal submission. Invoice delivery agent triggered — proceeding to portal access verification.
                       </p>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg">
@@ -237,13 +237,13 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
               <motion.div key="step2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="h-full flex flex-row">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
                   <div className="max-w-xl mx-auto space-y-4">
-                    <PanelHeader icon={<UserCheck className="w-4 h-4" />} title="Client Portal Access Record" sub="SAP Ariba supplier account verification" />
+                    <PanelHeader icon={<UserCheck className="w-4 h-4" />} title="Client Portal Access Record" sub="Client Portal supplier account verification" />
                     <CardBlock title="Portal Configuration — Pinnacle Capital Partners">
                       <DataTable rows={[
                         { field: 'Client', value: 'Pinnacle Capital Partners LLC' },
-                        { field: 'Portal', value: 'SAP Ariba Network', highlight: true },
-                        { field: 'Kroll Supplier ANID', value: 'AN01234567890-T' },
-                        { field: 'Ariba Account Status', value: 'Active — Enabled' },
+                        { field: 'Portal', value: 'Client Portal Network', highlight: true },
+                        { field: 'Kroll Supplier Portal ID', value: 'AN01234567890-T' },
+                        { field: 'Portal Account Status', value: 'Active — Enabled' },
                         { field: 'Onboarded', value: 'Oct 14, 2022' },
                         { field: 'PO Required', value: 'Yes — per client billing policy' },
                         { field: 'Linked PO', value: 'PO-4500091827 (Kroll Advisory Services 2025–2026)' },
@@ -260,23 +260,23 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                 </motion.div>
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 border-l border-slate-200">
                   <div className="max-w-lg mx-auto space-y-4">
-                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="Portal Access Validation" sub="Ariba account active · PO linkage confirmed" kroll />
+                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="Portal Access Validation" sub="Portal account active · PO linkage confirmed" kroll />
                     <CardBlock title="Validation Results" accent="emerald">
                       <div className="space-y-2.5">
-                        <CheckItem text="Kroll Ariba supplier account active (ANID: AN01234567890-T)" />
-                        <CheckItem text="Pinnacle Capital Partners Ariba buyer network — connected" />
+                        <CheckItem text="Kroll Portal supplier account active (Portal ID: AN01234567890-T)" />
+                        <CheckItem text="Pinnacle Capital Partners Portal buyer network — connected" />
                         <CheckItem text="PO-4500091827 located · 3 open lines · amounts match" />
-                        <CheckItem text="Ariba invoice submission rules retrieved" />
+                        <CheckItem text="Portal invoice submission rules retrieved" />
                         <CheckItem text="PDF + XML dual-format requirement confirmed" />
                       </div>
                     </CardBlock>
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                       <p className="text-[10px] font-semibold text-amber-700 uppercase tracking-wider mb-2">If Portal Access Not Available</p>
                       <ul className="text-xs text-amber-800 space-y-1.5">
-                        <li className="flex items-start gap-1.5"><span className="text-amber-500 mt-0.5">•</span>AI initiates Ariba supplier onboarding workflow</li>
+                        <li className="flex items-start gap-1.5"><span className="text-amber-500 mt-0.5">•</span>AI initiates Portal supplier onboarding workflow</li>
                         <li className="flex items-start gap-1.5"><span className="text-amber-500 mt-0.5">•</span>Drafts onboarding request to Pinnacle Capital AP team</li>
-                        <li className="flex items-start gap-1.5"><span className="text-amber-500 mt-0.5">•</span>Tracks onboarding confirmation and ANID issuance</li>
-                        <li className="flex items-start gap-1.5"><span className="text-amber-500 mt-0.5">•</span>Updates D365 billing record and notifies engagement partner</li>
+                        <li className="flex items-start gap-1.5"><span className="text-amber-500 mt-0.5">•</span>Tracks onboarding confirmation and Portal ID issuance</li>
+                        <li className="flex items-start gap-1.5"><span className="text-amber-500 mt-0.5">•</span>Updates Core ERP billing record and notifies engagement partner</li>
                       </ul>
                     </div>
                   </div>
@@ -321,8 +321,8 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                         <CheckItem text="Matter code KRL-MAT-2025-0847 — active & billable" />
                         <CheckItem text="Engagement partner sign-off present on all 3 invoices" />
                         <CheckItem text="Billing entity: Kroll, LLC (Delaware) — correct for US engagement" />
-                        <CheckItem text="Tax codes: US domestic services — validated against D365" />
-                        <CheckItem text="Ariba XML schema compliance — PDF + cXML format confirmed" />
+                        <CheckItem text="Tax codes: US domestic services — validated against Core ERP" />
+                        <CheckItem text="Portal XML schema compliance — PDF + cXML format confirmed" />
                         <CheckItem text="PO references present on all 3 invoices" />
                         <CheckItem text="Invoice amounts within PO line authorisation limits" />
                       </div>
@@ -333,7 +333,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                         <SectionLabel>Kroll AI — Validation Note</SectionLabel>
                       </div>
                       <p className="text-xs text-[#00263A] leading-relaxed">
-                        All 3 invoices pass Kroll billing policy and SAP Ariba submission rules. No data enrichment required. Proceeding to Ariba upload.
+                        All 3 invoices pass Kroll billing policy and Client Portal submission rules. No data enrichment required. Proceeding to Portal upload.
                       </p>
                     </div>
                   </div>
@@ -341,33 +341,33 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
               </motion.div>
             )}
 
-            {/* Step 4: Submit to SAP Ariba */}
+            {/* Step 4: Submit to Client Portal */}
             {currentStep === 3 && (
               <motion.div key="step4" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="h-full flex flex-row">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
                   <div className="max-w-xl mx-auto space-y-4">
-                    <PanelHeader icon={<Upload className="w-4 h-4" />} title="Ariba Upload Queue" sub="Kroll submitting 3 invoices to Pinnacle Capital Ariba" />
-                    <CardBlock title="Submission Queue — SAP Ariba Network">
+                    <PanelHeader icon={<Upload className="w-4 h-4" />} title="Portal Upload Queue" sub="Kroll submitting 3 invoices to Pinnacle Capital Portal" />
+                    <CardBlock title="Submission Queue — Client Portal Network">
                       <DataTable rows={[
                         { field: 'KRL-INV-4821', value: 'Queued · $95,000' },
                         { field: 'KRL-INV-4822', value: 'Queued · $55,000 · PO line 2' },
                         { field: 'KRL-INV-4823', value: 'Queued · $30,000' },
-                        { field: 'Target Portal', value: 'SAP Ariba Network', highlight: true },
-                        { field: 'Buyer AN ID', value: 'AN98765432100-T (Pinnacle Capital)' },
-                        { field: 'Supplier AN ID', value: 'AN01234567890-T (Kroll)' },
-                        { field: 'Format', value: 'PDF + cXML (Ariba standard)' },
+                        { field: 'Target Portal', value: 'Client Portal Network', highlight: true },
+                        { field: 'Buyer Portal ID', value: 'AN98765432100-T (Pinnacle Capital)' },
+                        { field: 'Supplier Portal ID', value: 'AN01234567890-T (Kroll)' },
+                        { field: 'Format', value: 'PDF + cXML (Portal standard)' },
                       ]} />
                     </CardBlock>
                   </div>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 border-l border-slate-200">
                   <div className="max-w-lg mx-auto space-y-4">
-                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="Ariba Submission — In Progress" sub="AI navigating Ariba portal end-to-end" kroll />
+                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="Portal Submission — In Progress" sub="AI navigating Portal end-to-end" kroll />
                     <CardBlock title="Submission Progress">
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-                          <span className="text-xs text-slate-700">Ariba login — Kroll supplier account authenticated</span>
+                          <span className="text-xs text-slate-700">Portal login — Kroll supplier account authenticated</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
@@ -385,7 +385,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                     </CardBlock>
                     <CardBlock title="Evidence Capture (Post Submission)">
                       <div className="space-y-1.5">
-                        {['Ariba submission confirmation & reference numbers', 'Screenshots of portal confirmation screens', 'cXML acknowledgement records', 'D365 billing record status update to "Submitted"'].map((item, i) => (
+                        {['Portal submission confirmation & reference numbers', 'Screenshots of portal confirmation screens', 'cXML acknowledgement records', 'Core ERP billing record status update to "Submitted"'].map((item, i) => (
                           <div key={i} className="flex items-start gap-2">
                             <span className="text-[#00263A] text-xs mt-0.5">·</span>
                             <span className="text-xs text-slate-600">{item}</span>
@@ -403,13 +403,13 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
               <motion.div key="step5" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="h-full flex flex-row">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
                   <div className="max-w-xl mx-auto space-y-4">
-                    <PanelHeader icon={<Eye className="w-4 h-4" />} title="Portal Response Outcomes" sub="Ariba submission results for 3 invoices" />
+                    <PanelHeader icon={<Eye className="w-4 h-4" />} title="Portal Response Outcomes" sub="Portal submission results for 3 invoices" />
                     <CardBlock title="Upload Results">
                       <div className="space-y-2">
                         <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200">
                           <div>
                             <span className="text-xs font-semibold text-slate-800">KRL-INV-4821 · $95,000</span>
-                            <p className="text-[10px] text-slate-500 mt-0.5">Ariba Ref: AR-2026-88921</p>
+                            <p className="text-[10px] text-slate-500 mt-0.5">Portal Ref: AR-2026-88921</p>
                           </div>
                           <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Submitted</span>
                         </div>
@@ -423,7 +423,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                         <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200">
                           <div>
                             <span className="text-xs font-semibold text-slate-800">KRL-INV-4823 · $30,000</span>
-                            <p className="text-[10px] text-slate-500 mt-0.5">Ariba Ref: AR-2026-88922</p>
+                            <p className="text-[10px] text-slate-500 mt-0.5">Portal Ref: AR-2026-88922</p>
                           </div>
                           <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Submitted</span>
                         </div>
@@ -433,11 +433,11 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                 </motion.div>
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 border-l border-slate-200">
                   <div className="max-w-lg mx-auto space-y-4">
-                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="Evidence Capture & D365 Update" sub="AI records outcomes and opens exception case" kroll />
+                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="Evidence Capture & Core ERP Update" sub="AI records outcomes and opens exception case" kroll />
                     <CardBlock title="AI Actions Completed" accent="emerald">
                       <div className="space-y-2.5">
-                        <CheckItem text="INV-4821: D365 status → Delivered · AR-2026-88921 stored" />
-                        <CheckItem text="INV-4823: D365 status → Delivered · AR-2026-88922 stored" />
+                        <CheckItem text="INV-4821: Core ERP status → Delivered · AR-2026-88921 stored" />
+                        <CheckItem text="INV-4823: Core ERP status → Delivered · AR-2026-88922 stored" />
                         <CheckItem text="Portal screenshots captured for both successful invoices" />
                         <CheckItem text="cXML acknowledgements logged in audit trail" />
                       </div>
@@ -461,7 +461,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                           <span className="text-xs font-semibold text-rose-600">$55,000 — exceeds tolerance</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-slate-500">D365 Case</span>
+                          <span className="text-xs text-slate-500">Core ERP Case</span>
                           <span className="text-xs font-semibold text-slate-800">EXC-2026-0391 opened</span>
                         </div>
                       </div>
@@ -476,11 +476,11 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
               <motion.div key="step6" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="h-full flex flex-row">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
                   <div className="max-w-xl mx-auto space-y-4">
-                    <PanelHeader icon={<AlertCircle className="w-4 h-4" />} title="Rejection Case — EXC-2026-0391" sub="KRL-INV-4822 rejected by Pinnacle Capital Ariba" />
+                    <PanelHeader icon={<AlertCircle className="w-4 h-4" />} title="Rejection Case — EXC-2026-0391" sub="KRL-INV-4822 rejected by Pinnacle Capital Portal" />
                     <CardBlock title="Rejection Details" accent="amber">
                       <div className="space-y-3">
                         <div>
-                          <SectionLabel>Ariba Rejection Message</SectionLabel>
+                          <SectionLabel>Portal Rejection Message</SectionLabel>
                           <p className="text-xs text-slate-700 mt-1 italic bg-slate-50 p-2.5 rounded border border-slate-200">
                             "Invoice KRL-INV-4822 rejected. Amount $55,000.00 exceeds approved PO-4500091827 Line 2 maximum of $50,925.00 (base $48,500 + 5% tolerance). Please resubmit with amended PO or revised invoice."
                           </p>
@@ -501,11 +501,11 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                     <PanelHeader icon={<Brain className="w-4 h-4" />} title="Exception Handling — AI Response" sub="Structured case routing with auditable evidence" kroll />
                     <CardBlock title="AI Actions Taken">
                       <div className="space-y-2.5">
-                        <CheckItem text="Ariba rejection parsed and linked to KRL-INV-4822 in D365" />
+                        <CheckItem text="Portal rejection parsed and linked to KRL-INV-4822 in Core ERP" />
                         <CheckItem text="Root cause classified: PO tolerance breach ($4,075 overage)" />
-                        <CheckItem text="Case EXC-2026-0391 created in D365 with full evidence" />
+                        <CheckItem text="Case EXC-2026-0391 created in Core ERP with full evidence" />
                         <CheckItem text="PO amendment request drafted — routed to engagement partner" />
-                        <CheckItem text="Pinnacle Capital AP team notified via Ariba messaging" />
+                        <CheckItem text="Pinnacle Capital AP team notified via Portal messaging" />
                       </div>
                     </CardBlock>
                     <CardBlock title="Escalation Logic">
@@ -554,7 +554,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                     </CardBlock>
                     <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
                       <p className="text-xs text-emerald-800">
-                        <span className="font-semibold">KRL-INV-4821</span> and <span className="font-semibold">KRL-INV-4823</span> delivered successfully — no trigger detected. Proceeding to D365 posting.
+                        <span className="font-semibold">KRL-INV-4821</span> and <span className="font-semibold">KRL-INV-4823</span> delivered successfully — no trigger detected. Proceeding to Core ERP posting.
                       </p>
                     </div>
                   </div>
@@ -564,11 +564,11 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                     <PanelHeader icon={<Brain className="w-4 h-4" />} title="Trigger Decisioning" sub="Root cause identified · resolution path set" kroll />
                     <CardBlock title="Selected Trigger: PO Tolerance Breach">
                       <div className="space-y-2.5">
-                        <CheckItem text="Ariba rejection message parsed and linked to KRL-INV-4822" />
+                        <CheckItem text="Portal rejection message parsed and linked to KRL-INV-4822" />
                         <CheckItem text="Trigger rule matched: invoice amount exceeds PO line 5% tolerance" />
                         <CheckItem text="Amendment request sent to engagement partner and client AP" />
                         <CheckItem text="Controlled retry armed — awaiting PO amendment confirmation" />
-                        <CheckItem text="D365 case EXC-2026-0391 updated with trigger snapshot" />
+                        <CheckItem text="Core ERP case EXC-2026-0391 updated with trigger snapshot" />
                       </div>
                     </CardBlock>
                     <CardBlock title="Trigger Snapshot">
@@ -586,7 +586,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
               </motion.div>
             )}
 
-            {/* Step 8: Post to D365 */}
+            {/* Step 8: Post to Core ERP */}
             {currentStep === 7 && (
               <motion.div key="step8" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="h-full flex flex-row">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
@@ -605,16 +605,16 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                               <span className={`text-[10px] font-semibold ${inv.color}`}>{inv.status}</span>
                             </div>
                             <p className="text-[10px] text-slate-500">{inv.desc}</p>
-                            <p className="text-[10px] text-[#00263A] font-medium mt-0.5">Ariba Ref: {inv.ref}</p>
+                            <p className="text-[10px] text-[#00263A] font-medium mt-0.5">Portal Ref: {inv.ref}</p>
                           </div>
                         ))}
                       </div>
                     </CardBlock>
-                    <CardBlock title="D365 Work Item">
+                    <CardBlock title="Core ERP Work Item">
                       <DataTable rows={[
                         { field: 'Matter', value: 'KRL-MAT-2025-0847', highlight: true },
                         { field: 'Billing Status', value: 'Fully Delivered' },
-                        { field: 'D365 Work Item', value: 'WI-2026-4821 — Closed' },
+                        { field: 'Core ERP Work Item', value: 'WI-2026-4821 — Closed' },
                         { field: 'Exception Case', value: 'EXC-2026-0391 — Resolved' },
                       ]} />
                     </CardBlock>
@@ -622,10 +622,10 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                 </motion.div>
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-5 border-l border-slate-200">
                   <div className="max-w-lg mx-auto space-y-4">
-                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="D365 Posting & Audit Trail" sub="AR entries created · revenue recognition triggered" kroll />
-                    <CardBlock title="D365 Actions Completed" accent="emerald">
+                    <PanelHeader icon={<Brain className="w-4 h-4" />} title="Core ERP Posting & Audit Trail" sub="AR entries created · revenue recognition triggered" kroll />
+                    <CardBlock title="Core ERP Actions Completed" accent="emerald">
                       <div className="space-y-2.5">
-                        <CheckItem text="AR ledger entries created for all 3 invoices in D365" />
+                        <CheckItem text="AR ledger entries created for all 3 invoices in Core ERP" />
                         <CheckItem text="Revenue recognition entries triggered — ASC 606 compliant" />
                         <CheckItem text="Engagement billing record KRL-MAT-2025-0847 updated: Fully Delivered" />
                         <CheckItem text="Exception case EXC-2026-0391 closed after PO amendment & retry" />
@@ -636,11 +636,11 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                     <CardBlock title="Audit Log — Complete">
                       <div className="space-y-1.5">
                         {[
-                          'Ariba submission confirmations (AR-2026-88921, 88922, 88935)',
+                          'Portal submission confirmations (AR-2026-88921, 88922, 88935)',
                           'Portal screenshots & cXML acknowledgements',
                           'PO amendment trail — EXC-2026-0391',
                           'Engagement partner approval timestamps',
-                          'D365 AR posting journal entries',
+                          'Core ERP AR posting journal entries',
                           'Revenue recognition schedule — ASC 606',
                         ].map((item, i) => (
                           <div key={i} className="flex items-start gap-2">
@@ -686,7 +686,7 @@ export const InvoiceDeliveryView: React.FC<{ onPostedToD365?: () => void }> = ({
                   ? 'bg-emerald-500 text-white cursor-default'
                   : 'bg-[#00263A] text-white hover:bg-[#003354]'
               }`}>
-              {currentStep === totalSteps - 1 ? (isApproved ? 'Posted to D365' : 'Approve & Post to D365') : 'Next Step'}
+              {currentStep === totalSteps - 1 ? (isApproved ? 'Posted to Core ERP' : 'Approve & Post to Core ERP') : 'Next Step'}
               {currentStep === totalSteps - 1 && isApproved
                 ? <Check className="w-3.5 h-3.5" />
                 : <ArrowRight className="w-3.5 h-3.5" />}
