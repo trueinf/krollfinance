@@ -252,7 +252,7 @@ const AI_STEPS_BASE: AIStep[] = [{
 const AI_STEPS_EXTENDED: AIStep[] = [
   ...AI_STEPS_BASE,
   { id: 6, title: 'Resolve Exception', details: ['Awaiting user interaction'] },
-  { id: 7, title: 'Posting to D365', details: ['Writing to D365'] },
+  { id: 7, title: 'Posting to Core ERP', details: ['Writing to Core ERP'] },
   { id: 8, title: 'Complete', details: ['Transaction finalized'] }
 ];
 const AI_STEPS_NORTHWIND: AIStep[] = [
@@ -267,7 +267,7 @@ const AI_STEPS_NORTHWIND: AIStep[] = [
   { id: 9, title: 'Parsed Response', details: ['Allocation extracted', 'Validation passed'] },
   { id: 10, title: 'Matching Successful', details: ['Allocation confirmed', 'Ready to post'] },
   { id: 11, title: 'AI Decision', details: ['Ready for auto posting', 'Automation resumed'] },
-  { id: 12, title: 'Posting to D365', details: ['Writing to D365', 'Transaction processing'] },
+  { id: 12, title: 'Posting to Core ERP', details: ['Writing to Core ERP', 'Transaction processing'] },
   { id: 13, title: 'Success', details: ['Cash application completed', 'Transaction finalized'] }
 ];
 
@@ -278,7 +278,7 @@ const AI_STEPS_BLUEWAVE: AIStep[] = [
   { id: 4, title: 'Tax Profile', details: ['Customer tax profile'] },
   { id: 5, title: 'Withholding Validation', details: ['Withholding Reasoning Agent'] },
   { id: 6, title: 'Resolution Recommendation', details: ['AI decision'] },
-  { id: 7, title: 'D365 Posting Preview', details: ['Journal entry proposal'] },
+  { id: 7, title: 'Core ERP Posting Preview', details: ['Journal entry proposal'] },
   { id: 8, title: 'Documentation Request', details: ['Generated email'] },
   { id: 9, title: 'Documentation Received', details: ['Proof in attachments', 'Ready to post'] },
   { id: 10, title: 'Approval', details: ['Approve & Post'] },
@@ -305,7 +305,7 @@ const AI_STEPS_BANKFEE: AIStep[] = [
   { id: 3, title: 'Remittance Analysis', details: ['Document AI Agent'] },
   { id: 4, title: 'Policy Check', details: ['Absorb vs Chargeback'] },
   { id: 5, title: 'Resolution Recommendation', details: ['AI decision'] },
-  { id: 6, title: 'D365 Posting Preview', details: ['Journal entry proposal'] },
+  { id: 6, title: 'Core ERP Posting Preview', details: ['Journal entry proposal'] },
   { id: 7, title: 'Customer Outreach', details: ['If chargeback: email draft'] },
   { id: 8, title: 'Approval', details: ['Approve & Post'] },
   { id: 9, title: 'Resolution Completed', details: ['Success'] }
@@ -317,9 +317,9 @@ const AI_STEPS_REFUND: AIStep[] = [
   { id: 3, title: 'Policy & Threshold Check', details: ['Kroll Case Resolution'] },
   { id: 4, title: 'Resolution Split', details: ['AI Decision Engine'] },
   { id: 5, title: 'AI Decision', details: ['AI Decision Engine'] },
-  { id: 6, title: 'Refund & Write-Off Posting Proposal', details: ['D365 Posting'] },
+  { id: 6, title: 'Refund & Write-Off Posting Proposal', details: ['Core ERP Posting'] },
   { id: 7, title: 'Human Review / Approval Matrix', details: ['User'] },
-  { id: 8, title: 'Posting Execution', details: ['Deterministic enforcement (D365)'] },
+  { id: 8, title: 'Posting Execution', details: ['Deterministic enforcement (Core ERP)'] },
   { id: 9, title: 'Resolution Completed', details: ['Complete'] },
 ];
 
@@ -329,9 +329,9 @@ const AI_STEPS_MISAPPLIED: AIStep[] = [
   { id: 3, title: 'Customer Disambiguation', details: ['Payment Matching Agent'] },
   { id: 4, title: 'Open Invoice Match', details: ['Payment Matching Agent'] },
   { id: 5, title: 'AI Decision', details: ['AI Decision Engine'] },
-  { id: 6, title: 'Correction Posting Proposal', details: ['D365 Posting'] },
+  { id: 6, title: 'Correction Posting Proposal', details: ['Core ERP Posting'] },
   { id: 7, title: 'Human Review', details: ['User'] },
-  { id: 8, title: 'Posting Execution', details: ['Deterministic enforcement (D365)'] },
+  { id: 8, title: 'Posting Execution', details: ['Deterministic enforcement (Core ERP)'] },
   { id: 9, title: 'Resolution Completed', details: ['Complete'] },
 ];
 
@@ -348,7 +348,7 @@ const STEP_AGENT_MAP: Record<string, string> = {
   'Tax Profile': 'Customer Tax Profile',
   'Withholding Validation': 'Withholding Reasoning Agent',
   'Resolution Recommendation': 'Kroll AI Agent',
-  'D365 Posting Preview': 'D365 Posting',
+  'Core ERP Posting Preview': 'Core ERP Posting',
   'Documentation Request': 'Customer Communications',
   'Documentation Received': 'Case orchestration',
   'Approval': 'User',
@@ -365,21 +365,21 @@ const STEP_AGENT_MAP: Record<string, string> = {
   'Response Received': 'Case orchestration',
   'Parsed Response': 'Remittance Ingestion & Decoding Agent',
   'Matching Successful': 'Payment Matching Agent',
-  'Posting to D365': 'Deterministic enforcement (D365)',
+  'Posting to Core ERP': 'Deterministic enforcement (Core ERP)',
   'Resolve Exception': 'Human workbench',
   'Complete': 'Deterministic enforcement',
   'Success': 'Complete',
   'Overpayment Detection': 'Match & Reconciliation Agent',
   'Policy & Threshold Check': 'Kroll Case Resolution',
   'Resolution Split': 'AI Decision Engine',
-  'Refund & Write-Off Posting Proposal': 'D365 Posting',
+  'Refund & Write-Off Posting Proposal': 'Core ERP Posting',
   'Human Review / Approval Matrix': 'User',
   'Misapplication Detection': 'Match & Reconciliation Agent',
   'Customer Disambiguation': 'Payment Matching Agent',
   'Open Invoice Match': 'Payment Matching Agent',
-  'Correction Posting Proposal': 'D365 Posting',
+  'Correction Posting Proposal': 'Core ERP Posting',
   'Human Review': 'User',
-  'Posting Execution': 'Deterministic enforcement (D365)'
+  'Posting Execution': 'Deterministic enforcement (Core ERP)'
 };
 const StatCard = ({
   label,
@@ -1398,7 +1398,7 @@ export const MicroSolveDashboard = () => {
             <span className="text-[10px] font-semibold text-rose-700">{kpis.failedToday} Requiring Attention</span>
           </span>
         </div>
-        <p className="text-xs text-slate-400">Kroll Receivables Intelligence · Engagement-based receivables · D365 / SAP Ariba · Audit trail active</p>
+        <p className="text-xs text-slate-400">Kroll Receivables Intelligence · Engagement-based receivables · Core ERP / SAP Ariba · Audit trail active</p>
       </div>
       <div className="flex items-center gap-3">
         <div className="text-right">
@@ -1827,7 +1827,7 @@ export const MicroSolveDashboard = () => {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
                 <div className="max-w-xl mx-auto space-y-4">
                   <h2 className="text-sm font-semibold text-slate-800">Refund & Write-Off Posting Proposal</h2>
-                  <p className="text-sm text-slate-600">The D365 Posting Agent prepares the journal entry and refund disbursement request.</p>
+                  <p className="text-sm text-slate-600">The Core ERP Posting Agent prepares the journal entry and refund disbursement request.</p>
                   <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
                     <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3">Posting Recommendation</h3>
                     <ul className="text-sm text-slate-700 space-y-1 list-disc list-inside">
@@ -1854,7 +1854,7 @@ export const MicroSolveDashboard = () => {
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h3 className="text-sm font-bold text-blue-900 mb-2">System Actions if Approved</h3>
                     <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                      <li>Mark KRL-INV-4970 Settled in D365</li>
+                      <li>Mark KRL-INV-4970 Settled in Core ERP</li>
                       <li>Create refund disbursement request to Treasury for $200 (customer bank on file)</li>
                       <li>Post $50 write-off with reason code WO_IMMATERIAL</li>
                       <li>Link refund + write-off docs to the original direct-debit receipt for audit</li>
@@ -1918,7 +1918,7 @@ export const MicroSolveDashboard = () => {
                     <div className="flex flex-wrap gap-3">
                       <button onClick={handleRefundApproveAndPost} className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-bold hover:bg-[#003354] transition-colors">
                         <CheckCircle2 className="w-4 h-4" />
-                        Approve &amp; Post to D365
+                        Approve &amp; Post to Core ERP
                       </button>
                       <button className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
                         <FileText className="w-4 h-4" />
@@ -1944,7 +1944,7 @@ export const MicroSolveDashboard = () => {
                   <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-16 h-16 mx-auto bg-blue-50 rounded-full flex items-center justify-center">
                     <RefreshCw className="w-8 h-8 text-blue-600" />
                   </motion.div>
-                  <h2 className="text-sm font-semibold text-slate-800">Posting to D365</h2>
+                  <h2 className="text-sm font-semibold text-slate-800">Posting to Core ERP</h2>
                   <div className="space-y-2 text-sm text-slate-700 text-left max-w-sm mx-auto">
                     <p>• Settling KRL-INV-4970…</p>
                     <p>• Posting $50 write-off (WO_IMMATERIAL)…</p>
@@ -2017,7 +2017,7 @@ export const MicroSolveDashboard = () => {
               </button>
               <button onClick={handleRefundApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
                 <CheckCircle2 className="w-4 h-4" />
-                Approve &amp; Post to D365
+                Approve &amp; Post to Core ERP
               </button>
               <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
                 <FileText className="w-4 h-4" />
@@ -2320,7 +2320,7 @@ export const MicroSolveDashboard = () => {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
                 <div className="max-w-xl mx-auto space-y-4">
                   <h2 className="text-sm font-semibold text-slate-800">Correction Posting Proposal</h2>
-                  <p className="text-sm text-slate-600">The D365 Posting Agent prepares the reversal and reapplication documents.</p>
+                  <p className="text-sm text-slate-600">The Core ERP Posting Agent prepares the reversal and reapplication documents.</p>
                   <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
                     <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3">Posting Recommendation</h3>
                     <ul className="text-sm text-slate-700 space-y-1 list-disc list-inside">
@@ -2399,7 +2399,7 @@ export const MicroSolveDashboard = () => {
                     <div className="flex flex-wrap gap-3">
                       <button onClick={handleMisappliedApproveAndPost} className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-bold hover:bg-[#003354] transition-colors">
                         <CheckCircle2 className="w-4 h-4" />
-                        Approve &amp; Post to D365
+                        Approve &amp; Post to Core ERP
                       </button>
                       <button className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
                         <FileText className="w-4 h-4" />
@@ -2427,7 +2427,7 @@ export const MicroSolveDashboard = () => {
                   <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-16 h-16 mx-auto bg-blue-50 rounded-full flex items-center justify-center">
                     <RefreshCw className="w-8 h-8 text-blue-600" />
                   </motion.div>
-                  <h2 className="text-sm font-semibold text-slate-800">Posting to D365</h2>
+                  <h2 className="text-sm font-semibold text-slate-800">Posting to Core ERP</h2>
                   <div className="space-y-2 text-sm text-slate-700 text-left max-w-sm mx-auto">
                     <p>• Reversing application on KRL-INV-4901…</p>
                     <p>• Re-applying $125,000 to KRL-INV-4933…</p>
@@ -2502,7 +2502,7 @@ export const MicroSolveDashboard = () => {
               </button>
               <button onClick={handleMisappliedApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
                 <CheckCircle2 className="w-4 h-4" />
-                Approve &amp; Post to D365
+                Approve &amp; Post to Core ERP
               </button>
               <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
                 <FileText className="w-4 h-4" />
@@ -2706,7 +2706,7 @@ Thank you.`}
                       Skip Communication
                     </button>
                     <p className="text-xs text-slate-600 w-full">
-                      On send, the system auto-creates a D365 work item for tracking and audit evidence.
+                      On send, the system auto-creates a Core ERP work item for tracking and audit evidence.
                     </p>
                   </div>
                 </div>
@@ -2720,7 +2720,7 @@ Thank you.`}
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
                 <div className="max-w-xl mx-auto space-y-4">
                   <h2 className="text-sm font-semibold text-slate-800">Accounting Posting Proposal</h2>
-                  <p className="text-sm text-slate-600">The D365 Posting Agent prepares the accounting resolution.</p>
+                  <p className="text-sm text-slate-600">The Core ERP Posting Agent prepares the accounting resolution.</p>
                   <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
                     <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3">Posting Recommendation (Conservative)</h3>
                     <ul className="text-sm text-slate-700 space-y-1 list-disc list-inside">
@@ -2749,7 +2749,7 @@ Thank you.`}
                     <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
                       <li>Apply payment to invoice KRL-INV-4863.</li>
                       <li>Record deduction using reason code <span className="font-mono">WHT_US</span>.</li>
-                      <li>Mark invoice as Settled in D365.</li>
+                      <li>Mark invoice as Settled in Core ERP.</li>
                       <li>Create follow-up task to track receipt of withholding documentation.</li>
                     </ul>
                   </div>
@@ -2802,7 +2802,7 @@ Thank you.`}
                     <div className="flex flex-wrap gap-3">
                       <button className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-bold hover:bg-[#003354] transition-colors">
                         <CheckCircle2 className="w-4 h-4" />
-                        Approve &amp; Post to D365
+                        Approve &amp; Post to Core ERP
                       </button>
                       <button className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
                         <FileText className="w-4 h-4" />
@@ -2830,7 +2830,7 @@ Thank you.`}
                   <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-16 h-16 mx-auto bg-blue-50 rounded-full flex items-center justify-center">
                     <RefreshCw className="w-8 h-8 text-blue-600" />
                   </motion.div>
-                  <h2 className="text-sm font-semibold text-slate-800">Posting to D365</h2>
+                  <h2 className="text-sm font-semibold text-slate-800">Posting to Core ERP</h2>
                   <div className="space-y-2 text-sm text-slate-700 text-left max-w-sm mx-auto">
                     <p>• Applying payment to invoice KRL-INV-4863…</p>
                     <p>• Posting withholding receivable of $15,000…</p>
@@ -2905,7 +2905,7 @@ Thank you.`}
               </button>
               <button onClick={handleNihonApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
                 <CheckCircle2 className="w-4 h-4" />
-                Approve & Post to D365
+                Approve & Post to Core ERP
               </button>
               <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
                 <FileText className="w-4 h-4" />
@@ -5017,7 +5017,7 @@ Thank you.`}
                       <RefreshCw className="w-5 h-5 text-blue-600" />
                       <h3 className="font-bold text-blue-900">Simulation: Success</h3>
                     </div>
-                    <p className="text-blue-800 text-sm mb-2">Simulated posting to D365 returns success code.</p>
+                    <p className="text-blue-800 text-sm mb-2">Simulated posting to Core ERP returns success code.</p>
                     <div className="flex gap-2">
                       <span className="px-2 py-1 bg-white/50 rounded border border-blue-200 text-xs font-mono text-blue-700">Type: DZ</span>
                       <span className="px-2 py-1 bg-white/50 rounded border border-blue-200 text-xs font-mono text-blue-700">Account: 100234</span>
@@ -5073,17 +5073,17 @@ Thank you.`}
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Next steps</p>
-                <p className="text-sm text-blue-800 mt-1">D365 posting preview → Customer email → Approval</p>
+                <p className="text-sm text-blue-800 mt-1">Core ERP posting preview → Customer email → Approval</p>
               </div>
             </div>
           </motion.div>
         </div>}
 
-        {/* Bank Fees Step 5: D365 Posting Preview */}
+        {/* Bank Fees Step 5: Core ERP Posting Preview */}
         {currentStep === 5 && processingRowId === '9' && <div className="h-full flex flex-row">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
             <div className="max-w-xl mx-auto space-y-4">
-              <h2 className="text-sm font-semibold text-slate-800">D365 Accounting Posting Preview</h2>
+              <h2 className="text-sm font-semibold text-slate-800">Core ERP Accounting Posting Preview</h2>
               <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Journal Entry (Option B1: Absorb)</h3>
@@ -5099,7 +5099,7 @@ Thank you.`}
                 <p className="text-sm text-slate-700">Invoice fully cleared. $150 captured as expense with reason code BNK_FEE.</p>
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-bold text-blue-900 mb-2">D365 Actions</h3>
+                <h3 className="text-sm font-bold text-blue-900 mb-2">Core ERP Actions</h3>
                 <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
                   <li>Apply payment to invoice KRL-INV-4890</li>
                   <li>Post bank fee using reason code BNK_FEE</li>
@@ -5143,17 +5143,17 @@ Thank you.`}
             <div className="max-w-xl mx-auto space-y-4">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Next step</p>
-                <p className="text-sm text-blue-800 mt-1">Approve & Post to D365</p>
+                <p className="text-sm text-blue-800 mt-1">Approve & Post to Core ERP</p>
               </div>
             </div>
           </motion.div>
         </div>}
 
-        {/* Nakamura Holdings Step 6: D365 Accounting Posting Preview */}
+        {/* Nakamura Holdings Step 6: Core ERP Accounting Posting Preview */}
         {currentStep === 6 && processingRowId === '7' && <div className="h-full flex flex-row">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
             <div className="max-w-xl mx-auto space-y-4">
-              <h2 className="text-sm font-semibold text-slate-800">D365 Accounting Posting Preview</h2>
+              <h2 className="text-sm font-semibold text-slate-800">Core ERP Accounting Posting Preview</h2>
               <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Journal Entry</h3>
@@ -5170,7 +5170,7 @@ Thank you.`}
                 <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">Documentation SLA: $30,000 proof due within <strong>30 days</strong>.</p>
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-bold text-blue-900 mb-2">D365 Actions</h3>
+                <h3 className="text-sm font-bold text-blue-900 mb-2">Core ERP Actions</h3>
                 <p className="text-xs text-blue-800 mb-2">The AI will:</p>
                 <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
                   <li>Apply payment to invoice KRL-INV-4847</li>
@@ -5234,7 +5234,7 @@ Thank you.`}
                 </div>
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
-                Sending this email automatically creates a D365 tracking ticket for audit and follow-up.
+                Sending this email automatically creates a Core ERP tracking ticket for audit and follow-up.
               </div>
               <div className="flex flex-wrap gap-3">
                 <button
@@ -5283,7 +5283,7 @@ Thank you.`}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
             <div className="max-w-xl mx-auto space-y-4">
               <h2 className="text-sm font-semibold text-slate-800">Documentation Received</h2>
-              <p className="text-sm text-slate-600">Inbound email with withholding proof in attachments. Case is now ready to post to D365.</p>
+              <p className="text-sm text-slate-600">Inbound email with withholding proof in attachments. Case is now ready to post to Core ERP.</p>
               <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                 <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
                   <div className="flex items-start gap-4">
@@ -5321,7 +5321,7 @@ Thank you.`}
                   </div>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                    <p className="text-sm font-semibold text-blue-900">Withholding proof received. Case ready to post to D365.</p>
+                    <p className="text-sm font-semibold text-blue-900">Withholding proof received. Case ready to post to Core ERP.</p>
                   </div>
                 </div>
               </div>
@@ -5341,7 +5341,7 @@ Thank you.`}
                   <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Next action</h3>
                 </div>
                 <div className="p-4">
-                  <p className="text-sm text-slate-700">Proceed to <strong>Approval</strong> to post the journal entry to D365 and clear the withholding receivable.</p>
+                  <p className="text-sm text-slate-700">Proceed to <strong>Approval</strong> to post the journal entry to Core ERP and clear the withholding receivable.</p>
                 </div>
               </div>
               <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
@@ -5359,7 +5359,7 @@ Thank you.`}
               <h2 className="text-sm font-semibold text-slate-800 mb-2">Approval</h2>
               <p className="text-slate-600 mb-5">Kroll now displays final actions. Select an option below.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
-                <span className="text-xs text-slate-500">Options: Approve & Post to D365 · Create Journal Draft · Escalate to Analyst</span>
+                <span className="text-xs text-slate-500">Options: Approve & Post to Core ERP · Create Journal Draft · Escalate to Analyst</span>
               </div>
             </div>
           </motion.div>
@@ -5402,7 +5402,7 @@ Thank you.`}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
             <div className="max-w-xl mx-auto text-center">
               <h2 className="text-sm font-semibold text-slate-800 mb-2">Approval</h2>
-              <p className="text-slate-600 mb-5">Review the posting and select Approve & Post to D365 below.</p>
+              <p className="text-slate-600 mb-5">Review the posting and select Approve & Post to Core ERP below.</p>
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
@@ -5609,7 +5609,7 @@ Thank you.`}
                 </div>
 
                 <div className="text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded-lg px-4 py-2 mb-4">
-                  <span className="font-medium text-slate-600">Human action:</span> Approve email, optionally approve posting plan. <span className="font-medium text-amber-700">Tier 1 (Draft):</span> human sends emails and posts to D365.
+                  <span className="font-medium text-slate-600">Human action:</span> Approve email, optionally approve posting plan. <span className="font-medium text-amber-700">Tier 1 (Draft):</span> human sends emails and posts to Core ERP.
                 </div>
                 <button
                   onClick={() => {
@@ -6044,7 +6044,7 @@ Thank you.`}
                       <CheckCircle2 className="w-8 h-8 text-white" />
                     </div>
                     <h3 className="text-sm font-semibold text-emerald-900 mb-2">Ready for Posting</h3>
-                    <p className="text-sm text-emerald-700">All controls passed. Allocation validated and ready to post to D365.</p>
+                    <p className="text-sm text-emerald-700">All controls passed. Allocation validated and ready to post to Core ERP.</p>
                   </div>
                 </div>
               </div>
@@ -6103,7 +6103,7 @@ Thank you.`}
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
                       <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                      <span className="text-sm font-medium text-emerald-900">Ready for D365 posting</span>
+                      <span className="text-sm font-medium text-emerald-900">Ready for Core ERP posting</span>
                     </div>
                   </div>
                 </div>
@@ -6112,7 +6112,7 @@ Thank you.`}
           </React.Fragment>
         </div>}
 
-        {/* Step 11: Posting to D365 (Harlow Crane only) */}
+        {/* Step 11: Posting to Core ERP (Harlow Crane only) */}
         {currentStep === 11 && processingRowId === '4' && <div className="h-full flex flex-row">
           <React.Fragment>
             {/* Left: Posting Details */}
@@ -6124,8 +6124,8 @@ Thank you.`}
                       <Cpu className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
-                      <h2 className="text-base font-semibold text-blue-900">Posting to D365</h2>
-                      <p className="text-sm text-blue-700">Writing to D365</p>
+                      <h2 className="text-base font-semibold text-blue-900">Posting to Core ERP</h2>
+                      <p className="text-sm text-blue-700">Writing to Core ERP</p>
                     </div>
                   </div>
                 </div>
@@ -6134,7 +6134,7 @@ Thank you.`}
                   <h3 className="text-sm font-semibold text-slate-800 mb-4">Posting Details</h3>
                   <div className="space-y-3">
                     {[
-                      { label: 'System', value: 'D365' },
+                      { label: 'System', value: 'Core ERP' },
                       { label: 'Document type', value: 'DZ' },
                       { label: 'Clearing document', value: '1800002472' }
                     ].map((item, i) => (
@@ -6172,7 +6172,7 @@ Thank you.`}
                     <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
                     <h3 className="font-bold text-blue-900">Posting in Progress</h3>
                   </div>
-                  <p className="text-sm text-blue-800">Writing transaction to D365...</p>
+                  <p className="text-sm text-blue-800">Writing transaction to Core ERP...</p>
                 </div>
               </div>
             </motion.div>
@@ -6241,7 +6241,7 @@ Thank you.`}
                       <CheckCircle2 className="w-8 h-8 text-white" />
                     </div>
                     <h3 className="text-sm font-semibold text-emerald-900 mb-2">Transaction Complete</h3>
-                    <p className="text-sm text-emerald-700">Payment successfully allocated and posted to D365</p>
+                    <p className="text-sm text-emerald-700">Payment successfully allocated and posted to Core ERP</p>
                   </div>
                 </div>
               </div>
@@ -6293,7 +6293,7 @@ Thank you.`}
                   </div>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Next step</p>
-                    <p className="text-sm text-blue-800 mt-1">Proceed to D365 posting preview (Option B1: expense with reason code BNK_FEE).</p>
+                    <p className="text-sm text-blue-800 mt-1">Proceed to Core ERP posting preview (Option B1: expense with reason code BNK_FEE).</p>
                   </div>
                 </div>
               </motion.div>
@@ -6448,7 +6448,7 @@ Thank you.`}
                 <div className="max-w-xl mx-auto space-y-4">
                   <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-2">
                     <div className="grid grid-cols-3 gap-4">
-                      <div><span className="text-xs font-bold text-blue-600 uppercase">System</span><p className="font-bold text-blue-900 text-sm">D365</p></div>
+                      <div><span className="text-xs font-bold text-blue-600 uppercase">System</span><p className="font-bold text-blue-900 text-sm">Core ERP</p></div>
                       <div><span className="text-xs font-bold text-blue-600 uppercase">Customer</span><p className="font-bold text-blue-900 text-sm">Harlow Crane LLP</p></div>
                       <div><span className="text-xs font-bold text-blue-600 uppercase">Open Invoices</span><p className="font-bold text-blue-900 text-sm">4 retrieved</p></div>
                     </div>
@@ -6552,7 +6552,7 @@ Thank you.`}
                 <div className="max-w-xl mx-auto space-y-4">
                   <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-2">
                     <div className="grid grid-cols-3 gap-4">
-                      <div><span className="text-xs font-bold text-blue-600 uppercase">System</span><p className="font-bold text-blue-900 text-sm">D365</p></div>
+                      <div><span className="text-xs font-bold text-blue-600 uppercase">System</span><p className="font-bold text-blue-900 text-sm">Core ERP</p></div>
                       <div><span className="text-xs font-bold text-blue-600 uppercase">Customer</span><p className="font-bold text-blue-900 text-sm">Sterling Trust Bank</p></div>
                       <div><span className="text-xs font-bold text-blue-600 uppercase">Open Invoices</span><p className="font-bold text-blue-900 text-sm">3 found</p></div>
                     </div>
@@ -6644,8 +6644,8 @@ Thank you.`}
                   <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <span className="text-xs font-bold text-blue-600 uppercase">Connected D365</span>
-                        <p className="font-bold text-blue-900">D365</p>
+                        <span className="text-xs font-bold text-blue-600 uppercase">Connected Core ERP</span>
+                        <p className="font-bold text-blue-900">Core ERP</p>
                       </div>
                       <div>
                         <span className="text-xs font-bold text-blue-600 uppercase">Customer</span>
@@ -6767,7 +6767,7 @@ Thank you.`}
                   </div>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-xs font-bold text-blue-900 uppercase tracking-wider">Next steps</p>
-                    <p className="text-sm text-blue-800 mt-1">D365 posting preview → Approval</p>
+                    <p className="text-sm text-blue-800 mt-1">Core ERP posting preview → Approval</p>
                   </div>
                 </div>
               </motion.div>
@@ -7095,7 +7095,7 @@ Thank you.`}
                   <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
                     <h3 className="font-bold text-slate-800 mb-4">Decision Factors</h3>
                     <div className="space-y-4">
-                      {[{ title: 'Review Not Required', desc: 'Confidence score > 90% threshold set by Treasury policy.' }, { title: 'No Exceptions Found', desc: 'No deductions, short-pays, or currency mismatches identified.' }, { title: 'D365 Ready', desc: 'Customer account is active and periods are open.' }].map((item, i) => (
+                      {[{ title: 'Review Not Required', desc: 'Confidence score > 90% threshold set by Treasury policy.' }, { title: 'No Exceptions Found', desc: 'No deductions, short-pays, or currency mismatches identified.' }, { title: 'Core ERP Ready', desc: 'Customer account is active and periods are open.' }].map((item, i) => (
                         <div key={i} className="flex items-start gap-4">
                           <div className="mt-1 w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0"><Check className="w-3 h-3 text-emerald-600" /></div>
                           <div><h4 className="font-bold text-slate-800 text-sm">{item.title}</h4><p className="text-xs text-slate-500">{item.desc}</p></div>
@@ -7114,7 +7114,7 @@ Thank you.`}
                   </div>
                   <div className="bg-[#00263A] text-white rounded-lg p-4 shadow-lg shadow-blue-200">
                     <h3 className="font-bold text-lg mb-2">Ready to Post?</h3>
-                    <p className="text-blue-100 text-sm mb-4">Proceeding will immediately clear the invoice KRL-INV-4845 in D365.</p>
+                    <p className="text-blue-100 text-sm mb-4">Proceeding will immediately clear the invoice KRL-INV-4845 in Core ERP.</p>
                     <div className="flex items-center gap-2 text-xs font-mono bg-[#003354]/60 p-2 rounded">
                       <Loader2 className="w-3 h-3 animate-pulse" />
                       Waiting for user confirmation...
@@ -7155,7 +7155,7 @@ Thank you.`}
         </button>
         <button onClick={handleBankFeeApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <CheckCircle2 className="w-4 h-4" />
-          Approve & Post to D365
+          Approve & Post to Core ERP
         </button>
       </div>}
       {(isBlueWave && currentStep === 9) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
@@ -7165,7 +7165,7 @@ Thank you.`}
         </button>
         <button onClick={handleBlueWaveApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <CheckCircle2 className="w-4 h-4" />
-          Approve & Post to D365
+          Approve & Post to Core ERP
         </button>
         <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <FileText className="w-4 h-4" />
@@ -7183,7 +7183,7 @@ Thank you.`}
         </button>
         <button onClick={handleNihonApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <CheckCircle2 className="w-4 h-4" />
-          Approve & Post to D365
+          Approve & Post to Core ERP
         </button>
         <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
           <FileText className="w-4 h-4" />
@@ -7257,8 +7257,8 @@ Thank you.`}
         <div className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 custom-scrollbar">
           <div className="max-w-xl mx-auto space-y-4">
             <div>
-              <h2 className="text-sm font-semibold text-slate-800 mb-2">Posting to D365</h2>
-              <p className="text-slate-500">Applying payment to customer account in D365.</p>
+              <h2 className="text-sm font-semibold text-slate-800 mb-2">Posting to Core ERP</h2>
+              <p className="text-slate-500">Applying payment to customer account in Core ERP.</p>
             </div>
 
             <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
@@ -7295,7 +7295,7 @@ Thank you.`}
                 <Building2 className="w-5 h-5 text-blue-600 flex-shrink-0" />
                 <div>
                   <h4 className="font-bold text-blue-900 text-sm mb-1">Target System</h4>
-                  <p className="text-xs text-blue-700">D365</p>
+                  <p className="text-xs text-blue-700">Core ERP</p>
                   <p className="text-xs text-blue-700 mt-1">Environment: Production ({isLitware ? 'KRL-EU Region' : 'KRL-US Region'})</p>
                 </div>
               </div>
@@ -7402,7 +7402,7 @@ Thank you.`}
           <div className={`flex items-center gap-2 px-4 py-2 border rounded-full mb-5 relative z-10 ${isLitware ? 'bg-amber-50 border-amber-100' : 'bg-emerald-50 border-emerald-100'}`}>
             <div className={`w-2 h-2 rounded-full animate-pulse ${isLitware ? 'bg-amber-500' : 'bg-emerald-500'}`} />
             <span className={`text-sm font-bold ${isLitware ? 'text-amber-700' : 'text-emerald-700'}`}>
-              {isLitware ? 'Assisted Resolution — Posted to D365' : 'Posted to D365'}
+              {isLitware ? 'Assisted Resolution — Posted to Core ERP' : 'Posted to Core ERP'}
             </span>
           </div>
 
@@ -8099,7 +8099,7 @@ Thank you.`}
           </div>
           <div className="p-4 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {['Audit Trail Entry', 'Customer Email Draft', 'D365 Dispute Notes', 'D365 Timeline Update'].map((item, i) => (
+              {['Audit Trail Entry', 'Customer Email Draft', 'Core ERP Dispute Notes', 'Core ERP Timeline Update'].map((item, i) => (
                 <div key={i} className="flex items-start gap-3 p-3 bg-white border border-slate-200 rounded-lg">
                   <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -9235,12 +9235,12 @@ Sterling Asset Management`,
                                   <span>Invoice matched in SAP</span>
                                 </div>
                                 <div className="text-xs text-slate-400 ml-6">
-                                  {invoiceNum} found in D365
+                                  {invoiceNum} found in Core ERP
                                 </div>
 
                                 <div className="flex items-center gap-2 text-sm text-emerald-700 mt-3">
                                   <CheckCircle className="w-4 h-4" />
-                                  <span>Customer matched in D365</span>
+                                  <span>Customer matched in Core ERP</span>
                                 </div>
                                 <div className="text-xs text-slate-400 ml-6">
                                   Domain {domain} linked to {customerName}
@@ -9313,7 +9313,7 @@ Sterling Asset Management`,
                     <div>
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-1 h-5 bg-[#00263A] rounded"></div>
-                        <h3 className="text-slate-800 text-sm font-semibold">Enriched Data (D365 + SAP Ariba)</h3>
+                        <h3 className="text-slate-800 text-sm font-semibold">Enriched Data (Core ERP + SAP Ariba)</h3>
                       </div>
 
                       <div className="bg-white border border-slate-200 rounded-lg p-4">
@@ -9553,7 +9553,7 @@ Sterling Asset Management`,
                 <div className="flex-1 min-w-0">
                   <h3 className="text-slate-800 font-semibold text-base mb-2">AI-Powered PTP Detection &amp; Prediction</h3>
                   <p className="text-slate-600 text-sm leading-relaxed mb-5">
-                    Incoming customer emails are processed automatically: payment commitments are extracted, data is enriched from D365 and SAP Ariba, and machine learning predicts payment likelihood and recommends optimal collection actions.
+                    Incoming customer emails are processed automatically: payment commitments are extracted, data is enriched from Core ERP and SAP Ariba, and machine learning predicts payment likelihood and recommends optimal collection actions.
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {[
@@ -9655,13 +9655,13 @@ Sterling Asset Management`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">INV-10023 found in D365</div>
+                                <div className="text-xs text-slate-500">INV-10023 found in Core ERP</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in Core ERP</div>
                                 <div className="text-xs text-slate-500">Domain pinnaclecp.com linked to Pinnacle Capital Partners LLC</div>
                               </div>
                             </div>
@@ -9673,13 +9673,13 @@ Sterling Asset Management`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">KRL-INV-4799 found in D365</div>
+                                <div className="text-xs text-slate-500">KRL-INV-4799 found in Core ERP</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in Core ERP</div>
                                 <div className="text-xs text-slate-500">Domain aldridgecapital.com linked to Aldridge Capital Group</div>
                               </div>
                             </div>
@@ -9691,13 +9691,13 @@ Sterling Asset Management`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">KRL-INV-4756 found in D365</div>
+                                <div className="text-xs text-slate-500">KRL-INV-4756 found in Core ERP</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in Core ERP</div>
                                 <div className="text-xs text-slate-500">Domain meridianpe.com linked to Meridian Private Equity</div>
                               </div>
                             </div>
@@ -9709,13 +9709,13 @@ Sterling Asset Management`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">KRL-INV-4712 found in D365</div>
+                                <div className="text-xs text-slate-500">KRL-INV-4712 found in Core ERP</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in Core ERP</div>
                                 <div className="text-xs text-slate-500">Domain horizonrestructuring.co.uk linked to Horizon Restructuring Ltd</div>
                               </div>
                             </div>
@@ -9727,13 +9727,13 @@ Sterling Asset Management`,
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
                                 <div className="text-xs font-medium text-slate-800">Invoice matched in SAP</div>
-                                <div className="text-xs text-slate-500">KRL-INV-4688 found in D365</div>
+                                <div className="text-xs text-slate-500">KRL-INV-4688 found in Core ERP</div>
                               </div>
                             </div>
                             <div className="flex items-start gap-3">
                               <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                               <div className="space-y-1">
-                                <div className="text-xs font-medium text-slate-800">Customer matched in D365</div>
+                                <div className="text-xs font-medium text-slate-800">Customer matched in Core ERP</div>
                                 <div className="text-xs text-slate-500">Domain sterlingmgt.com linked to Sterling Asset Management</div>
                               </div>
                             </div>
@@ -10014,7 +10014,7 @@ Sterling Asset Management`,
                           <div>
                             <h4 className="font-semibold text-purple-900 mb-2">Schedule Call Task</h4>
                             <p className="text-sm text-purple-800">
-                              This will create a task in your D365 calendar and send notifications.
+                              This will create a task in your Core ERP calendar and send notifications.
                             </p>
                           </div>
                         </div>
@@ -11439,7 +11439,7 @@ If you ask a question, you must wait for the customer's response before continui
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     <tr><td className="px-4 py-3 font-medium">Tier 0 (Assist)</td><td className="px-4 py-3 text-slate-600">High uncertainty or high impact</td><td className="px-4 py-3 text-slate-600">Suggestions only; no external writes</td><td className="px-4 py-3 text-slate-600">Analyst approves every action</td></tr>
-                    <tr><td className="px-4 py-3 font-medium">Tier 1 (Draft)</td><td className="px-4 py-3 text-slate-600">Medium confidence, moderate impact</td><td className="px-4 py-3 text-slate-600">Draft emails/tasks; propose match plans</td><td className="px-4 py-3 text-slate-600">Human sends emails; human posts to D365</td></tr>
+                    <tr><td className="px-4 py-3 font-medium">Tier 1 (Draft)</td><td className="px-4 py-3 text-slate-600">Medium confidence, moderate impact</td><td className="px-4 py-3 text-slate-600">Draft emails/tasks; propose match plans</td><td className="px-4 py-3 text-slate-600">Human sends emails; human posts to Core ERP</td></tr>
                     <tr><td className="px-4 py-3 font-medium">Tier 2 (Controlled auto)</td><td className="px-4 py-3 text-slate-600">High confidence + low impact + stable counterparty</td><td className="px-4 py-3 text-slate-600">Auto-post low-value/high-confidence; auto-route routine disputes</td><td className="px-4 py-3 text-slate-600">Post-action sampling audit + rollback playbook</td></tr>
                     <tr><td className="px-4 py-3 font-medium">Tier 3 (Scaled agentic)</td><td className="px-4 py-3 text-slate-600">Proven controls; mature monitoring</td><td className="px-4 py-3 text-slate-600">Auto-resolve high-volume classes; limited auto-send for low-risk templates</td><td className="px-4 py-3 text-slate-600">Continuous controls testing; tighter change management</td></tr>
                   </tbody>
@@ -11938,7 +11938,7 @@ If you ask a question, you must wait for the customer's response before continui
         {currentView === 'invoice-delivery' && (
           <InvoiceDeliveryView
             key="invoice-delivery"
-            onPostedToD365={() => {
+            onPostedToCore ERP={() => {
               setCurrentView('dashboard');
             }}
           />
