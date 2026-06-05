@@ -203,6 +203,28 @@ const NEW_REMITTANCES_POOL: Remittance[] = [{
   age: 'Just now',
   status: 'Ready',
   isNew: true
+}, {
+  id: '10',
+  emailId: 'REM_010',
+  customer: 'Harborview Partners LLP',
+  amount: '$125,000',
+  region: 'NA',
+  confidence: 88,
+  age: 'Just now',
+  status: 'Ready',
+  isNew: true,
+  aiContext: 'Possible duplicate / misapplied'
+}, {
+  id: '11',
+  emailId: 'REM_011',
+  customer: 'Calderwood Advisory Group',
+  amount: '$80,250',
+  region: 'EMEA',
+  confidence: 90,
+  age: 'Just now',
+  status: 'Ready',
+  isNew: true,
+  aiContext: 'Overpayment — refund + write-off'
 }];
 const AI_STEPS_BASE: AIStep[] = [{
   id: 1,
@@ -289,6 +311,30 @@ const AI_STEPS_BANKFEE: AIStep[] = [
   { id: 9, title: 'Resolution Completed', details: ['Success'] }
 ];
 
+const AI_STEPS_REFUND: AIStep[] = [
+  { id: 1, title: 'Case Overview', details: ['Case summary', 'Overpayment via direct debit'] },
+  { id: 2, title: 'Overpayment Detection', details: ['Match & Reconciliation Agent'] },
+  { id: 3, title: 'Policy & Threshold Check', details: ['Kroll Case Resolution'] },
+  { id: 4, title: 'Resolution Split', details: ['AI Decision Engine'] },
+  { id: 5, title: 'AI Decision', details: ['AI Decision Engine'] },
+  { id: 6, title: 'Refund & Write-Off Posting Proposal', details: ['D365 Posting'] },
+  { id: 7, title: 'Human Review / Approval Matrix', details: ['User'] },
+  { id: 8, title: 'Posting Execution', details: ['Deterministic enforcement (D365)'] },
+  { id: 9, title: 'Resolution Completed', details: ['Complete'] },
+];
+
+const AI_STEPS_MISAPPLIED: AIStep[] = [
+  { id: 1, title: 'Case Overview', details: ['Case summary', 'Duplicate application'] },
+  { id: 2, title: 'Misapplication Detection', details: ['Match & Reconciliation Agent'] },
+  { id: 3, title: 'Customer Disambiguation', details: ['Payment Matching Agent'] },
+  { id: 4, title: 'Open Invoice Match', details: ['Payment Matching Agent'] },
+  { id: 5, title: 'AI Decision', details: ['AI Decision Engine'] },
+  { id: 6, title: 'Correction Posting Proposal', details: ['D365 Posting'] },
+  { id: 7, title: 'Human Review', details: ['User'] },
+  { id: 8, title: 'Posting Execution', details: ['Deterministic enforcement (D365)'] },
+  { id: 9, title: 'Resolution Completed', details: ['Complete'] },
+];
+
 const STEP_AGENT_MAP: Record<string, string> = {
   'Withholding Analysis': 'Withholding Reasoning Agent',
   'AI Decision': 'AI Decision Engine',
@@ -322,7 +368,18 @@ const STEP_AGENT_MAP: Record<string, string> = {
   'Posting to D365': 'Deterministic enforcement (D365)',
   'Resolve Exception': 'Human workbench',
   'Complete': 'Deterministic enforcement',
-  'Success': 'Complete'
+  'Success': 'Complete',
+  'Overpayment Detection': 'Match & Reconciliation Agent',
+  'Policy & Threshold Check': 'Kroll Case Resolution',
+  'Resolution Split': 'AI Decision Engine',
+  'Refund & Write-Off Posting Proposal': 'D365 Posting',
+  'Human Review / Approval Matrix': 'User',
+  'Misapplication Detection': 'Match & Reconciliation Agent',
+  'Customer Disambiguation': 'Payment Matching Agent',
+  'Open Invoice Match': 'Payment Matching Agent',
+  'Correction Posting Proposal': 'D365 Posting',
+  'Human Review': 'User',
+  'Posting Execution': 'Deterministic enforcement (D365)'
 };
 const StatCard = ({
   label,
@@ -850,7 +907,25 @@ export const MicroSolveDashboard = () => {
     const isNorthwind = processingRowId === '4';
     const isBlueWave = processingRowId === '7';
     const isBankFee = processingRowId === '9';
+    const isMisapplied = processingRowId === '10';
+    const isRefund = processingRowId === '11';
     const currentSteps = isLitware ? AI_STEPS_EXTENDED : AI_STEPS_BASE;
+
+    // Refund/DD/Write-Off has 9 steps (0-8); step 8 is Resolution Completed, no Next
+    if (isRefund) {
+      if (currentStep < 8) {
+        setCurrentStep(prev => prev + 1);
+      }
+      return;
+    }
+
+    // Misapplied Cash has 9 steps (0-8); step 8 is Resolution Completed, no Next
+    if (isMisapplied) {
+      if (currentStep < 8) {
+        setCurrentStep(prev => prev + 1);
+      }
+      return;
+    }
 
     // Bank Fees has 9 steps (0-8); step 8 is Resolution Completed, no Next
     if (isBankFee) {
@@ -962,7 +1037,7 @@ export const MicroSolveDashboard = () => {
         </button>
         <button onClick={() => setCurrentView('dashboard')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'dashboard' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <Inbox className="w-4 h-4 flex-shrink-0" />
-          Failed Cash Applications
+          Cash Applications
         </button>
         <button onClick={() => setCurrentView('invoice-delivery')} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${currentView === 'invoice-delivery' ? 'bg-[#003354] text-white' : 'text-[#A8C8DB] hover:bg-[#003354]/70 hover:text-white'}`}>
           <Upload className="w-4 h-4" />
@@ -991,7 +1066,7 @@ export const MicroSolveDashboard = () => {
     const getTitle = () => {
       switch (currentView) {
         case 'overview': return 'Dashboard';
-        case 'dashboard': return 'Failed Cash Applications';
+        case 'dashboard': return 'Cash Applications';
         case 'call-analysis': return 'Call Analysis';
         case 'disputes': return 'Disputes';
         case 'ptp': return 'Promise to Pay';
@@ -1317,7 +1392,7 @@ export const MicroSolveDashboard = () => {
     <div className="flex items-start justify-between mb-5">
       <div>
         <div className="flex items-center gap-2 mb-0.5">
-          <h1 className="text-base font-semibold text-slate-800">Failed Cash Applications</h1>
+          <h1 className="text-base font-semibold text-slate-800">Cash Applications</h1>
           <span className="flex items-center gap-1 px-2 py-0.5 bg-rose-50 border border-rose-100 rounded-full">
             <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse" />
             <span className="text-[10px] font-semibold text-rose-700">{kpis.failedToday} Requiring Attention</span>
@@ -1326,10 +1401,6 @@ export const MicroSolveDashboard = () => {
         <p className="text-xs text-slate-400">Kroll Receivables Intelligence · Engagement-based receivables · D365 / SAP Ariba · Audit trail active</p>
       </div>
       <div className="flex items-center gap-3">
-        <button onClick={handleRefresh} disabled={isRefreshing} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${isRefreshing ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 active:scale-95'}`}>
-          <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
-          {isRefreshing ? 'Refreshing...' : 'Refresh Queue'}
-        </button>
         <div className="text-right">
           <div className="text-xs font-semibold text-slate-700">Alex Rivers</div>
           <div className="text-[10px] text-slate-400">Director, Receivables · Global Finance</div>
@@ -1401,6 +1472,10 @@ export const MicroSolveDashboard = () => {
         <h3 className="text-xs font-semibold text-slate-700">Exception Queue — Requiring Analyst Review</h3>
         <p className="text-[10px] text-slate-400 mt-0.5">Multi-matter allocation · cross-border withholding · intermediary-fee shortfalls · DSO impact tracked</p>
       </div>
+      <button onClick={handleRefresh} disabled={isRefreshing} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${isRefreshing ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 active:scale-95'}`}>
+        <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+        {isRefreshing ? 'Refreshing...' : 'Refresh Queue'}
+      </button>
     </div>
 
     <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
@@ -1508,14 +1583,951 @@ export const MicroSolveDashboard = () => {
     setProcessingRowId(null);
     setCurrentStep(0);
   };
+  const handleMisappliedApproveAndPost = () => {
+    setData(prev => prev.map(item => item.id === '10' ? { ...item, status: 'Posted' as const, resolutionType: 'Corrected' } : item));
+    setCurrentStep(7);
+  };
+  const handleMisappliedBackToDashboard = () => {
+    setCurrentView('dashboard');
+    setProcessingRowId(null);
+    setCurrentStep(0);
+  };
+  const handleRefundApproveAndPost = () => {
+    setData(prev => prev.map(item => item.id === '11' ? { ...item, status: 'Posted' as const, resolutionType: 'Refunded' } : item));
+    setCurrentStep(7);
+  };
+  const handleRefundBackToDashboard = () => {
+    setCurrentView('dashboard');
+    setProcessingRowId(null);
+    setCurrentStep(0);
+  };
   const AIProcessingView = () => {
     const isLitware = processingRowId === '5';
     const isNorthwind = processingRowId === '4';
     const isBlueWave = processingRowId === '7';
     const isNihon = processingRowId === '8';
     const isBankFee = processingRowId === '9';
-    const currentSteps = isBankFee ? AI_STEPS_BANKFEE : (isNihon ? AI_STEPS_NIHON : (isBlueWave ? AI_STEPS_BLUEWAVE : (isNorthwind ? AI_STEPS_NORTHWIND : (isLitware ? AI_STEPS_EXTENDED : AI_STEPS_BASE))));
+    const isMisapplied = processingRowId === '10';
+    const isRefund = processingRowId === '11';
+    const currentSteps = isRefund ? AI_STEPS_REFUND : (isMisapplied ? AI_STEPS_MISAPPLIED : (isBankFee ? AI_STEPS_BANKFEE : (isNihon ? AI_STEPS_NIHON : (isBlueWave ? AI_STEPS_BLUEWAVE : (isNorthwind ? AI_STEPS_NORTHWIND : (isLitware ? AI_STEPS_EXTENDED : AI_STEPS_BASE))))));
     const activeStep = currentSteps[currentStep];
+
+    // Refund/DD/Write-Off: custom detailed screens for steps 2–9 (indices 1–8)
+    if (isRefund && currentStep >= 1) {
+      return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 overflow-hidden flex flex-col h-full bg-slate-50/50">
+        {/* Horizontal Stepper */}
+        <div className="bg-white border-b border-slate-200 px-4 py-2 shrink-0 z-10 shadow-sm">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-center justify-between">
+              {currentSteps.map((step, index) => {
+                const isCompleted = index < currentStep;
+                const isActive = index === currentStep;
+                const label = step.title.replace(/\s+/, '\n');
+                return <React.Fragment key={step.id}>
+                  <div className="flex flex-col items-center flex-1 min-w-0 max-w-[5rem]">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold mb-0.5 transition-all flex-shrink-0 ${isCompleted ? 'bg-emerald-500 text-white' : isActive ? 'bg-blue-500 text-white ring-2 ring-blue-100' : 'bg-slate-200 text-slate-500'}`}>
+                      {isCompleted ? <Check className="w-3 h-3" /> : step.id}
+                    </div>
+                    <span className={`text-[9px] font-semibold text-center uppercase tracking-wide leading-tight w-full px-0.5 whitespace-pre-line ${isActive ? 'text-blue-600' : isCompleted ? 'text-emerald-600' : 'text-slate-400'}`}>
+                      {label}
+                    </span>
+                    {STEP_AGENT_MAP[step.title] && (
+                      <span className="text-[8px] text-slate-400 text-center mt-0.5 px-0.5 truncate w-full" title={STEP_AGENT_MAP[step.title]}>
+                        {STEP_AGENT_MAP[step.title]}
+                      </span>
+                    )}
+                  </div>
+                  {index < currentSteps.length - 1 && <div className="flex-1 h-0.5 mx-0.5 min-w-2 mt-[-18px]">
+                    <div className={`h-full rounded-full transition-all ${isCompleted ? 'bg-emerald-500' : 'bg-slate-200'}`} />
+                  </div>}
+                </React.Fragment>;
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-hidden relative">
+          {currentStep === 1 && (
+            /* Step 2 — Overpayment Detection */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Overpayment Detection</h2>
+                  <p className="text-sm text-slate-600">The Match & Reconciliation Agent cross-checks the collected amount against the invoice.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Evidence Used</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Field</th>
+                            <th className="pb-2 text-left">Value</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr><td className="py-2 text-slate-500">Invoice</td><td className="py-2 font-semibold text-slate-900">KRL-INV-4970 — $80,000</td></tr>
+                          <tr><td className="py-2 text-slate-500">Collected via direct debit</td><td className="py-2 font-semibold text-slate-900">$80,250 (SEPA-DD-KRL-0098)</td></tr>
+                          <tr><td className="py-2 text-slate-500">Variance</td><td className="py-2 font-semibold text-amber-600">+$250 overpayment</td></tr>
+                          <tr><td className="py-2 text-slate-500">Invoice status after $80,000 applied</td><td className="py-2 font-semibold text-emerald-600">Settled</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">AI Conclusion</h3>
+                    <p className="text-sm text-blue-800">Direct-debit collection exceeded the invoice by $250. Invoice can be cleared; the $250 residual credit must be refunded or written off per policy.</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 2 && (
+            /* Step 3 — Policy & Threshold Check */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Policy & Threshold Check</h2>
+                  <p className="text-sm text-slate-600">The Kroll Case Resolution agent applies the approval matrix to the $250 residual.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Approval Policy</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Rule</th>
+                            <th className="pb-2 text-left">Threshold</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr><td className="py-2 text-slate-700">Auto write-off (immaterial)</td><td className="py-2 font-semibold text-slate-900">≤ $75</td></tr>
+                          <tr><td className="py-2 text-slate-700">Refund — analyst prepares</td><td className="py-2 font-semibold text-slate-900">Any</td></tr>
+                          <tr><td className="py-2 text-slate-700">Refund — manager approval required</td><td className="py-2 font-semibold text-amber-700">&gt; $100</td></tr>
+                          <tr><td className="py-2 text-slate-700">Refund disbursement executed by</td><td className="py-2 font-semibold text-slate-900">Treasury</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">AI Reasoning</h3>
+                    <p className="text-sm text-blue-800">$250 residual. $50 falls under the $75 immaterial write-off threshold → eligible for write-off. Remaining $200 exceeds the $100 refund threshold → manager approval required before Treasury disburses.</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            /* Step 4 — Resolution Split */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Resolution Split — Refund vs Write-Off</h2>
+                  <p className="text-sm text-slate-600">The AI Decision Engine splits the $250 residual according to policy thresholds.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Split Decision</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Portion</th>
+                            <th className="pb-2 text-left">Amount</th>
+                            <th className="pb-2 text-left">Treatment</th>
+                            <th className="pb-2 text-left">Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr className="bg-blue-50">
+                            <td className="py-2 font-semibold text-blue-700">Refund</td>
+                            <td className="py-2 font-semibold text-blue-700">$200</td>
+                            <td className="py-2 text-slate-700">Return to customer</td>
+                            <td className="py-2 text-slate-600 text-xs">Above immaterial threshold; customer funds</td>
+                          </tr>
+                          <tr className="bg-amber-50">
+                            <td className="py-2 font-semibold text-amber-700">Write-off</td>
+                            <td className="py-2 font-semibold text-amber-700">$50</td>
+                            <td className="py-2 text-slate-700">Write off residual</td>
+                            <td className="py-2 text-slate-600 text-xs">Below $75 immaterial threshold</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">Why split it?</h3>
+                    <p className="text-sm text-blue-800">Refunding the full $250 incurs disproportionate processing cost for a $50 tail. Policy permits writing off the immaterial $50 and refunding the material $200.</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 4 && (
+            /* Step 5 — AI Decision / Resolution Strategy */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">AI Decision — Resolution Strategy</h2>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">AI Conclusion</h3>
+                    <p className="text-sm text-blue-800">Clear KRL-INV-4970, refund $200 to the customer's bank on file, write off $50 as immaterial. Route refund for manager approval.</p>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Resolution Strategy</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Action</th>
+                            <th className="pb-2 text-left">Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr><td className="py-2 font-semibold text-slate-900">Apply $80,000 to KRL-INV-4970</td><td className="py-2 text-slate-700">Settle the invoice</td></tr>
+                          <tr><td className="py-2 font-semibold text-slate-900">Refund $200 to customer</td><td className="py-2 text-slate-700">Material overpayment, customer funds</td></tr>
+                          <tr><td className="py-2 font-semibold text-slate-900">Write off $50 (WO_IMMATERIAL)</td><td className="py-2 text-slate-700">Below $75 threshold</td></tr>
+                          <tr><td className="py-2 font-semibold text-slate-900">Link all docs for audit</td><td className="py-2 text-slate-700">Complete audit trail (SLA 2.2.5)</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 5 && (
+            /* Step 6 — Refund & Write-Off Posting Proposal */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Refund & Write-Off Posting Proposal</h2>
+                  <p className="text-sm text-slate-600">The D365 Posting Agent prepares the journal entry and refund disbursement request.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
+                    <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3">Posting Recommendation</h3>
+                    <ul className="text-sm text-slate-700 space-y-1 list-disc list-inside">
+                      <li>Settle invoice KRL-INV-4970 with $80,000 from direct debit collection</li>
+                      <li>Create refund payable of $200 due back to Calderwood Advisory Group</li>
+                      <li>Write off $50 residual (reason code WO_IMMATERIAL)</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Proposed Journal Entry</h3>
+                    </div>
+                    <div className="p-4 font-mono text-xs space-y-2 text-slate-800 bg-slate-50">
+                      <p>Dr Accounts Receivable        $80,000   (clear KRL-INV-4970)</p>
+                      <p>Dr Refund Payable             $200      (due back to customer)</p>
+                      <p>Dr Write-Off Expense          $50       (reason WO_IMMATERIAL)</p>
+                      <p>Cr Cash (direct debit)        $80,250</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">System Actions if Approved</h3>
+                    <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                      <li>Mark KRL-INV-4970 Settled in D365</li>
+                      <li>Create refund disbursement request to Treasury for $200 (customer bank on file)</li>
+                      <li>Post $50 write-off with reason code WO_IMMATERIAL</li>
+                      <li>Link refund + write-off docs to the original direct-debit receipt for audit</li>
+                    </ul>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 6 && (
+            /* Step 7 — Human Review / Approval Matrix */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Human Review / Approval Matrix</h2>
+                  <p className="text-sm text-slate-600">This resolution requires manager authorization before posting.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4 space-y-2">
+                    <h3 className="text-sm font-bold text-slate-800 mb-2">AI Resolution Summary</h3>
+                    <p className="text-sm text-slate-700">Overpayment via direct debit. Invoice settled. $200 refund (manager approval required, Treasury disburses) + $50 immaterial write-off.</p>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Approval Routing</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Item</th>
+                            <th className="pb-2 text-left">Amount</th>
+                            <th className="pb-2 text-left">Approval</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr>
+                            <td className="py-2 text-slate-700">Write-off</td>
+                            <td className="py-2 font-semibold text-slate-900">$50</td>
+                            <td className="py-2 font-semibold text-emerald-600">Auto-approved (under threshold)</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 text-slate-700">Refund</td>
+                            <td className="py-2 font-semibold text-slate-900">$200</td>
+                            <td className="py-2 font-semibold text-amber-600">Requires manager approval</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 text-slate-700">Disbursement</td>
+                            <td className="py-2 font-semibold text-slate-900">$200</td>
+                            <td className="py-2 font-semibold text-blue-600">Treasury</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-slate-800 mb-3">Approval Options</h3>
+                    <div className="flex flex-wrap gap-3">
+                      <button onClick={handleRefundApproveAndPost} className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-bold hover:bg-[#003354] transition-colors">
+                        <CheckCircle2 className="w-4 h-4" />
+                        Approve &amp; Post to D365
+                      </button>
+                      <button className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
+                        <FileText className="w-4 h-4" />
+                        Create Journal Draft
+                      </button>
+                      <button className="flex items-center gap-2 px-4 py-2 bg-white text-rose-700 border border-rose-200 rounded-lg text-sm font-bold hover:bg-rose-50 transition-colors">
+                        <XCircle className="w-4 h-4" />
+                        Reject Recommendation
+                      </button>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-3">Refunds above the policy threshold require manager authorization; disbursement is executed by Treasury, separate from posting.</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 7 && (
+            /* Step 8 — Posting Execution */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
+                <div className="max-w-xl mx-auto text-center space-y-4">
+                  <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-16 h-16 mx-auto bg-blue-50 rounded-full flex items-center justify-center">
+                    <RefreshCw className="w-8 h-8 text-blue-600" />
+                  </motion.div>
+                  <h2 className="text-sm font-semibold text-slate-800">Posting to D365</h2>
+                  <div className="space-y-2 text-sm text-slate-700 text-left max-w-sm mx-auto">
+                    <p>• Settling KRL-INV-4970…</p>
+                    <p>• Posting $50 write-off (WO_IMMATERIAL)…</p>
+                    <p>• Creating $200 refund request to Treasury…</p>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200 flex flex-col justify-center">
+                <div className="max-w-md mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <h3 className="text-sm font-bold text-slate-800 mb-2">Posting Summary</h3>
+                    <p className="text-xs text-slate-600 mb-1">Case: REM_011 — Calderwood Advisory</p>
+                    <p className="text-xs text-slate-600 mb-1">Invoice Settled: KRL-INV-4970</p>
+                    <p className="text-xs text-slate-600 mb-1">Refund $200 → Treasury queue</p>
+                    <p className="text-xs text-slate-600">Write-off $50 posted (WO_IMMATERIAL)</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 8 && (
+            /* Step 9 — Resolution Completed */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
+                <div className="max-w-xl mx-auto space-y-4 text-center">
+                  <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+                  </div>
+                  <h2 className="text-sm font-semibold text-slate-800">Resolution Completed</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden text-left max-w-sm mx-auto">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800">Resolution Summary</h3>
+                    </div>
+                    <div className="p-4 space-y-2 text-sm">
+                      <div className="flex justify-between"><span className="text-slate-600">KRL-INV-4970</span><span className="font-semibold text-emerald-700">Settled</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">Refund $200</span><span className="font-semibold text-slate-900">Submitted to Treasury</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">Write-off $50</span><span className="font-semibold text-slate-900">Posted (WO_IMMATERIAL)</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">Audit chain (refund + write-off + DD receipt)</span><span className="font-semibold text-slate-900">Linked</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">Resolution Type</span><span className="font-semibold text-emerald-700">Refunded</span></div>
+                    </div>
+                  </div>
+                  <p className="text-sm font-bold text-emerald-700">Overpayment resolved — refund authorized, residual written off, full audit trail recorded.</p>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200 flex flex-col justify-center">
+                <div className="max-w-md mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">Dashboard Update</p>
+                    <p className="text-sm text-blue-800">REM_011 — Calderwood Advisory will appear in Cash Applications as <span className="font-semibold">Refunded</span>. Refund $200 is pending Treasury disbursement.</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer for Refund/DD/Write-Off */}
+        <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
+          {currentStep === 8 ? (
+            <button onClick={handleRefundBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Cash Applications
+            </button>
+          ) : currentStep === 6 ? (
+            <>
+              <button onClick={handlePrevStep} className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </button>
+              <button onClick={handleRefundApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+                <CheckCircle2 className="w-4 h-4" />
+                Approve &amp; Post to D365
+              </button>
+              <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <FileText className="w-4 h-4" />
+                Create Journal Draft
+              </button>
+              <button className="flex items-center gap-2 px-5 py-2 bg-white text-rose-700 border border-rose-200 rounded-lg text-sm font-semibold hover:bg-rose-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <XCircle className="w-4 h-4" />
+                Reject Recommendation
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={handlePrevStep} className="flex items-center gap-2 px-6 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </button>
+              <button onClick={handleNextStep} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+                Next Step
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </>
+          )}
+        </div>
+      </motion.div>;
+    }
+
+    // Misapplied Cash: show custom detailed screens for steps 2–9 (indices 1–8)
+    if (isMisapplied && currentStep >= 1) {
+      return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 overflow-hidden flex flex-col h-full bg-slate-50/50">
+        {/* Horizontal Stepper - Compact */}
+        <div className="bg-white border-b border-slate-200 px-4 py-2 shrink-0 z-10 shadow-sm">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-center justify-between">
+              {currentSteps.map((step, index) => {
+                const isCompleted = index < currentStep;
+                const isActive = index === currentStep;
+                const label = step.title.replace(/\s+/, '\n');
+                return <React.Fragment key={step.id}>
+                  <div className="flex flex-col items-center flex-1 min-w-0 max-w-[5rem]">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold mb-0.5 transition-all flex-shrink-0 ${isCompleted ? 'bg-emerald-500 text-white' : isActive ? 'bg-blue-500 text-white ring-2 ring-blue-100' : 'bg-slate-200 text-slate-500'}`}>
+                      {isCompleted ? <Check className="w-3 h-3" /> : step.id}
+                    </div>
+                    <span className={`text-[9px] font-semibold text-center uppercase tracking-wide leading-tight w-full px-0.5 whitespace-pre-line ${isActive ? 'text-blue-600' : isCompleted ? 'text-emerald-600' : 'text-slate-400'}`}>
+                      {label}
+                    </span>
+                    {STEP_AGENT_MAP[step.title] && (
+                      <span className="text-[8px] text-slate-400 text-center mt-0.5 px-0.5 truncate w-full" title={STEP_AGENT_MAP[step.title]}>
+                        {STEP_AGENT_MAP[step.title]}
+                      </span>
+                    )}
+                  </div>
+                  {index < currentSteps.length - 1 && <div className="flex-1 h-0.5 mx-0.5 min-w-2 mt-[-18px]">
+                    <div className={`h-full rounded-full transition-all ${isCompleted ? 'bg-emerald-500' : 'bg-slate-200'}`} />
+                  </div>}
+                </React.Fragment>;
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Area for Misapplied Cash steps 2–9 */}
+        <div className="flex-1 overflow-hidden relative">
+          {currentStep === 1 && (
+            /* Misapplied Step 2 — Misapplication Detection */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Misapplication Detection</h2>
+                  <p className="text-sm text-slate-600">The Match & Reconciliation Agent cross-checks the targeted invoice against the payment ledger.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Evidence Used</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Field</th>
+                            <th className="pb-2 text-left">Value</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr>
+                            <td className="py-2 text-slate-500">Targeted invoice</td>
+                            <td className="py-2 font-semibold text-slate-900">KRL-INV-4901</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 text-slate-500">Invoice status</td>
+                            <td className="py-2 font-semibold text-rose-600">Settled (paid 12 days ago)</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 text-slate-500">Prior payment</td>
+                            <td className="py-2 font-semibold text-slate-900">$125,000 on May 24, 2026</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 text-slate-500">This payment</td>
+                            <td className="py-2 font-semibold text-rose-600">Duplicate hit — invoice already closed</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">AI Conclusion</h3>
+                    <p className="text-sm text-blue-800">
+                      This payment cannot belong to KRL-INV-4901; that invoice is already settled. Cash is misapplied. Investigating correct allocation.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 2 && (
+            /* Misapplied Step 3 — Customer Disambiguation */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Customer Disambiguation</h2>
+                  <p className="text-sm text-slate-600">The Payment Matching Agent identifies the correct customer record via fuzzy name matching and routing analysis.</p>
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-amber-900">Incorrect customer allocation detected</p>
+                      <p className="text-xs text-amber-800 mt-0.5">Auto-match selected the wrong customer record due to a near-identical name collision.</p>
+                    </div>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Fuzzy Match Results</h3>
+                    </div>
+                    <div className="p-4 overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Customer</th>
+                            <th className="pb-2 text-left">ID</th>
+                            <th className="pb-2 text-left">Region</th>
+                            <th className="pb-2 text-left">Open Balance</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr className="bg-rose-50">
+                            <td className="py-2 font-semibold text-rose-700">Harborview Partners LLP</td>
+                            <td className="py-2 text-slate-600 font-mono text-xs">CL-2025-0112</td>
+                            <td className="py-2 text-slate-600">NA</td>
+                            <td className="py-2 font-semibold text-rose-700">$0 (all settled)</td>
+                          </tr>
+                          <tr className="bg-emerald-50">
+                            <td className="py-2 font-semibold text-emerald-700">Harborview Partners (APAC) Pte Ltd</td>
+                            <td className="py-2 text-slate-600 font-mono text-xs">CL-2025-0119</td>
+                            <td className="py-2 text-slate-600">APAC</td>
+                            <td className="py-2 font-semibold text-emerald-700">$125,000 open</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">AI Reasoning</h3>
+                    <p className="text-sm text-blue-800">
+                      Bank routing detail and remittance memo map to the APAC entity (CL-2025-0119), which has an open invoice matching this amount. Original auto-match picked the wrong customer record due to a name collision. This is an incorrect customer allocation.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            /* Misapplied Step 4 — Open Invoice Match */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Open Invoice Match — True Owner</h2>
+                  <p className="text-sm text-slate-600">The Payment Matching Agent scans open invoices for Harborview Partners (APAC) Pte Ltd (CL-2025-0119).</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">APAC Entity — Open Invoices</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Invoice</th>
+                            <th className="pb-2 text-left">Amount</th>
+                            <th className="pb-2 text-left">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr>
+                            <td className="py-2 text-slate-600 font-mono text-xs">KRL-INV-4917</td>
+                            <td className="py-2 text-slate-600">$88,000</td>
+                            <td className="py-2 text-slate-500">Open</td>
+                          </tr>
+                          <tr className="bg-emerald-50 ring-1 ring-emerald-300 ring-inset">
+                            <td className="py-2 font-bold text-emerald-700 font-mono text-xs">KRL-INV-4933</td>
+                            <td className="py-2 font-bold text-emerald-700">$125,000</td>
+                            <td className="py-2 font-bold text-emerald-700">Open ✓</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 text-slate-600 font-mono text-xs">KRL-INV-4941</td>
+                            <td className="py-2 text-slate-600">$42,500</td>
+                            <td className="py-2 text-slate-500">Open</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="space-y-3">
+                    {[
+                      { label: 'Customer Match', pct: 100 },
+                      { label: 'Invoice Match', pct: 98 },
+                      { label: 'Amount Match', pct: 100 },
+                    ].map(({ label, pct }) => (
+                      <div key={label}>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-xs font-semibold text-slate-700">{label}</span>
+                          <span className="text-xs font-bold text-emerald-600">{pct}%</span>
+                        </div>
+                        <div className="w-full bg-slate-100 rounded-full h-2">
+                          <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-blue-800 font-semibold">Correct open item identified. Recommend reverse-and-reapply.</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 4 && (
+            /* Misapplied Step 5 — AI Decision / Resolution Strategy */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">AI Decision — Resolution Strategy</h2>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">AI Conclusion</h3>
+                    <p className="text-sm text-blue-800">
+                      Misapplied cash. Reverse the application on the settled invoice and re-apply to the correct customer's open invoice.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Resolution Strategy</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Action</th>
+                            <th className="pb-2 text-left">Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr>
+                            <td className="py-2 font-semibold text-slate-900">Reverse application on KRL-INV-4901</td>
+                            <td className="py-2 text-slate-700">Invoice already settled; duplicate application</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold text-slate-900">Re-apply $125,000 to KRL-INV-4933</td>
+                            <td className="py-2 text-slate-700">Correct customer (APAC) and matching open item</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 font-semibold text-slate-900">Link reversal + reapply for audit</td>
+                            <td className="py-2 text-slate-700">Full documentation of correction (SLA 2.2.4)</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 5 && (
+            /* Misapplied Step 6 — Correction Posting Proposal */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Correction Posting Proposal</h2>
+                  <p className="text-sm text-slate-600">The D365 Posting Agent prepares the reversal and reapplication documents.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
+                    <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3">Posting Recommendation</h3>
+                    <ul className="text-sm text-slate-700 space-y-1 list-disc list-inside">
+                      <li>Reverse $125,000 application from KRL-INV-4901 (reopen nothing; it stays settled by its original payment)</li>
+                      <li>Apply $125,000 to KRL-INV-4933 (customer CL-2025-0119)</li>
+                      <li>Net cash movement: $0 — reclassification only</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Proposed Document Chain</h3>
+                    </div>
+                    <div className="p-4 font-mono text-xs space-y-2 text-slate-800 bg-slate-50">
+                      <p>Reversal Doc   KRL-DOC-REV-5510   Un-apply $125,000 from KRL-INV-4901</p>
+                      <p>Reapply Doc    KRL-DOC-APP-5511   Apply  $125,000 to KRL-INV-4933</p>
+                      <p>Reason codes   MISAPPLIED_REVERSAL · REAPPLY_CORRECT_CUST</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-blue-900 mb-2">System Actions if Approved</h3>
+                    <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                      <li>Un-apply $125,000 from KRL-INV-4901</li>
+                      <li>Apply $125,000 to KRL-INV-4933</li>
+                      <li>Link both docs to original cash receipt for audit</li>
+                      <li>Update both customers' AR balances</li>
+                      <li>Mark KRL-INV-4933 Settled</li>
+                    </ul>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 6 && (
+            /* Misapplied Step 7 — Human Review */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <h2 className="text-sm font-semibold text-slate-800">Human Review (Before Posting)</h2>
+                  <p className="text-sm text-slate-600">Since this affects financial records, the system requires human approval before posting.</p>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4 space-y-2">
+                    <h3 className="text-sm font-bold text-slate-800 mb-2">AI Resolution Summary</h3>
+                    <p className="text-sm text-slate-700">Misapplied cash identified. Duplicate application on a settled invoice; correct owner is the APAC entity. Reverse-and-reapply prepared.</p>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Evidence Panel</h3>
+                    </div>
+                    <div className="p-4">
+                      <table className="w-full text-sm">
+                        <thead className="border-b border-slate-200">
+                          <tr className="text-xs text-slate-500 uppercase">
+                            <th className="pb-2 text-left">Evidence</th>
+                            <th className="pb-2 text-left">Detail</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          <tr><td className="py-2 text-slate-700">Settled-invoice flag</td><td className="py-2 font-semibold text-rose-600">KRL-INV-4901 already paid 12 days ago</td></tr>
+                          <tr><td className="py-2 text-slate-700">Customer collision</td><td className="py-2 font-semibold text-slate-900">Name collision between two Harborview entities</td></tr>
+                          <tr><td className="py-2 text-slate-700">True open item</td><td className="py-2 font-semibold text-emerald-700">KRL-INV-4933 — $125,000 open (APAC entity)</td></tr>
+                          <tr><td className="py-2 text-slate-700">Net cash impact</td><td className="py-2 font-semibold text-slate-900">$0 — reclassification only</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="bg-slate-100 border border-slate-200 rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-slate-800 mb-3">Approval Options</h3>
+                    <div className="flex flex-wrap gap-3">
+                      <button onClick={handleMisappliedApproveAndPost} className="flex items-center gap-2 px-4 py-2 bg-[#00263A] text-white rounded-lg text-sm font-bold hover:bg-[#003354] transition-colors">
+                        <CheckCircle2 className="w-4 h-4" />
+                        Approve &amp; Post to D365
+                      </button>
+                      <button className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
+                        <FileText className="w-4 h-4" />
+                        Create Journal Draft
+                      </button>
+                      <button className="flex items-center gap-2 px-4 py-2 bg-white text-rose-700 border border-rose-200 rounded-lg text-sm font-bold hover:bg-rose-50 transition-colors">
+                        <XCircle className="w-4 h-4" />
+                        Reject Recommendation
+                      </button>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-3">
+                      Reversals that change customer balances require explicit human approval before posting.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 7 && (
+            /* Misapplied Step 8 — Posting Execution */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
+                <div className="max-w-xl mx-auto text-center space-y-4">
+                  <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} className="w-16 h-16 mx-auto bg-blue-50 rounded-full flex items-center justify-center">
+                    <RefreshCw className="w-8 h-8 text-blue-600" />
+                  </motion.div>
+                  <h2 className="text-sm font-semibold text-slate-800">Posting to D365</h2>
+                  <div className="space-y-2 text-sm text-slate-700 text-left max-w-sm mx-auto">
+                    <p>• Reversing application on KRL-INV-4901…</p>
+                    <p>• Re-applying $125,000 to KRL-INV-4933…</p>
+                    <p>• Updating both customer AR balances…</p>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200 flex flex-col justify-center">
+                <div className="max-w-md mx-auto space-y-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <h3 className="text-sm font-bold text-slate-800 mb-2">Posting Summary</h3>
+                    <p className="text-xs text-slate-600 mb-1">Case: REM_010 — Harborview Partners</p>
+                    <p className="text-xs text-slate-600 mb-1">From: KRL-INV-4901 → To: KRL-INV-4933</p>
+                    <p className="text-xs text-slate-600">Docs: REV-5510 / APP-5511</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {currentStep === 8 && (
+            /* Misapplied Step 9 — Resolution Completed */
+            <div className="h-full flex flex-row">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5 flex flex-col justify-center">
+                <div className="max-w-xl mx-auto space-y-4 text-center">
+                  <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+                  </div>
+                  <h2 className="text-sm font-semibold text-slate-800">Resolution Completed</h2>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden text-left max-w-sm mx-auto">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800">Resolution Summary</h3>
+                    </div>
+                    <div className="p-4 space-y-2 text-sm">
+                      <div className="flex justify-between"><span className="text-slate-600">KRL-INV-4901</span><span className="font-semibold text-slate-900">Application reversed</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">KRL-INV-4933</span><span className="font-semibold text-emerald-700">Settled</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">Both customer balances</span><span className="font-semibold text-slate-900">Corrected</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">Audit chain (reversal + reapply)</span><span className="font-semibold text-slate-900">Linked</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">Net cash impact</span><span className="font-semibold text-slate-900">$0</span></div>
+                      <div className="flex justify-between"><span className="text-slate-600">Resolution Type</span><span className="font-semibold text-emerald-700">Corrected</span></div>
+                    </div>
+                  </div>
+                  <p className="text-sm font-bold text-emerald-700">Misapplied cash corrected — full audit trail recorded.</p>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200 flex flex-col justify-center">
+                <div className="max-w-md mx-auto space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">Dashboard Update</p>
+                    <p className="text-sm text-blue-800">
+                      REM_010 — Harborview Partners will appear in Cash Applications as <span className="font-semibold">Corrected</span>.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer for Misapplied Cash */}
+        <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
+          {currentStep === 8 ? (
+            <button onClick={handleMisappliedBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Cash Applications
+            </button>
+          ) : currentStep === 6 ? (
+            <>
+              <button onClick={handlePrevStep} className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </button>
+              <button onClick={handleMisappliedApproveAndPost} className="flex items-center gap-2 px-5 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+                <CheckCircle2 className="w-4 h-4" />
+                Approve &amp; Post to D365
+              </button>
+              <button className="flex items-center gap-2 px-5 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <FileText className="w-4 h-4" />
+                Create Journal Draft
+              </button>
+              <button className="flex items-center gap-2 px-5 py-2 bg-white text-rose-700 border border-rose-200 rounded-lg text-sm font-semibold hover:bg-rose-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <XCircle className="w-4 h-4" />
+                Reject Recommendation
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={handlePrevStep} className="flex items-center gap-2 px-6 py-2 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors shadow-sm active:scale-95 transform duration-200">
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </button>
+              <button onClick={handleNextStep} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
+                Next Step
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </>
+          )}
+        </div>
+      </motion.div>;
+    }
 
     // Castellan: show custom detailed screens for steps 6–11 (indices 5–10)
     if (isNihon && currentStep >= 5) {
@@ -1869,7 +2881,7 @@ Thank you.`}
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">Dashboard Update</p>
                     <p className="text-sm text-blue-800">
-                      REM_008 — Castellan Restructuring Ltd will appear in the Failed Cash Applications dashboard as <span className="font-semibold">Awaiting Documentation</span>.
+                      REM_008 — Castellan Restructuring Ltd will appear in the Cash Applications dashboard as <span className="font-semibold">Awaiting Documentation</span>.
                     </p>
                   </div>
                 </div>
@@ -1883,7 +2895,7 @@ Thank you.`}
           {currentStep === 10 ? (
             <button onClick={handleNihonBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
               <ArrowLeft className="w-4 h-4" />
-              Back to Failed Cash Applications
+              Back to Cash Applications
             </button>
           ) : currentStep === 8 ? (
             <>
@@ -2252,6 +3264,196 @@ Thank you.`}
                     <p className="font-bold text-slate-800 text-sm">REM_008 — Castellan Restructuring Ltd</p>
                     <p className="text-slate-600 text-xs mt-1">Amount: $50,000 · Region: APAC</p>
                     <p className="text-slate-500 text-xs font-medium mt-1">AI Confidence: 91%</p>
+                  </div>
+                </div>
+              </motion.div>
+            </React.Fragment>
+          ) : processingRowId === '11' ? (
+            /* Calderwood Advisory Group Step 0: Case Overview */
+            <React.Fragment>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-slate-100 rounded-lg">
+                        <Mail className="w-5 h-5 text-slate-600" />
+                      </div>
+                      <div>
+                        <h2 className="text-sm font-semibold text-slate-800">Source Document</h2>
+                        <p className="text-sm text-slate-500">Bank advice — direct debit collection</p>
+                      </div>
+                    </div>
+                    <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">HSBC · SEPA Direct Debit</span>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <div className="flex items-start gap-4">
+                        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Building2 className="w-5 h-5 text-slate-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-semibold text-slate-900 truncate">Calderwood Advisory Group</span>
+                            <span className="text-xs text-slate-500 whitespace-nowrap">Jun 5, 10:15 AM</span>
+                          </div>
+                          <div className="text-sm text-slate-600 truncate">SEPA Direct Debit — Mandate SEPA-DD-KRL-0098</div>
+                          <div className="text-xs text-slate-400 mt-1">Bank: HSBC · Region: EMEA</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <div className="space-y-2 text-xs text-slate-600">
+                        <div className="flex justify-between py-1 border-b border-slate-100">
+                          <span className="text-slate-500">Collection method</span>
+                          <span className="font-semibold">Direct Debit (SEPA mandate SEPA-DD-KRL-0098)</span>
+                        </div>
+                        <div className="flex justify-between py-1 border-b border-slate-100">
+                          <span className="text-slate-500">Amount collected</span>
+                          <span className="font-semibold">$80,250</span>
+                        </div>
+                        <div className="flex justify-between py-1 border-b border-slate-100">
+                          <span className="text-slate-500">Against invoice</span>
+                          <span className="font-semibold">KRL-INV-4970 ($80,000)</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span className="text-slate-500">Region</span>
+                          <span className="font-semibold">EMEA</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Direct debit reference matched</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Customer identified</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Invoice located</span>
+                    </div>
+                  </div>
+                  <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-amber-900">Overpayment Detected</p>
+                      <p className="text-xs text-amber-800 mt-1">Payment exceeds invoice by $250 — overpayment requires refund/write-off handling.</p>
+                    </div>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Case Summary</h3>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {[
+                        { field: 'Email ID', value: 'REM_011' },
+                        { field: 'Bank', value: 'HSBC' },
+                        { field: 'Customer', value: 'Calderwood Advisory Group' },
+                        { field: 'Collection Method', value: 'SEPA Direct Debit (SEPA-DD-KRL-0098)' },
+                        { field: 'Amount Collected', value: '$80,250' },
+                        { field: 'Invoice', value: 'KRL-INV-4970 ($80,000)' },
+                        { field: 'Variance', value: '+$250 overpayment' },
+                      ].map((row, i) => (
+                        <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </React.Fragment>
+          ) : processingRowId === '10' ? (
+            /* Harborview Partners LLP Step 0: Case Overview */
+            <React.Fragment>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 border-r border-slate-200 bg-white overflow-y-auto p-5">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-slate-100 rounded-lg">
+                        <Mail className="w-5 h-5 text-slate-600" />
+                      </div>
+                      <div>
+                        <h2 className="text-sm font-semibold text-slate-800">Source Document</h2>
+                        <p className="text-sm text-slate-500">Original email content</p>
+                      </div>
+                    </div>
+                    <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">Outlook Format</span>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <div className="flex items-start gap-4">
+                        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Building2 className="w-5 h-5 text-slate-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-semibold text-slate-900 truncate">Harborview Partners LLP</span>
+                            <span className="text-xs text-slate-500 whitespace-nowrap">Jun 5, 9:08 AM</span>
+                          </div>
+                          <div className="text-sm text-slate-600 truncate">Subject: Payment Remittance – Invoice INV-4901</div>
+                          <div className="text-xs text-slate-400 mt-1">To: ar@kroll.com</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <div className="prose prose-sm max-w-none text-xs text-slate-600">
+                        <p>Hello,</p>
+                        <p>Please find our remittance for invoice <strong>INV-4901</strong>. We have transferred <strong>$125,000</strong> via Citi Bank.</p>
+                        <p className="mt-2">Bank: <strong>Citi</strong> · Payer: Harborview Partners LLP · Region: NA · Ref: INV-4901</p>
+                        <p className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">Best regards,<br />Harborview Partners LLP — Finance</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex-1 bg-slate-50/50 overflow-y-auto p-4 border-l border-slate-200">
+                <div className="max-w-xl mx-auto space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Email identified</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Customer name read</span>
+                    </div>
+                  </div>
+                  <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-amber-900">Duplicate / Misapplied Cash Alert</p>
+                      <p className="text-xs text-amber-800 mt-1">Applied invoice KRL-INV-4901 is in Settled status — possible duplicate / misapplied cash.</p>
+                    </div>
+                  </div>
+                  <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3">
+                      <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Case Summary</h3>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {[
+                        { field: 'Email ID', value: 'REM_010' },
+                        { field: 'Bank', value: 'Citi' },
+                        { field: 'Payer', value: 'Harborview Partners LLP' },
+                        { field: 'Amount', value: '$125,000' },
+                        { field: 'Remittance Ref', value: 'INV-4901' },
+                        { field: 'Region', value: 'NA' },
+                        { field: 'AI Context', value: 'Possible duplicate / misapplied' },
+                      ].map((row, i) => (
+                        <div key={i} className="flex justify-between py-2 border-b border-slate-100 last:border-0">
+                          <span className="text-xs text-slate-500">{row.field}</span>
+                          <span className="text-xs font-semibold text-slate-900">{row.value}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -5931,19 +7133,19 @@ Thank you.`}
       {(isBlueWave && currentStep === 10) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <button onClick={handleBlueWaveBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <ArrowLeft className="w-4 h-4" />
-          Back to Failed Cash Applications
+          Back to Cash Applications
         </button>
       </div>}
       {(isNihon && currentStep === 10) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <button onClick={handleNihonBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <ArrowLeft className="w-4 h-4" />
-          Back to Failed Cash Applications
+          Back to Cash Applications
         </button>
       </div>}
       {(isBankFee && currentStep === 8) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <button onClick={handleBankFeeBackToDashboard} className="flex items-center gap-2 px-6 py-2 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-colors shadow-lg hover:shadow-xl active:scale-95 transform duration-200">
           <ArrowLeft className="w-4 h-4" />
-          Back to Failed Cash Applications
+          Back to Cash Applications
         </button>
       </div>}
       {(isBankFee && currentStep === 7) && <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-3 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex-wrap">
@@ -6207,7 +7409,7 @@ Thank you.`}
           <div className="grid grid-cols-1 gap-4 w-full max-w-xs relative z-10">
             <button onClick={handleBackToDashboard} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#00263A] text-white rounded-lg text-sm font-semibold hover:bg-[#003354] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
               <ArrowLeft className="w-4 h-4" />
-              Back to Failed Cash Applications
+              Back to Cash Applications
             </button>
             <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
               <FileText className="w-4 h-4" />
