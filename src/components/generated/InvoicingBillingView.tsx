@@ -863,20 +863,17 @@ const InvoiceGenerationView: React.FC<{
   onUpdateInvoice: (id: string, status: InvStatus) => void;
   onProceed: (process: ProcessId) => void;
 }> = ({ onBack, invoices, onUpdateInvoice, onProceed }) => {
-  const [openInvoice, setOpenInvoice] = useState<GeneratedInvoice | null>(null);
+  const inv = invoices[0]; // Go directly to the workflow for the first invoice
 
   return (
     <AnimatePresence mode="wait">
-      {openInvoice === null
-        ? <InvoiceInbox key="inbox" onBack={onBack} onOpen={setOpenInvoice} invoices={invoices} />
-        : <InvoiceDetail
-            key={openInvoice.id}
-            inv={openInvoice}
-            onBack={() => setOpenInvoice(null)}
-            onGenerationComplete={() => onUpdateInvoice(openInvoice.id, 'generated')}
-            onProceed={onProceed}
-          />
-      }
+      <InvoiceDetail
+        key={inv.id}
+        inv={inv}
+        onBack={onBack}
+        onGenerationComplete={() => onUpdateInvoice(inv.id, 'generated')}
+        onProceed={onProceed}
+      />
     </AnimatePresence>
   );
 };
